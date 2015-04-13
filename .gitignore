@@ -6,3 +6,6 @@ org.efry.z80editor.ui/src-gen/
 org.efry.z80editor.ui/xtend-gen/
 org.efry.z80editor.tests/src-gen/
 org.efry.z80editor.tests/bin/
+org.efry.z80editor.ui/plugin.xml_gen
+org.efry.z80editor/model/
+org.efry.z80editor/plugin.xml_gen
