@@ -1,0 +1,217 @@
+grammar org.efry.z80editor.Z80 with org.eclipse.xtext.common.Terminals
+
+generate z80 "http://www.efry.org/z80editor/Z80"
+
+Model:
+    commands+=Line*;
+
+
+terminal REGISTER_A: 'a'|'A';
+terminal REGISTER_B: 'b'|'B';
+REGISTER_C: 'c'|'C'; //cannot be a terminal because it clashes with the 'C'arry flag.
+terminal REGISTER_D: 'd'|'D';
+terminal REGISTER_E: 'e'|'E';
+terminal REGISTER_H: 'h'|'H';
+terminal REGISTER_L: 'l'|'L';
+
+terminal REGISTER_AF: 'af'|'Af'|'aF'|'AF';
+terminal REGISTER_AF_SHADOW: 'af\''|'Af\''|'aF\''|'AF\'';
+terminal REGISTER_BC: 'bc'|'Bc'|'bC'|'BC';
+REGISTER_DE: 'de'|'De'|'dE'|'DE';
+terminal REGISTER_HL: 'hl'|'Hl'|'hL'|'HL';
+terminal REGISTER_IX: 'ix'|'Ix'|'iX'|'IX';
+terminal REGISTER_IY: 'iy'|'Iy'|'iY'|'IY';
+terminal REGISTER_SP: 'sp'|'Sp'|'sP'|'SP';
+
+
+terminal NEWLINE:
+// New line on DOS or Unix
+    '\r'? '\n';
+  
+Line:
+	Define NEWLINE |
+	MemoryMap NEWLINE |
+	RomBankMap NEWLINE |
+	Sdsctag NEWLINE |
+	Bank NEWLINE |
+	Org NEWLINE |
+	Section NEWLINE |
+	RamSection NEWLINE |
+	Rept NEWLINE |
+	Db NEWLINE |
+	Dw NEWLINE |
+	Include NEWLINE |
+	Incbin NEWLINE |
+	//UnHandledWlaDxCommand NEWLINE |
+    (name=LABEL | Command) NEWLINE |
+    name=LABEL cmd=Command NEWLINE |
+    NEWLINE;
+
+Define: '.define' name=ID expr=Expression;
+MemoryMap: '.memorymap' NEWLINE MemoryMapCommands+ '.endme';
+MemoryMapCommands: ('defaultslot' INT NEWLINE) |
+	('slotsize' (HEX|INT) NEWLINE) |
+	('slot' (HEX|INT) (HEX|INT)? NEWLINE)
+;
+
+RomBankMap: '.rombankmap' NEWLINE RomBankCommands+ '.endro';
+RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
+	('banksize' (INT|HEX) NEWLINE) |
+	('banks' (INT|HEX) NEWLINE)
+;
+
+Rept: '.rept' INT NEWLINE block=Line+ '.endr';
+Bank: '.bank' INT ('slot' INT)?;
+Org: '.org' (INT|HEX|BINARY);
+Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE block=Line+ '.ends';
+RamSection:'.ramsection' name=STRING ('bank' (INT|HEX|BINARY))? ('slot' (INT|HEX|BINARY))? NEWLINE block+=(VarDefinition|NEWLINE)*'.ends';
+VarDefinition: ID ('db'|'dw'|('ds' (INT|HEX|BINARY))|('dsb' (INT|HEX|BINARY))|('dsw' (INT|HEX|BINARY))) NEWLINE;
+Db: '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
+Dw: '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
+Include: '.include' file=STRING;
+Incbin: '.incbin' file=STRING;
+
+Sdsctag: '.sdsctag' INT('.'INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID);
+
+//terminal UnHandledWlaDxCommand: '.' ID !('\n'|'\r')*; //FIXME
+
+terminal PLUS: '+';
+terminal PLUSPLUS: '+'+;
+
+terminal MINUS: '-';
+terminal MINUSMINUS: '-'+;
+
+//terminal ANONYMOUS_LABEL:
+//	(PLUSPLUS|MINUSMINUS)
+//;
+
+terminal LABEL:
+    ((ID|'+'+|'-'+)':');
+  //  ((ID|ANONYMOUS_LABEL)':');
+
+terminal BANKLABEL: (':'ID);
+
+
+Expression returns Expr:
+    BitwiseOp;
+
+BitwiseOp returns Expr:
+    Addition
+    ({BinaryExpr.left=current} op=('|' | '&') right=Addition)*;
+
+Addition returns Expr:
+    Multiplication
+    ({BinaryExpr.left=current} op=(PLUS | MINUS) right=Multiplication)*;
+
+Multiplication returns Expr:
+    PrimaryExpression
+    ({BinaryExpr.left=current} op=('*' | '/') right=PrimaryExpression)*;
+
+PrimaryExpression returns Expr:
+    '(' Expression ')' |
+    {NumLiteral} MINUS? value=NumericLiteral;
+      
+Command:
+    (Adc|Add|And|Bit|Call|Ccf|Cp|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrca|Rrd|Rst|Sbc|Set|Sla|Sra|Srl|Sub|Xor)
+;
+
+DoubleRegisters:
+    (REGISTER_AF|REGISTER_BC|REGISTER_DE|REGISTER_HL|xx)
+;
+
+Adc: 'adc' ((REGISTER_A ',' s)|(REGISTER_HL ',' ss));
+Add: 'add' ((REGISTER_A ',' s)|(REGISTER_HL ',' ss)|(REGISTER_IX ',' pp)|(REGISTER_IY ',' rr));
+And: 'and' s;
+Bit: 'bit' B ',' m;
+Call: 'call' (CC ',')? NumericLiteral;
+Ccf: 'ccf';
+Cp: 'cp' s;
+Daa: 'daa';
+Dec: 'dec' (s|xx|ss);
+Di: 'di';
+Djnz: 'djnz' e;
+Ei: 'ei';
+Ex: 'ex' ((SPIndirect ',' REGISTER_HL)|(SPIndirect ',' xx)|(REGISTER_AF ',' REGISTER_AF_SHADOW)|(REGISTER_DE ',' REGISTER_HL));
+Exx: 'exx';
+Halt: 'halt';
+Im: 'im' NumericLiteral;
+In: 'in' ((REGISTER_A ',' NumericLiteralIndirect)|(r ',' CIndirect));
+Inc: 'inc' (r|HLIndirect|xx|IndexIndirectPlusOffset|ss);
+Ind: 'ind';
+Indr: 'indr';
+Ini: 'ini';
+Inir: 'inir';
+Jp: 'jp' (HLIndirect|IndexIndirect|((CC ',')? (NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
+Jr: 'jr' (CC ',')? e;
+Ld: 'ld' ((dstt=dst ',' srs=src)|(REGISTER_A ',' ('i'|'r')));
+Ldd: 'ldd';
+Lddr: 'lddr';
+Ldi: 'ldi';
+Ldir: 'ldir';
+Neg: 'neg';
+Nop: 'nop';
+Or: 'or' s;
+Otdr: 'otdr';
+Otir: 'otir';
+Out: 'out' ((CIndirect ',' r)|(NumericLiteralIndirect ',' REGISTER_A));
+Outd: 'outd';
+Outi: 'outi';
+Pop: 'pop' DoubleRegisters;
+Push: 'push' DoubleRegisters;
+Res: 'res' B ',' m;
+Ret: 'ret' CC?;
+Reti: 'reti';
+Retn: 'retn';
+Rl: 'rl' m;
+Rla: 'rla';
+Rlc: 'rlc' m;
+Rlca: 'rlca';
+Rld: 'rld';
+RrCmd: 'rr' m;
+Rra: 'rra';
+Rrca: 'rrca';
+Rrd: 'rrd';
+Rst: 'rst' p;
+Sbc: 'sbc' ((REGISTER_A ',' s)|(REGISTER_HL ',' ss));
+Set: 'set' B ',' m;
+Sla: 'sla' m;
+Sra: 'sra' m;
+Srl: 'srl' m;
+Sub: 'sub' s;
+Xor: 'xor' s;
+
+terminal SL_COMMENT     : ';' !('\n'|'\r')*;
+terminal WS            : (' '|'\t')+;
+
+terminal B: 'bb'; //INT; //'0'..'7'; //FIXME
+NumericLiteral: BANKLABEL|ID|INT|HEX|BINARY; //
+terminal fragment NUMBER: INT|HEX|BINARY;
+terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
+terminal BINARY: '%'('0'..'1')+;
+
+CIndirect: ('[' REGISTER_C ']')|('(' REGISTER_C ')');
+BCIndirect: ('[' REGISTER_BC ']')|('(' REGISTER_BC ')');
+DEIndirect: ('[' REGISTER_DE ']')|('(' REGISTER_DE ')');
+HLIndirect: ('[' REGISTER_HL ']')|('(' REGISTER_HL ')');
+SPIndirect: ('[' REGISTER_SP ']')|('(' REGISTER_SP ')');
+NumericLiteralIndirect: ('[' NumericLiteral ']')|('(' NumericLiteral ')');
+
+IndexIndirectPlusOffset: ('[' IndexPlusOffset ']')|('(' IndexPlusOffset ')');
+IndexIndirect: ('[' xx ']')|('(' xx ')');
+
+IndexPlusOffset: xx PLUS INT;
+
+CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
+
+dst: s|ss|BCIndirect|DEIndirect|=>NumericLiteralIndirect;
+
+e: (NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS); //fixme -126 to +129
+m: r|HLIndirect|IndexIndirectPlusOffset;
+p: INT; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
+pp: REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP;
+r: REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|REGISTER_H|REGISTER_L;
+rr: REGISTER_BC|REGISTER_DE|REGISTER_IY|REGISTER_SP;
+s: r|Expression|HLIndirect|IndexIndirectPlusOffset;
+ss: REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP;
+src: s|ss|BCIndirect|DEIndirect|=>NumericLiteralIndirect;
+xx: REGISTER_IX|REGISTER_IY;

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.efry.org/z80editor/Z80" 
+       class = "org.efry.z80editor.z80.Z80Package"
+       genModel = "model/generated/Z80.genmodel" /> 
+	
+  </extension>
+
+
+
+</plugin>
