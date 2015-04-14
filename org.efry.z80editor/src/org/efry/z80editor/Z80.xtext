@@ -43,11 +43,14 @@ Line:
 	Include NEWLINE |
 	Incbin NEWLINE |
 	//UnHandledWlaDxCommand NEWLINE |
-    (name=LABEL | Command) NEWLINE |
-    name=LABEL cmd=Command NEWLINE |
+    (LabelType | Command) NEWLINE |
+    //LabelType cmd=Command NEWLINE |
     NEWLINE;
 
-Define: '.define' name=ID expr=Expression;
+
+
+
+Define: '.define' VarName expr=Expression;
 MemoryMap: '.memorymap' NEWLINE MemoryMapCommands+ '.endme';
 MemoryMapCommands: ('defaultslot' INT NEWLINE) |
 	('slotsize' (HEX|INT) NEWLINE) |
@@ -63,9 +66,12 @@ RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
 Rept: '.rept' INT NEWLINE block=Line+ '.endr';
 Bank: '.bank' INT ('slot' INT)?;
 Org: '.org' (INT|HEX|BINARY);
-Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE block=Line+ '.ends';
-RamSection:'.ramsection' name=STRING ('bank' (INT|HEX|BINARY))? ('slot' (INT|HEX|BINARY))? NEWLINE block+=(VarDefinition|NEWLINE)*'.ends';
-VarDefinition: ID ('db'|'dw'|('ds' (INT|HEX|BINARY))|('dsb' (INT|HEX|BINARY))|('dsw' (INT|HEX|BINARY))) NEWLINE;
+//Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
+Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE;
+
+RamSection:'.ramsection' name=STRING ('bank' (INT|HEX|BINARY))? ('slot' (INT|HEX|BINARY))? NEWLINE block+=(VarDefinition)*'.ends';
+
+VarDefinition: VarName ('db'|'dw'|('ds' (INT|HEX|BINARY))|('dsb' (INT|HEX|BINARY))|('dsw' (INT|HEX|BINARY))) NEWLINE;
 Db: '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Dw: '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Include: '.include' file=STRING;
@@ -75,22 +81,27 @@ Sdsctag: '.sdsctag' INT('.'INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID)
 
 //terminal UnHandledWlaDxCommand: '.' ID !('\n'|'\r')*; //FIXME
 
-terminal PLUS: '+';
-terminal PLUSPLUS: '+'+;
+ PLUS: '+';
+terminal PLUSLABEL: '+:';
+terminal PLUSPLUS: '+''+'+;
 
+terminal MINUSLABEL: '-:';
 terminal MINUS: '-';
-terminal MINUSMINUS: '-'+;
+terminal MINUSMINUS: '-''-'+;
 
 //terminal ANONYMOUS_LABEL:
 //	(PLUSPLUS|MINUSMINUS)
 //;
 
-terminal LABEL:
-    ((ID|'+'+|'-'+)':');
+LABEL:
+    ((ID|PLUSPLUS|MINUSMINUS));
   //  ((ID|ANONYMOUS_LABEL)':');
 
-terminal BANKLABEL: (':'ID);
+BANKLABEL hidden(): ':'referencedObj=[VarName|ID];
 
+VarName: name=ID;
+
+LabelType hidden(): PLUSLABEL|MINUSLABEL|((VarName|PLUSPLUS|MINUSMINUS)':');
 
 Expression returns Expr:
     BitwiseOp;
@@ -184,7 +195,7 @@ terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
 
 terminal B: 'bb'; //INT; //'0'..'7'; //FIXME
-NumericLiteral: BANKLABEL|ID|INT|HEX|BINARY; //
+NumericLiteral: BANKLABEL|referencedObj=[VarName|ID]|INT|HEX|BINARY; //ID
 terminal fragment NUMBER: INT|HEX|BINARY;
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
 terminal BINARY: '%'('0'..'1')+;
