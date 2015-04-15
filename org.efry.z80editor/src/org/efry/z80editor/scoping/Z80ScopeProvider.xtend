@@ -3,6 +3,14 @@
  */
 package org.efry.z80editor.scoping
 
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.scoping.IScope
+import org.eclipse.xtext.scoping.Scopes
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
+import org.efry.z80editor.z80.VarName
+import org.eclipse.emf.ecore.EObject
+
 /**
  * This class contains custom scoping description.
  * 
@@ -10,6 +18,13 @@ package org.efry.z80editor.scoping
  * on how and when to use it.
  *
  */
-class Z80ScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider {
+class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 
+
+	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
+		 Scopes::scopeFor(
+			EcoreUtil2::getAllContentsOfType(EcoreUtil2::getRootContainer(varName), typeof(VarName))
+		);
+	}
+	
 }

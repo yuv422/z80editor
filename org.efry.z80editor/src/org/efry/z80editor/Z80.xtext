@@ -195,7 +195,7 @@ terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
 
 terminal B: 'bb'; //INT; //'0'..'7'; //FIXME
-NumericLiteral: BANKLABEL|referencedObj=[VarName|ID]|INT|HEX|BINARY; //ID
+NumericLiteral: BANKLABEL|referencedObj=[VarName]|INT|HEX|BINARY; //ID
 terminal fragment NUMBER: INT|HEX|BINARY;
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
 terminal BINARY: '%'('0'..'1')+;
