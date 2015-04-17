@@ -10,6 +10,8 @@ import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
 import org.efry.z80editor.z80.VarName
 import org.eclipse.emf.ecore.EObject
+import com.google.inject.Inject
+import org.eclipse.xtext.scoping.IGlobalScopeProvider
 
 /**
  * This class contains custom scoping description.
@@ -20,11 +22,13 @@ import org.eclipse.emf.ecore.EObject
  */
 class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 
+	@Inject
+	private IGlobalScopeProvider globalScopeProvider;
 
 	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
-		 Scopes::scopeFor(
-			EcoreUtil2::getAllContentsOfType(EcoreUtil2::getRootContainer(varName), typeof(VarName))
-		);
+		
+		var locals = EcoreUtil2::getAllContentsOfType(EcoreUtil2::getRootContainer(varName), typeof(VarName));
+		Scopes::scopeFor(locals, globalScopeProvider.getScope(varName.eResource, ref, null));		
 	}
 	
 }

@@ -12,4 +12,8 @@ public class Z80UiModule extends org.efry.z80editor.ui.AbstractZ80UiModule {
 	public Z80UiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
+	
+	public com.google.inject.Provider<org.eclipse.xtext.resource.containers.IAllContainersState> provideIAllContainersState() {
+		return org.eclipse.xtext.ui.shared.Access.getWorkspaceProjectsState();
+	}
 }

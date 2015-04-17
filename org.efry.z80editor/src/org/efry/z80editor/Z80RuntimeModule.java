@@ -3,9 +3,26 @@
  */
 package org.efry.z80editor;
 
+import org.eclipse.xtext.resource.IContainer;
+import org.eclipse.xtext.resource.containers.StateBasedContainerManager;
+
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class Z80RuntimeModule extends org.efry.z80editor.AbstractZ80RuntimeModule {
 
+	@Override
+    public Class<? extends IContainer.Manager> bindIContainer$Manager() {
+    	return StateBasedContainerManager.class;
+    }
+    
+	@Override
+	public Class<? extends org.eclipse.xtext.naming.IQualifiedNameProvider> bindIQualifiedNameProvider() {
+		return Z80QualifiedNameProvider.class;
+	}
+	
+	@Override
+	public Class<? extends org.eclipse.xtext.scoping.IGlobalScopeProvider> bindIGlobalScopeProvider() {
+		return org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider.class;
+	}
 }
