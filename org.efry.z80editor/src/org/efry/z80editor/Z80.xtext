@@ -45,8 +45,8 @@ Line:
 	Include NEWLINE |
 	Incbin NEWLINE |
 	//UnHandledWlaDxCommand NEWLINE |
-    (LabelType | Command) NEWLINE |
-    l=LabelType cmd=Command NEWLINE |
+    (Label | Command) NEWLINE |
+    l=Label cmd=Command NEWLINE |
     NEWLINE;
 
 
@@ -95,7 +95,7 @@ BANKLABEL hidden(): ':'referencedObj=[VarName];
 
 VarName: name=ID;
 
-LabelType hidden() : (PLUSLABEL|MINUSLABEL|((VarName|PLUSPLUS|MINUSMINUS)':'));
+Label hidden() : {LabelType} (PLUSLABEL|MINUSLABEL|((varName=VarName|PLUSPLUS|MINUSMINUS)':'));
 
 Expression returns Expr:
     BitwiseOp;
@@ -117,7 +117,7 @@ PrimaryExpression returns Expr:
     {NumLiteral} sign=MINUS? value=NumericLiteral;
       
 Command:
-    (Adc|Add|And|Bit|Call|Ccf|Cp|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrca|Rrd|Rst|Sbc|Set|Sla|Sra|Srl|Sub|Xor)
+     (Adc|Add|And|Bit|Call|Ccf|Cp|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrca|Rrd|Rst|Sbc|Set|Sla|Sra|Srl|Sub|Xor)
 ;
 
 DoubleRegisters:
@@ -147,7 +147,7 @@ Indr: 'indr';
 Ini: 'ini';
 Inir: 'inir';
 Jp returns Operation: 'jp' (reg=(HLIndirect|IndexIndirect)|((CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
-Jr: 'jr' (CC ',')? e;
+Jr: 'jr' (jrCc ',')? e;
 Ld returns Operation: 'ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: 'ldd';
 Lddr: 'lddr';
@@ -189,7 +189,7 @@ terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
 
 B returns Operand: intType=INT; //'0'..'7'; //FIXME
-NumericLiteral : BANKLABEL|referencedObj=[VarName]|NUMBER; //ID
+NumericLiteral : BANKLABEL|referencedObj=[LabelType]|NUMBER; //ID
 NUMBER: i=INT|str=(HEX|BINARY);
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
 terminal BINARY: '%'('0'..'1')+;
@@ -208,6 +208,7 @@ IndexIndirect: ('[' xx ']')|('(' xx ')');
 IndexPlusOffset: xx PLUS INT;
 
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
+jrCc: 'c'|'nc'|'nz'|'z';
 
 dst returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect)|=>NumericLiteralIndirect;
 

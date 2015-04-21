@@ -3,6 +3,8 @@
  */
 package org.efry.z80editor.ui.labeling
 
+import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
+
 //import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
@@ -10,7 +12,7 @@ package org.efry.z80editor.ui.labeling
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class Z80DescriptionLabelProvider extends org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider {
+class Z80DescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 
 	// Labels and icons can be computed like this:
 	
@@ -20,5 +22,6 @@ class Z80DescriptionLabelProvider extends org.eclipse.xtext.ui.label.DefaultDesc
 //	 
 //	override image(IEObjectDescription ele) {
 //		ele.EClass.name + '.gif'
-//	}	 
+//	}
+	 
 }
