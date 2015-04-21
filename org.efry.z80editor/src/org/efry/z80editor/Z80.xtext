@@ -12,7 +12,9 @@ REGISTER_C: 'c'|'C'; //cannot be a terminal because it clashes with the 'C'arry 
 terminal REGISTER_D: 'd'|'D';
 terminal REGISTER_E: 'e'|'E';
 terminal REGISTER_H: 'h'|'H';
+terminal REGISTER_I: 'i';
 terminal REGISTER_L: 'l'|'L';
+terminal REGISTER_R: 'r';
 
 terminal REGISTER_AF: 'af'|'Af'|'aF'|'AF';
 terminal REGISTER_AF_SHADOW: 'af\''|'Af\''|'aF\''|'AF\'';
@@ -44,13 +46,13 @@ Line:
 	Incbin NEWLINE |
 	//UnHandledWlaDxCommand NEWLINE |
     (LabelType | Command) NEWLINE |
-    //LabelType cmd=Command NEWLINE |
+    l=LabelType cmd=Command NEWLINE |
     NEWLINE;
 
 
 
 
-Define: '.define' VarName expr=Expression;
+Define returns DefineType: '.define' VarName expr=Expression;
 MemoryMap: '.memorymap' NEWLINE MemoryMapCommands+ '.endme';
 MemoryMapCommands: ('defaultslot' INT NEWLINE) |
 	('slotsize' (HEX|INT) NEWLINE) |
@@ -63,15 +65,15 @@ RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
 	('banks' (INT|HEX) NEWLINE)
 ;
 
-Rept: '.rept' INT NEWLINE block=Line+ '.endr';
+Rept: '.rept' INT NEWLINE block+=Line+ '.endr';
 Bank: '.bank' INT ('slot' INT)?;
-Org: '.org' (INT|HEX|BINARY);
-//Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
-Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE;
+Org: '.org' value=(NUMBER);
+Section: '.section' name=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
+//Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE;
 
-RamSection:'.ramsection' name=STRING ('bank' (INT|HEX|BINARY))? ('slot' (INT|HEX|BINARY))? NEWLINE block+=(VarDefinition)*'.ends';
+RamSection:'.ramsection' name=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
 
-VarDefinition: VarName ('db'|'dw'|('ds' (INT|HEX|BINARY))|('dsb' (INT|HEX|BINARY))|('dsw' (INT|HEX|BINARY))) NEWLINE;
+VarDefinition: (id=VarName ('db'|'dw'|('ds' ds=(NUMBER))|('dsb' dsb=Expression)|('dsw' dsw=NUMBER)))? NEWLINE;
 Db: '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Dw: '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Include: '.include' file=STRING;
@@ -89,38 +91,30 @@ terminal MINUSLABEL: '-:';
 terminal MINUS: '-';
 terminal MINUSMINUS: '-''-'+;
 
-//terminal ANONYMOUS_LABEL:
-//	(PLUSPLUS|MINUSMINUS)
-//;
-
-LABEL:
-    ((ID|PLUSPLUS|MINUSMINUS));
-  //  ((ID|ANONYMOUS_LABEL)':');
-
-BANKLABEL hidden(): ':'referencedObj=[VarName|ID];
+BANKLABEL hidden(): ':'referencedObj=[VarName];
 
 VarName: name=ID;
 
-LabelType hidden(): PLUSLABEL|MINUSLABEL|((VarName|PLUSPLUS|MINUSMINUS)':');
+LabelType hidden() : (PLUSLABEL|MINUSLABEL|((VarName|PLUSPLUS|MINUSMINUS)':'));
 
 Expression returns Expr:
     BitwiseOp;
 
 BitwiseOp returns Expr:
     Addition
-    ({BinaryExpr.left=current} op=('|' | '&') right=Addition)*;
+    ({BinaryExpr.left=current} op1=('|' | '&') right=Addition)*;
 
 Addition returns Expr:
     Multiplication
-    ({BinaryExpr.left=current} op=(PLUS | MINUS) right=Multiplication)*;
+    ({BinaryExpr.left=current} op1=(PLUS | MINUS) right=Multiplication)*;
 
 Multiplication returns Expr:
     PrimaryExpression
-    ({BinaryExpr.left=current} op=('*' | '/') right=PrimaryExpression)*;
+    ({BinaryExpr.left=current} op1=('*' | '/') right=PrimaryExpression)*;
 
 PrimaryExpression returns Expr:
     '(' Expression ')' |
-    {NumLiteral} MINUS? value=NumericLiteral;
+    {NumLiteral} sign=MINUS? value=NumericLiteral;
       
 Command:
     (Adc|Add|And|Bit|Call|Ccf|Cp|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrca|Rrd|Rst|Sbc|Set|Sla|Sra|Srl|Sub|Xor)
@@ -130,31 +124,31 @@ DoubleRegisters:
     (REGISTER_AF|REGISTER_BC|REGISTER_DE|REGISTER_HL|xx)
 ;
 
-Adc: 'adc' ((REGISTER_A ',' s)|(REGISTER_HL ',' ss));
-Add: 'add' ((REGISTER_A ',' s)|(REGISTER_HL ',' ss)|(REGISTER_IX ',' pp)|(REGISTER_IY ',' rr));
+Adc returns Operation: 'adc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
+Add returns Operation: 'add' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss)|(REGISTER_IX ',' rightOp=pp)|(REGISTER_IY ',' rightOp=rr));
 And: 'and' s;
-Bit: 'bit' B ',' m;
-Call: 'call' (CC ',')? NumericLiteral;
+Bit returns Operation: 'bit' leftOp=B ',' rightOp=m;
+Call: 'call' (CC ',')? lit=NumericLiteral;
 Ccf: 'ccf';
 Cp: 'cp' s;
 Daa: 'daa';
-Dec: 'dec' (s|xx|ss);
+Dec returns Operation: 'dec' op=(s|ss)|reg=xx;
 Di: 'di';
 Djnz: 'djnz' e;
 Ei: 'ei';
 Ex: 'ex' ((SPIndirect ',' REGISTER_HL)|(SPIndirect ',' xx)|(REGISTER_AF ',' REGISTER_AF_SHADOW)|(REGISTER_DE ',' REGISTER_HL));
 Exx: 'exx';
 Halt: 'halt';
-Im: 'im' NumericLiteral;
-In: 'in' ((REGISTER_A ',' NumericLiteralIndirect)|(r ',' CIndirect));
-Inc: 'inc' (r|HLIndirect|xx|IndexIndirectPlusOffset|ss);
+Im returns Operation: 'im' lit=NumericLiteral;
+In returns Operation: 'in' ((REGISTER_A ',' rightOp=NumericLiteralIndirect)|(leftOp=r ',' CIndirect));
+Inc returns Operation: 'inc' incOps;
 Ind: 'ind';
 Indr: 'indr';
 Ini: 'ini';
 Inir: 'inir';
-Jp: 'jp' (HLIndirect|IndexIndirect|((CC ',')? (NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
+Jp returns Operation: 'jp' (reg=(HLIndirect|IndexIndirect)|((CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
 Jr: 'jr' (CC ',')? e;
-Ld: 'ld' ((dstt=dst ',' srs=src)|(REGISTER_A ',' ('i'|'r')));
+Ld returns Operation: 'ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: 'ldd';
 Lddr: 'lddr';
 Ldi: 'ldi';
@@ -164,41 +158,42 @@ Nop: 'nop';
 Or: 'or' s;
 Otdr: 'otdr';
 Otir: 'otir';
-Out: 'out' ((CIndirect ',' r)|(NumericLiteralIndirect ',' REGISTER_A));
+Out returns Operation: 'out' ((CIndirect ',' rightOp=r)|(NumericLiteralIndirect ',' REGISTER_A));
 Outd: 'outd';
 Outi: 'outi';
 Pop: 'pop' DoubleRegisters;
 Push: 'push' DoubleRegisters;
-Res: 'res' B ',' m;
+Res returns Operation: 'res' leftOp=B ',' rightOp=m;
 Ret: 'ret' CC?;
 Reti: 'reti';
 Retn: 'retn';
-Rl: 'rl' m;
+Rl returns Operation: 'rl' op=m;
 Rla: 'rla';
-Rlc: 'rlc' m;
+Rlc returns Operation: 'rlc' op=m;
 Rlca: 'rlca';
 Rld: 'rld';
-RrCmd: 'rr' m;
+RrCmd returns Operation: 'rr' op=m;
 Rra: 'rra';
 Rrca: 'rrca';
 Rrd: 'rrd';
 Rst: 'rst' p;
-Sbc: 'sbc' ((REGISTER_A ',' s)|(REGISTER_HL ',' ss));
-Set: 'set' B ',' m;
-Sla: 'sla' m;
-Sra: 'sra' m;
-Srl: 'srl' m;
+Sbc returns Operation: 'sbc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
+Set returns Operation: 'set' leftOp=B ',' rightOp=m;
+Sla returns Operation: 'sla' op=m;
+Sra returns Operation: 'sra' op=m;
+Srl returns Operation: 'srl' op=m;
 Sub: 'sub' s;
 Xor: 'xor' s;
 
 terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
 
-terminal B: 'bb'; //INT; //'0'..'7'; //FIXME
-NumericLiteral: BANKLABEL|referencedObj=[VarName]|INT|HEX|BINARY; //ID
-terminal fragment NUMBER: INT|HEX|BINARY;
+B returns Operand: intType=INT; //'0'..'7'; //FIXME
+NumericLiteral : BANKLABEL|referencedObj=[VarName]|NUMBER; //ID
+NUMBER: i=INT|str=(HEX|BINARY);
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
 terminal BINARY: '%'('0'..'1')+;
+
 
 CIndirect: ('[' REGISTER_C ']')|('(' REGISTER_C ')');
 BCIndirect: ('[' REGISTER_BC ']')|('(' REGISTER_BC ')');
@@ -214,15 +209,16 @@ IndexPlusOffset: xx PLUS INT;
 
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
 
-dst: s|ss|BCIndirect|DEIndirect|=>NumericLiteralIndirect;
+dst returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect)|=>NumericLiteralIndirect;
 
-e: (NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS); //fixme -126 to +129
-m: r|HLIndirect|IndexIndirectPlusOffset;
-p: INT; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
-pp: REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP;
-r: REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|REGISTER_H|REGISTER_L;
-rr: REGISTER_BC|REGISTER_DE|REGISTER_IY|REGISTER_SP;
-s: r|Expression|HLIndirect|IndexIndirectPlusOffset;
-ss: REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP;
-src: s|ss|BCIndirect|DEIndirect|=>NumericLiteralIndirect;
-xx: REGISTER_IX|REGISTER_IY;
+e returns Operand: (lit=NumericLiteral|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS)); //fixme -126 to +129
+m returns Operand: op=r|reg=(HLIndirect|IndexIndirectPlusOffset);
+p returns Operand: intType=INT; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
+pp returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP);
+r returns Operand: reg=(REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|REGISTER_H|REGISTER_L);
+rr returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IY|REGISTER_SP);
+s returns Operand:  op=m|expr=Expression;
+ss returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP);
+src returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect|REGISTER_I|REGISTER_R)|=>NumericLiteralIndirect;
+xx: (REGISTER_IX|REGISTER_IY);
+incOps returns Operand: op=(r|ss)|reg=(HLIndirect|xx|IndexIndirectPlusOffset);

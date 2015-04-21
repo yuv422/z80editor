@@ -4,6 +4,8 @@
 package org.efry.z80editor.ui.labeling
 
 import com.google.inject.Inject
+import org.efry.z80editor.z80.Section
+import org.efry.z80editor.z80.DefineType
 
 /**
  * Provides labels for EObjects.
@@ -26,4 +28,17 @@ class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelPro
 //	def image(Greeting ele) {
 //		'Greeting.gif'
 //	}
+
+	def image(Section ele) {
+		's.png'
+	}
+
+	def image(DefineType ele) {
+		'define.gif'
+	}
+/*	
+	def image(LabelType ele) {
+		'public_co.gif'
+	}
+*/		
 }

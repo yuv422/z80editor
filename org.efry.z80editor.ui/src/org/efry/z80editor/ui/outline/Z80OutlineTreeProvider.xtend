@@ -3,11 +3,22 @@
  */
 package org.efry.z80editor.ui.outline
 
+import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
+import org.efry.z80editor.z80.Command
+import org.efry.z80editor.z80.DefineType
+
 /**
  * Customization of the default outline structure.
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#outline
  */
-class Z80OutlineTreeProvider extends org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider {
+class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
+	  
+	def _isLeaf(Command operation) {
+		true
+	}
 	
+	def _isLeaf(DefineType operation) {
+		true
+	}
 }

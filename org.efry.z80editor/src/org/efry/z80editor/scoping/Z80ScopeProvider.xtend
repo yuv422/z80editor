@@ -8,10 +8,10 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
-import org.efry.z80editor.z80.VarName
 import org.eclipse.emf.ecore.EObject
 import com.google.inject.Inject
 import org.eclipse.xtext.scoping.IGlobalScopeProvider
+import org.efry.z80editor.z80.VarName
 
 /**
  * This class contains custom scoping description.
