@@ -69,11 +69,16 @@ Rept: '.rept' INT NEWLINE block+=Line+ '.endr';
 Bank: '.bank' INT ('slot' INT)?;
 Org: '.org' value=(NUMBER);
 Section: '.section' name=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
-//Section: '.section' name=STRING? ('size' (INT|HEX|BINARY))? ('align' (INT|HEX|BINARY))? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE;
 
 RamSection:'.ramsection' name=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
 
-VarDefinition: (id=VarName ('db'|'dw'|('ds' ds=(NUMBER))|('dsb' dsb=Expression)|('dsw' dsw=NUMBER)))? NEWLINE;
+VarDefinition: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))? NEWLINE;
+
+VarTypeByte: {VarType} 'db';
+VarTypeWord: {VarType} 'dw';
+VarTypeByteString: {VarType} 'ds'|'dsb' size=Expression (',' initalValue=Expression)?;
+VarTypeWordString: {VarType} 'dsw' size=Expression (',' initalValue=Expression)?;
+
 Db: '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Dw: '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Include: '.include' file=STRING;
@@ -83,7 +88,7 @@ Sdsctag: '.sdsctag' INT('.'INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID)
 
 //terminal UnHandledWlaDxCommand: '.' ID !('\n'|'\r')*; //FIXME
 
- PLUS: '+';
+PLUS: '+';
 terminal PLUSLABEL: '+:';
 terminal PLUSPLUS: '+''+'+;
 
@@ -124,66 +129,67 @@ DoubleRegisters:
     (REGISTER_AF|REGISTER_BC|REGISTER_DE|REGISTER_HL|xx)
 ;
 
-Adc returns Operation: 'adc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
-Add returns Operation: 'add' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss)|(REGISTER_IX ',' rightOp=pp)|(REGISTER_IY ',' rightOp=rr));
-And: 'and' s;
-Bit returns Operation: 'bit' leftOp=B ',' rightOp=m;
-Call: 'call' (CC ',')? lit=NumericLiteral;
-Ccf: 'ccf';
-Cp: 'cp' s;
-Daa: 'daa';
-Dec returns Operation: 'dec' op=(s|ss)|reg=xx;
-Di: 'di';
-Djnz: 'djnz' e;
-Ei: 'ei';
-Ex: 'ex' ((SPIndirect ',' REGISTER_HL)|(SPIndirect ',' xx)|(REGISTER_AF ',' REGISTER_AF_SHADOW)|(REGISTER_DE ',' REGISTER_HL));
-Exx: 'exx';
-Halt: 'halt';
-Im returns Operation: 'im' lit=NumericLiteral;
-In returns Operation: 'in' ((REGISTER_A ',' rightOp=NumericLiteralIndirect)|(leftOp=r ',' CIndirect));
-Inc returns Operation: 'inc' incOps;
-Ind: 'ind';
-Indr: 'indr';
-Ini: 'ini';
-Inir: 'inir';
+Adc: {Operation} opcode='adc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
+Add: {Operation} opcode='add' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss)|(REGISTER_IX ',' rightOp=pp)|(REGISTER_IY ',' rightOp=rr));
+And: {Operation} opcode='and' operand=s;
+Bit: {Operation} opcode='bit' leftOp=B ',' rightOp=m;
+Call: {Operation} opcode='call' (CC ',')? literal=NumericLiteral;
+Ccf: {Operation} opcode='ccf';
+Cp: {Operation} opcode='cp' operand=s;
+Daa: {Operation} opcode='daa';
+Dec: {Operation} opcode='dec' operand=(s|ss)|indexReg=xx;
+Di: {Operation} opcode='di';
+Djnz: {Operation} opcode='djnz' operand=e;
+Ei: {Operation} opcode='ei';
+Ex: {Operation} opcode='ex' ((SPIndirect ',' REGISTER_HL)|(SPIndirect ',' xx)|(REGISTER_AF ',' REGISTER_AF_SHADOW)|(REGISTER_DE ',' REGISTER_HL));
+Exx: {Operation} opcode='exx';
+Halt: {Operation} opcode='halt';
+Im: {Operation} opcode='im' literal=NumericLiteral;
+In: {Operation} opcode='in' ((REGISTER_A ',' rightOp=NumericLiteralIndirect)|(leftOp=r ',' CIndirect));
+Inc: {Operation} opcode='inc' operand=incOps;
+Ind: {Operation} opcode='ind';
+Indr: {Operation} opcode='indr';
+Ini: {Operation} opcode='ini';
+Inir: {Operation} opcode='inir';
+//Jp: {Operation} opcode='jp' register=(HLIndirect|IndexIndirect)|((jumpCondition=CC ',')? (literal=NumericLiteral|anonymousLabel=AnonymousLabel));
 Jp returns Operation: 'jp' (reg=(HLIndirect|IndexIndirect)|((CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
-Jr: 'jr' (jrCc ',')? e;
-Ld returns Operation: 'ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
-Ldd: 'ldd';
-Lddr: 'lddr';
-Ldi: 'ldi';
-Ldir: 'ldir';
-Neg: 'neg';
-Nop: 'nop';
-Or: 'or' s;
-Otdr: 'otdr';
-Otir: 'otir';
-Out returns Operation: 'out' ((CIndirect ',' rightOp=r)|(NumericLiteralIndirect ',' REGISTER_A));
-Outd: 'outd';
-Outi: 'outi';
-Pop: 'pop' DoubleRegisters;
-Push: 'push' DoubleRegisters;
-Res returns Operation: 'res' leftOp=B ',' rightOp=m;
-Ret: 'ret' CC?;
-Reti: 'reti';
-Retn: 'retn';
-Rl returns Operation: 'rl' op=m;
-Rla: 'rla';
-Rlc returns Operation: 'rlc' op=m;
-Rlca: 'rlca';
-Rld: 'rld';
-RrCmd returns Operation: 'rr' op=m;
-Rra: 'rra';
-Rrca: 'rrca';
-Rrd: 'rrd';
-Rst: 'rst' p;
-Sbc returns Operation: 'sbc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
-Set returns Operation: 'set' leftOp=B ',' rightOp=m;
-Sla returns Operation: 'sla' op=m;
-Sra returns Operation: 'sra' op=m;
-Srl returns Operation: 'srl' op=m;
-Sub: 'sub' s;
-Xor: 'xor' s;
+Jr: {Operation} opcode='jr' (jumpCondition=jrCc ',')? operand=e;
+Ld: {Operation} opcode='ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
+Ldd: {Operation} opcode='ldd';
+Lddr: {Operation} opcode='lddr';
+Ldi: {Operation} opcode='ldi';
+Ldir: {Operation} opcode='ldir';
+Neg: {Operation} opcode='neg';
+Nop: {Operation} opcode='nop';
+Or: {Operation} opcode='or' operand=s;
+Otdr: {Operation} opcode='otdr';
+Otir: {Operation} opcode='otir';
+Out: {Operation} opcode='out' ((CIndirect ',' rightOp=r)|(literal=NumericLiteralIndirect ',' REGISTER_A));
+Outd: {Operation} opcode='outd';
+Outi: {Operation} opcode='outi';
+Pop: {Operation} opcode='pop' DoubleRegisters;
+Push: {Operation} opcode='push' DoubleRegisters;
+Res: {Operation} opcode='res' leftOp=B ',' rightOp=m;
+Ret: {Operation} opcode='ret' CC?;
+Reti: {Operation} opcode='reti';
+Retn: {Operation} opcode='retn';
+Rl: {Operation} opcode='rl' operand=m;
+Rla: {Operation} opcode='rla';
+Rlc: {Operation} opcode='rlc' operand=m;
+Rlca: {Operation} opcode='rlca';
+Rld: {Operation} opcode='rld';
+RrCmd: {Operation} opcode='rr' operand=m;
+Rra: {Operation} opcode='rra';
+Rrca: {Operation} opcode='rrca';
+Rrd: {Operation} opcode='rrd';
+Rst: {Operation} opcode='rst' operand=p;
+Sbc: {Operation} opcode='sbc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
+Set: {Operation} opcode='set' leftOp=B ',' rightOp=m;
+Sla: {Operation} opcode='sla' operand=m;
+Sra: {Operation} opcode='sra' operand=m;
+Srl: {Operation} opcode='srl' operand=m;
+Sub: {Operation} opcode='sub' operand=s;
+Xor: {Operation} opcode='xor' operand=s;
 
 terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
@@ -194,6 +200,7 @@ NUMBER: i=INT|str=(HEX|BINARY);
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
 terminal BINARY: '%'('0'..'1')+;
 
+AnonymousLabel: PLUS|PLUSPLUS|MINUS|MINUSMINUS;
 
 CIndirect: ('[' REGISTER_C ']')|('(' REGISTER_C ')');
 BCIndirect: ('[' REGISTER_BC ']')|('(' REGISTER_BC ')');
