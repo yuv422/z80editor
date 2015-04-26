@@ -30,47 +30,49 @@ terminal NEWLINE:
 // New line on DOS or Unix
     '\r'? '\n';
   
+//Line:
+//	Define NEWLINE |
+//	MemoryMap NEWLINE |
+//	RomBankMap NEWLINE |
+//	Sdsctag NEWLINE |
+//	Bank NEWLINE |
+//	Org NEWLINE |
+//	Section NEWLINE |
+//	RamSection NEWLINE |
+//	Rept NEWLINE |
+//	Db NEWLINE |
+//	Dw NEWLINE |
+//	Include NEWLINE |
+//	Incbin NEWLINE |
+//	//UnHandledWlaDxCommand NEWLINE |
+//    (Label | Command?) NEWLINE |
+//    l=Label cmd=Command NEWLINE;// |
+//   // NEWLINE;
+
 Line:
-	Define NEWLINE |
-	MemoryMap NEWLINE |
-	RomBankMap NEWLINE |
-	Sdsctag NEWLINE |
-	Bank NEWLINE |
-	Org NEWLINE |
-	Section NEWLINE |
-	RamSection NEWLINE |
-	Rept NEWLINE |
-	Db NEWLINE |
-	Dw NEWLINE |
-	Include NEWLINE |
-	Incbin NEWLINE |
-	//UnHandledWlaDxCommand NEWLINE |
-    (Label | Command) NEWLINE |
-    l=Label cmd=Command NEWLINE |
-    NEWLINE;
+	(Define | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | RamSection | Rept | Db | Dw | Include | Incbin | Label | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
 
 
+Define: '.define' name=VarName expr=Expression;
 
-
-Define returns DefineType: '.define' VarName expr=Expression;
-MemoryMap: '.memorymap' NEWLINE MemoryMapCommands+ '.endme';
+MemoryMap: '.memorymap' NEWLINE cmds+=MemoryMapCommands+ '.endme';
 MemoryMapCommands: ('defaultslot' INT NEWLINE) |
 	('slotsize' (HEX|INT) NEWLINE) |
 	('slot' (HEX|INT) (HEX|INT)? NEWLINE)
 ;
 
-RomBankMap: '.rombankmap' NEWLINE RomBankCommands+ '.endro';
+RomBankMap: '.rombankmap' NEWLINE cmds+=RomBankCommands+ '.endro';
 RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
 	('banksize' (INT|HEX) NEWLINE) |
 	('banks' (INT|HEX) NEWLINE)
 ;
 
 Rept: '.rept' INT NEWLINE block+=Line+ '.endr';
-Bank: '.bank' INT ('slot' INT)?;
+Bank: {BankCmd} '.bank' INT ('slot' slot=INT)?;
 Org: '.org' value=(NUMBER);
-Section: '.section' name=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
+Section: '.section' sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
 
-RamSection:'.ramsection' name=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
+RamSection: '.ramsection' sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
 
 VarDefinition: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))? NEWLINE;
 
@@ -79,12 +81,12 @@ VarTypeWord: {VarType} 'dw';
 VarTypeByteString: {VarType} 'ds'|'dsb' size=Expression (',' initalValue=Expression)?;
 VarTypeWordString: {VarType} 'dsw' size=Expression (',' initalValue=Expression)?;
 
-Db: '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
-Dw: '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
+Db: {DbCmd} '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
+Dw: {DwCmd} '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Include: '.include' file=STRING;
 Incbin: '.incbin' file=STRING;
 
-Sdsctag: '.sdsctag' INT('.'INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID);
+Sdsctag: {SdscTagCmd} '.sdsctag' INT('.'INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID); //FIXME need to make a better version number type
 
 //terminal UnHandledWlaDxCommand: '.' ID !('\n'|'\r')*; //FIXME
 
@@ -151,8 +153,7 @@ Ind: {Operation} opcode='ind';
 Indr: {Operation} opcode='indr';
 Ini: {Operation} opcode='ini';
 Inir: {Operation} opcode='inir';
-//Jp: {Operation} opcode='jp' register=(HLIndirect|IndexIndirect)|((jumpCondition=CC ',')? (literal=NumericLiteral|anonymousLabel=AnonymousLabel));
-Jp returns Operation: 'jp' (reg=(HLIndirect|IndexIndirect)|((CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
+Jp: {Operation} opcode='jp' (reg=(HLIndirect|IndexIndirect)|((jumpCondition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
 Jr: {Operation} opcode='jr' (jumpCondition=jrCc ',')? operand=e;
 Ld: {Operation} opcode='ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: {Operation} opcode='ldd';

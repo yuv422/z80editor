@@ -15,7 +15,7 @@ import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
 class Z80DescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 
 	// Labels and icons can be computed like this:
-	
+
 //	override text(IEObjectDescription ele) {
 //		ele.name.toString
 //	}
