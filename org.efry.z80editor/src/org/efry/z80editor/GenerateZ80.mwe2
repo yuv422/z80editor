@@ -64,10 +64,12 @@ Workflow {
     		fragment = resourceFactory.ResourceFactoryFragment auto-inject {}
     
     		// The antlr parser generator fragment.
-    		fragment = parser.antlr.XtextAntlrGeneratorFragment auto-inject {
-    		//  options = {
+    		//fragment = parser.antlr.XtextAntlrGeneratorFragment auto-inject {
+    		fragment = org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment auto-inject {
+    		  options = {
     		//      backtrack = true
-    		//  }
+    			ignoreCase=true
+    		  }
     		}
     
     		// Xtend-based API for validation

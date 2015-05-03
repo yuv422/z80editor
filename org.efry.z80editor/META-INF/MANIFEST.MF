@@ -27,4 +27,5 @@ Export-Package: org.efry.z80editor,
  org.efry.z80editor.validation,
  org.efry.z80editor.scoping,
  org.efry.z80editor.generator,
- org.efry.z80editor.formatting
+ org.efry.z80editor.formatting,
+ org.efry.z80editor.parser.antlr.lexer

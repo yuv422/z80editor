@@ -6,25 +6,42 @@ Model:
     commands+=Line*;
 
 
-terminal REGISTER_A: 'a'|'A';
-terminal REGISTER_B: 'b'|'B';
-REGISTER_C: 'c'|'C'; //cannot be a terminal because it clashes with the 'C'arry flag.
-terminal REGISTER_D: 'd'|'D';
-terminal REGISTER_E: 'e'|'E';
-terminal REGISTER_H: 'h'|'H';
+//terminal REGISTER_A: 'a'|'A';
+//terminal REGISTER_B: 'b'|'B';
+//REGISTER_C: 'c'|'C'; //cannot be a terminal because it clashes with the 'C'arry flag.
+//terminal REGISTER_D: 'd'|'D';
+//terminal REGISTER_E: 'e'|'E';
+//terminal REGISTER_H: 'h'|'H';
+//terminal REGISTER_I: 'i';
+//terminal REGISTER_L: 'l'|'L';
+//terminal REGISTER_R: 'r';
+//
+//terminal REGISTER_AF: 'af'|'Af'|'aF'|'AF';
+//terminal REGISTER_AF_SHADOW: 'af\''|'Af\''|'aF\''|'AF\'';
+//terminal REGISTER_BC: 'bc'|'Bc'|'bC'|'BC';
+//REGISTER_DE: 'de'|'De'|'dE'|'DE';
+//terminal REGISTER_HL: 'hl'|'Hl'|'hL'|'HL';
+//terminal REGISTER_IX: 'ix'|'Ix'|'iX'|'IX';
+//terminal REGISTER_IY: 'iy'|'Iy'|'iY'|'IY';
+//terminal REGISTER_SP: 'sp'|'Sp'|'sP'|'SP';
+terminal REGISTER_A: 'a';
+terminal REGISTER_B: 'b';
+REGISTER_C: 'c'; //cannot be a terminal because it clashes with the 'C'arry flag.
+terminal REGISTER_D: 'd';
+terminal REGISTER_E: 'e';
+terminal REGISTER_H: 'h';
 terminal REGISTER_I: 'i';
-terminal REGISTER_L: 'l'|'L';
+terminal REGISTER_L: 'l';
 terminal REGISTER_R: 'r';
 
-terminal REGISTER_AF: 'af'|'Af'|'aF'|'AF';
-terminal REGISTER_AF_SHADOW: 'af\''|'Af\''|'aF\''|'AF\'';
-terminal REGISTER_BC: 'bc'|'Bc'|'bC'|'BC';
-REGISTER_DE: 'de'|'De'|'dE'|'DE';
-terminal REGISTER_HL: 'hl'|'Hl'|'hL'|'HL';
-terminal REGISTER_IX: 'ix'|'Ix'|'iX'|'IX';
-terminal REGISTER_IY: 'iy'|'Iy'|'iY'|'IY';
-terminal REGISTER_SP: 'sp'|'Sp'|'sP'|'SP';
-
+terminal REGISTER_AF: 'af';
+terminal REGISTER_AF_SHADOW: 'af\'';
+terminal REGISTER_BC: 'bc';
+REGISTER_DE: 'de';
+terminal REGISTER_HL: 'hl';
+terminal REGISTER_IX: 'ix';
+terminal REGISTER_IY: 'iy';
+terminal REGISTER_SP: 'sp';
 
 terminal NEWLINE:
 // New line on DOS or Unix

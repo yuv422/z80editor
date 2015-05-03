@@ -4,6 +4,9 @@
 package org.efry.z80editor.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
+import org.eclipse.xtext.ui.editor.folding.IFoldingRegionProvider;
+import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -15,5 +18,17 @@ public class Z80UiModule extends org.efry.z80editor.ui.AbstractZ80UiModule {
 	
 	public com.google.inject.Provider<org.eclipse.xtext.resource.containers.IAllContainersState> provideIAllContainersState() {
 		return org.eclipse.xtext.ui.shared.Access.getWorkspaceProjectsState();
+	}
+	
+    public Class<? extends IEObjectHoverProvider> bindIEObjectHoverProvider() {
+        return z80EObjectHoverProvider.class;
+    }
+    
+    public Class<? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProvider() {
+        return z80EObjectDocumentationProvider.class;
+    }
+    
+	public Class<? extends IFoldingRegionProvider> bindFoldingRegionProvider() {
+		return z80FoldingRegionProvider.class;
 	}
 }
