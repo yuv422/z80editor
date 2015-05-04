@@ -1,0 +1,21 @@
+<p>Repeats LDI (LD (DE),(HL), then increments DE, HL, and decrements BC) until BC=0. Note that if BC=0 before this instruction is called, it will loop around until BC=0 again.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>LDIR</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>P/V is reset.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<p>Copying sections of data.</p>
+<h2 id="toc3"><span>T-States</span></h2>
+<table class="wiki-content-table">
+<tr>
+<td>BC is not 0</td>
+<td>21</td>
+</tr>
+<tr>
+<td>BC equals 0</td>
+<td>16</td>
+</tr>
+</table>

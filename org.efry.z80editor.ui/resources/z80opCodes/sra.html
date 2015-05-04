@@ -1,0 +1,40 @@
+<p>Arithmetic shift right 1 bit, bit 0 goes to carry flag, bit 7 remains unchanged.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>SRA A
+SRA B
+SRA C
+SRA D
+SRA E
+SRA H
+SRA L
+SRA (HL)
+SRA (IX+d)
+SRA (IY+d)</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code"></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>S and Z set according to definition, H and N reset, C from bit 0, P/V if parity is 0.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>8</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>15</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>23</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>23</td>
+</tr>
+</table>

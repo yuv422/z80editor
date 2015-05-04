@@ -1,0 +1,11 @@
+<p>Writes the value from (HL) to the (C) port, then decrements B and HL.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>OUTD</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>C is preserved, N is set, H, S, and P/V are undefined. Z is set only if B becomes zero after decrement, otherwise it is reset.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>16&#160;t-states</p>

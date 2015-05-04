@@ -1,0 +1,87 @@
+<p>The values of the two operands are added together, and the result is written back to the first one.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>add a,op8        ;8 bits
+add op16,op16    ;16 bits</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed instructions</span></h3>
+<div class="code">
+<pre>
+<code>add a,a
+add a,b
+add a,c
+add a,d
+add a,e
+add a,h
+add a,l
+add a,ixh
+add a,ixl
+add a,iyh
+add a,ixl
+add a,(hl)
+add a,(ix+n)
+add a,(iy+n)
+add a,n        ;8-bit constant
+
+add hl,bc
+add hl,de
+add hl,hl
+add hl,sp
+
+add ix,bc
+add ix,de
+add ix,ix
+add ix,sp
+
+add iy,bc
+add iy,de
+add iy,iy
+add iy,sp</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<h3 id="toc3"><span>8-bit arithmetic</span></h3>
+<p>N flag is reset, P/V is interpreted as overflow.<br />
+Rest of the flags is modified by definition.</p>
+<h3 id="toc4"><span>16-bit arithmetic</span></h3>
+<p>preserves the S, Z and P/V flags, and H is undefined.<br />
+Rest of flags modified by definition.</p>
+<h2 id="toc5"><span>Uses</span></h2>
+<p>Obviously used to add two numbers together. However, you can add 16-bit numbers to sp, giving you control of where the stack pointer is pointing to.</p>
+<h2 id="toc6"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br />
+rr represents a two byte register pair: BC, DE, HL, SP<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>4</td>
+</tr>
+<tr>
+<td>X</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>hl, rr</td>
+<td>11</td>
+</tr>
+<tr>
+<td>ix, rr</td>
+<td>15</td>
+</tr>
+<tr>
+<td>iy, rr</td>
+<td>15</td>
+</tr>
+</table>

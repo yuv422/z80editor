@@ -1,0 +1,20 @@
+<p>Performs a 4-bit leftward rotation of the 12-bit number whose 4 most signigifcant bits are the 4 least significant bits of A, and its 8 least significant bits are in (HL).</p>
+<div class="code">
+<pre>
+<code>; assume W,X,Y,Z are the set of all possible hex values 0-F
+ld A,$WX
+ld (HL),$YZ
+RLD
+; A = $WY
+; (HL) = $ZX</code>
+</pre></div>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>RLD</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>The H and N flags are reset, P/V is parity, C is preserved, and S and Z are modified by definition.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>18&#160;t-states</p>

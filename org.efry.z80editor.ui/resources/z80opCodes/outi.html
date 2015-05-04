@@ -1,0 +1,11 @@
+<p>Reads from (HL) and writes to the (C) port. HL is then incremented, and B is decremented.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>OUTI</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>C is preserved, N is reset, H, S, and P/V are undefined. Z is set only if B becomes zero after decrement, otherwise it's reset.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>16&#160;t-states</p>

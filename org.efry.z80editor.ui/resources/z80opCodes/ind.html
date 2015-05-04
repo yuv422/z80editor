@@ -1,0 +1,11 @@
+<p>Reads the (C) port and writes the result to (HL), then decrements HL and decrements B.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>IND</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>C is preserved, the N flag is set. S, H and P/V are undefined. Z is set if B becomes zero <strong>after</strong> decrementing, otherwise it is reset.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>16&#160;t-states</p>

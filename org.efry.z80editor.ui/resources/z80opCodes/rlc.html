@@ -1,0 +1,43 @@
+<p>8-bit rotation to the left. The bit leaving on the left is copied into the carry, and to bit 0.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>RLC op8</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>RLC A
+RLC B
+RLC C
+RLC D
+RLC E
+RLC H
+RLC L
+RLC (HL)
+RLC (IX+n)
+RLC (IY+n)</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>H and N flags are reset, P/V is parity, S and Z are modified by definition.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>8</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>15</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>23</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>23</td>
+</tr>
+</table>

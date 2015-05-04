@@ -1,0 +1,16 @@
+<p>The DI <strong>D</strong>isables the <strong>I</strong>nterrupts (both mode 1 and mode 2).</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>DI</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>Flags preserved</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<p>Useful if you want to use the iy register or shadow registers, which are modified by the OS's interrupts. Be sure to reset iy to flags before returning to the OS.</p>
+<div class="code">
+<pre>
+<code> ld iy,flags</code>
+</pre></div>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>4&#160;t-states</p>

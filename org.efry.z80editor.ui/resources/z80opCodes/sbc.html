@@ -1,0 +1,65 @@
+<p>Sum of second operand and carry flag is subtracted from the first operand. Results are written into the first operand.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>sbc a,op8    ;8 bits
+sbc hl,op16    ;16 bits</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>sbc a,a
+sbc a,b
+sbc a,c
+sbc a,d
+sbc a,e
+sbc a,h
+sbc a,l
+sbc a,ixh
+sbc a,ixl
+sbc a,iyh
+sbc a,iyl
+sbc a,(hl)
+sbc a,(ix+n)
+sbc a,(iy+n)
+sbc a,n        ;8 bits
+
+sbc hl,bc
+sbc hl,de
+sbc hl,hl
+sbc hl,sp</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>N flag is set, P/V detects overflow, rest modified by definition.</p>
+<p>In the case of 16-bit registers, h flag is undefined.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>Multiple precision subtraction</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br />
+rr represents a two byte register pair: BC, DE, HL, SP<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>4</td>
+</tr>
+<tr>
+<td>X</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>hl, rr</td>
+<td>15</td>
+</tr>
+</table>

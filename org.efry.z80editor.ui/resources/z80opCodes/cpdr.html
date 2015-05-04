@@ -1,0 +1,34 @@
+<p>Repeats CPD until either:</p>
+<ul>
+<li>BC=0</li>
+<li>A=HL</li>
+</ul>
+<h2 id="toc0"><span>Syntax</span></h2>
+<p>No operands.</p>
+<div class="code">
+<pre>
+<code>CPDR</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>The carry is preserved, N is set and all the other flags are affected as defined. P/V denotes the overflowing of BC, while the Z flag is set if A=(HL) <strong>before</strong> HL is decreased.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<p>Say you want to find the last occurrence of 124 in the valid memory space:</p>
+<div class="code">
+<pre>
+<code>LD HL,0000h
+LD BC,0000h
+LD A,124
+CPDR</code>
+</pre></div>
+<p>Note if you used CPIR it would find the first occurrence of 124 in the valid memory space.</p>
+<h2 id="toc3"><span>T-States</span></h2>
+<table class="wiki-content-table">
+<tr>
+<td>BC != 0 and A != (HL)</td>
+<td>21</td>
+</tr>
+<tr>
+<td>BC = 0 or A = (HL)</td>
+<td>16</td>
+</tr>
+</table>

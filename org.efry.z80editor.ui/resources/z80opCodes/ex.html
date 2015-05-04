@@ -1,0 +1,44 @@
+<p>Exchanges two 16-bit values.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>ex op16,op16</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>ex af,af'
+ex de,hl
+ex (sp),hl
+ex (sp),ix
+ex (sp),iy</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>Flags are preserved.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>EX DE,HL exchanges HL with DE. Note that IX and IY do not work with this command.<br />
+EX (SP),HL exchanges HL with the last pushed value on the stack.<br />
+EX AF,AF' exchanges AF with its shadow register. This is mostly used as an alternative to pushing AF to the stack during interrupts. Note that the flags will most likely not be the same after this command.</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<table class="wiki-content-table">
+<tr>
+<td>de, hl</td>
+<td>4</td>
+</tr>
+<tr>
+<td>af, af'</td>
+<td>4</td>
+</tr>
+<tr>
+<td>(sp),hl</td>
+<td>19</td>
+</tr>
+<tr>
+<td>(sp),ix</td>
+<td>19</td>
+</tr>
+<tr>
+<td>(sp),iy</td>
+<td>19</td>
+</tr>
+</table>

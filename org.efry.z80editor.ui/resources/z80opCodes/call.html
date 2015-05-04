@@ -1,0 +1,48 @@
+<p>Pushes the address after the CALL instruction (PC+3) onto the stack and jumps to the label. Can also take conditions.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>call label            ;unconditional call
+call cond.,label        ;conditional call</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>call label        ;always calls
+
+call c,label        ;calls if C flag is set
+call nc,label        ;calls if C flag is reset
+
+call z,label        ;calls if Z flag is set
+call nz,label        ;calls if Z flag is reset
+
+call m,label        ;calls if S flag is set
+call p,label        ;calls if S flag is reset
+
+call pe,label        ;calls if P/V is set
+call po,label        ;calls if P/V is reset</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>Flags are preserved.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>The most common use of CALL is to create routines that can be used multiple times.</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>cc is condition: NZ, Z, NC, C, PO, PE, P, M<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>XX</td>
+<td>17</td>
+</tr>
+</table>
+<table class="wiki-content-table">
+<tr>
+<td></td>
+<td>condition true</td>
+<td>condition false</td>
+</tr>
+<tr>
+<td>cc,XX</td>
+<td>17</td>
+<td>10</td>
+</tr>
+</table>

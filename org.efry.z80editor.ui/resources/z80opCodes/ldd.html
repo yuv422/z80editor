@@ -1,0 +1,12 @@
+<p>Does a sort of &quot;LD (DE),(HL)&quot;, then decrements DE, HL, and BC.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>LDD</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>P/V is reset in case of overflow (if BC=0 after calling LDD).</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<p>Used when you want to copy over the data pointed to by HL to the location pointed to by DE.</p>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>16&#160;t-states</p>

@@ -14,6 +14,7 @@ public class Z80RuntimeModule extends org.efry.z80editor.AbstractZ80RuntimeModul
 	@Override
     public Class<? extends IContainer.Manager> bindIContainer$Manager() {
     	return StateBasedContainerManager.class;
+    	
     }
     
 	@Override

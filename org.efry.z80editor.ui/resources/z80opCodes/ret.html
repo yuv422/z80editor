@@ -1,0 +1,43 @@
+<p>Pops the top of the stack into the program counter. Note that RET can be either conditional or unconditional.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>ret        ;no conditions
+ret cond.    ;conditional</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>ret z     ; Z flag is set
+ret nz      ; Z flag is reset
+ret c    ; Carry flag is set
+ret nc    ; Carry flag is reset
+ret m    ; S flag is set
+ret p    ; S flag is reset
+ret pe    ; P/V is set
+ret po    ; P/V is reset</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>Preserves all flags.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>RET is used mostly for exiting an assembly program or returning from a routine.</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>cc is condition: NZ, Z, NC, C, PO, PE, P, M<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>ret</td>
+<td>10</td>
+</tr>
+</table>
+<table class="wiki-content-table">
+<tr>
+<td></td>
+<td>condition true</td>
+<td>condition false</td>
+</tr>
+<tr>
+<td>ret cc</td>
+<td>11</td>
+<td>5</td>
+</tr>
+</table>

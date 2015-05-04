@@ -1,0 +1,71 @@
+<p>Increases operand by 1.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>inc op8        ;8 bits
+inc op16    ;16 bits</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>inc a
+inc b
+inc c
+inc d
+inc e
+inc h
+inc l
+inc ixh
+inc ixl
+inc iyh
+inc iyl
+inc (hl)
+inc (ix+n)
+inc (iy+n)
+
+inc bc
+inc de
+inc hl
+inc ix
+inc iy
+inc sp</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p><strong>8 Bits</strong></p>
+<p>Preserves C flag, N flag is reset, P/V detects overflow and rest are modified by definition.</p>
+<p><strong>16 Bits</strong></p>
+<p>No flags altered.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br />
+rr represents a two byte register pair: BC, DE, HL, SP</p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>4</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>11</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>23</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>23</td>
+</tr>
+<tr>
+<td>rr</td>
+<td>6</td>
+</tr>
+<tr>
+<td>ix</td>
+<td>10</td>
+</tr>
+<tr>
+<td>iy</td>
+<td>10</td>
+</tr>
+</table>

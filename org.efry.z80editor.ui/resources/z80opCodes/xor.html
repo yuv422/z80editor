@@ -1,0 +1,57 @@
+<p>XOR is an instruction that takes one 8-bit input and compares it with the accumulator. XOR is similar to OR, except for one thing: only 1 of the 2 test bits can be set or else it will result in a zero. The final answer is stored to the accumulator.</p>
+<p><strong>0 and 0</strong> result: 0<br />
+<strong>0 and 1</strong> result: 1<br />
+<strong>1 and 0</strong> result: 1<br />
+<strong>1 and 1</strong> result: 0</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>XOR op8</code>
+</pre></div>
+<h3 id="toc1"><span>Acceptable inputs</span></h3>
+<div class="code">
+<pre>
+<code>xor a
+xor b
+xor c
+xor d
+xor e
+xor h
+xor l
+xor ixh
+xor ixl
+xor iyh
+xor iyl
+xor (hl)
+xor (ix+n)
+xor (iy+n)
+xor n        ;8 bit constant</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>C and N flags cleared. P/V is parity, and rest are modified by definition.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>XORing numbers is used a lot to invert sprites and such. It is also very useful in bit-masking.</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.</p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>4</td>
+</tr>
+<tr>
+<td>X</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>19</td>
+</tr>
+</table>

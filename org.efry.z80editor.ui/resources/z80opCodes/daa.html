@@ -1,0 +1,11 @@
+<p>When this instruction is executed, the A register is BCD corrected using the contents of the flags. The exact process is the following: if the least significant four bits of A contain a non-BCD digit (i. e. it is greater than 9) or the H flag is set, then $06 is added to the register. Then the four most significant bits are checked. If this more significant digit also happens to be greater than 9 or the C flag is set, then $60 is added.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>daa</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>If the second addition was needed, the C flag is set after execution, otherwise it is reset. The N flag is preserved, P/V is parity and the others are altered by definition.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>4&#160;t-states</p>

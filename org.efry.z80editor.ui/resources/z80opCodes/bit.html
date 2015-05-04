@@ -1,0 +1,50 @@
+<p>Tests if the specified bit is set.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>bit n,op8</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<p>n can be any integer from [0,7]. It must be defined on compile time.</p>
+<div class="code">
+<pre>
+<code>bit n,a
+bit n,b
+bit n,c
+bit n,d
+bit n,e
+bit n,h
+bit n,l
+bit n,(hl)
+bit n,(ix+n)
+bit n,(iy+n)</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>Opposite of the n<sup>th</sup> bit is written into the Z flag. C is preserved, N is reset, H is set, and S and P/V are undefined.</p>
+<div class="code">
+<pre>
+<code>ld a,%00000001
+bit 0,a        ;would reset Z
+bit 1,a        ;would set Z</code>
+</pre></div>
+<h2 id="toc3"><span>Uses</span></h2>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>8</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>12</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>20</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>20</td>
+</tr>
+</table>

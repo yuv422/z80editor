@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.efry.z80editor.ui
-Bundle-Vendor: My Company
+Bundle-Vendor: Eric Fry
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.efry.z80editor.ui; singleton:=true
 Bundle-ActivationPolicy: lazy

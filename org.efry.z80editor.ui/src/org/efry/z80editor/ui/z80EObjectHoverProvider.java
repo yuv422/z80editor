@@ -2,22 +2,34 @@ package org.efry.z80editor.ui;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
-import org.efry.z80editor.z80.Jp;
-import org.efry.z80editor.z80.Nop;
+import org.efry.z80editor.z80.Operation;
 
 
 public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
 
 	@Override
 	protected String getFirstLine(EObject o) {
-		if(o instanceof Nop) {
-			return "NOP: No Operation";
+		if(o instanceof Operation) {
+			String opCode = ((Operation)o).getOpcode();
+			if(opCode != null) {
+				try {
+				Z80OpCodes opEnum = Z80OpCodes.valueOf(opCode.toUpperCase());
+				return opEnum.toString() + ": " + opEnum.getDescription();
+				} catch (IllegalArgumentException e) {
+					return "Unknown opcode";
+				}
+			}
 		}
 
-		if(o instanceof Jp) {
-			return "JP: jump";
+		return super.getFirstLine(o);
+	}
+	
+	@Override
+	protected boolean hasHover(EObject o) {
+		if(o instanceof Operation) {
+			return true;
 		}
-		
-		return "Hello Hover." + o.toString();
+
+		return super.hasHover(o);
 	}
 }

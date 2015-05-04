@@ -5,25 +5,6 @@ generate z80 "http://www.efry.org/z80editor/Z80"
 Model:
     commands+=Line*;
 
-
-//terminal REGISTER_A: 'a'|'A';
-//terminal REGISTER_B: 'b'|'B';
-//REGISTER_C: 'c'|'C'; //cannot be a terminal because it clashes with the 'C'arry flag.
-//terminal REGISTER_D: 'd'|'D';
-//terminal REGISTER_E: 'e'|'E';
-//terminal REGISTER_H: 'h'|'H';
-//terminal REGISTER_I: 'i';
-//terminal REGISTER_L: 'l'|'L';
-//terminal REGISTER_R: 'r';
-//
-//terminal REGISTER_AF: 'af'|'Af'|'aF'|'AF';
-//terminal REGISTER_AF_SHADOW: 'af\''|'Af\''|'aF\''|'AF\'';
-//terminal REGISTER_BC: 'bc'|'Bc'|'bC'|'BC';
-//REGISTER_DE: 'de'|'De'|'dE'|'DE';
-//terminal REGISTER_HL: 'hl'|'Hl'|'hL'|'HL';
-//terminal REGISTER_IX: 'ix'|'Ix'|'iX'|'IX';
-//terminal REGISTER_IY: 'iy'|'Iy'|'iY'|'IY';
-//terminal REGISTER_SP: 'sp'|'Sp'|'sP'|'SP';
 terminal REGISTER_A: 'a';
 terminal REGISTER_B: 'b';
 REGISTER_C: 'c'; //cannot be a terminal because it clashes with the 'C'arry flag.
@@ -46,28 +27,9 @@ terminal REGISTER_SP: 'sp';
 terminal NEWLINE:
 // New line on DOS or Unix
     '\r'? '\n';
-  
-//Line:
-//	Define NEWLINE |
-//	MemoryMap NEWLINE |
-//	RomBankMap NEWLINE |
-//	Sdsctag NEWLINE |
-//	Bank NEWLINE |
-//	Org NEWLINE |
-//	Section NEWLINE |
-//	RamSection NEWLINE |
-//	Rept NEWLINE |
-//	Db NEWLINE |
-//	Dw NEWLINE |
-//	Include NEWLINE |
-//	Incbin NEWLINE |
-//	//UnHandledWlaDxCommand NEWLINE |
-//    (Label | Command?) NEWLINE |
-//    l=Label cmd=Command NEWLINE;// |
-//   // NEWLINE;
 
 Line:
-	(Define | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | RamSection | Rept | Db | Dw | Include | Incbin | Label | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
+	(Define | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | RamSection | Rept | Db | Dw | IncludeType | Label | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
 
 
 Define: '.define' name=VarName expr=Expression;
@@ -100,6 +62,7 @@ VarTypeWordString: {VarType} 'dsw' size=Expression (',' initalValue=Expression)?
 
 Db: {DbCmd} '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Dw: {DwCmd} '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
+IncludeType: inc=(Include|Incbin);
 Include: '.include' file=STRING;
 Incbin: '.incbin' file=STRING;
 
@@ -141,7 +104,7 @@ PrimaryExpression returns Expr:
     {NumLiteral} sign=MINUS? value=NumericLiteral;
       
 Command:
-     (Adc|Add|And|Bit|Call|Ccf|Cp|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrca|Rrd|Rst|Sbc|Set|Sla|Sra|Srl|Sub|Xor)
+     (Adc|Add|And|Bit|Call|Ccf|Cp|Cpd|Cpdr|Cpi|Cpir|Cpl|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrc|Rrca|Rrd|Rst|Sbc|Scf|Set|Sla|Sra|Srl|Sub|Xor)
 ;
 
 DoubleRegisters:
@@ -155,6 +118,11 @@ Bit: {Operation} opcode='bit' leftOp=B ',' rightOp=m;
 Call: {Operation} opcode='call' (CC ',')? literal=NumericLiteral;
 Ccf: {Operation} opcode='ccf';
 Cp: {Operation} opcode='cp' operand=s;
+Cpd: {Operation} opcode='cpd';
+Cpdr: {Operation} opcode='cpdr';
+Cpi: {Operation} opcode='cpi';
+Cpir: {Operation} opcode='cpir';
+Cpl: {Operation} opcode='cpl';
 Daa: {Operation} opcode='daa';
 Dec: {Operation} opcode='dec' operand=(s|ss)|indexReg=xx;
 Di: {Operation} opcode='di';
@@ -198,10 +166,12 @@ Rlca: {Operation} opcode='rlca';
 Rld: {Operation} opcode='rld';
 RrCmd: {Operation} opcode='rr' operand=m;
 Rra: {Operation} opcode='rra';
+Rrc: {Operation} opcode='rrca' operand=m;
 Rrca: {Operation} opcode='rrca';
 Rrd: {Operation} opcode='rrd';
 Rst: {Operation} opcode='rst' operand=p;
 Sbc: {Operation} opcode='sbc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
+Scf: {Operation} opcode='scf';
 Set: {Operation} opcode='set' leftOp=B ',' rightOp=m;
 Sla: {Operation} opcode='sla' operand=m;
 Sra: {Operation} opcode='sra' operand=m;
@@ -212,7 +182,8 @@ Xor: {Operation} opcode='xor' operand=s;
 terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
 
-B returns Operand: intType=INT; //'0'..'7'; //FIXME
+BitOperand: {BitType} INT; //FIXME '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7';
+B returns Operand: bitType=BitOperand;
 NumericLiteral : BANKLABEL|referencedObj=[LabelType]|NUMBER; //ID
 NUMBER: i=INT|str=(HEX|BINARY);
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');

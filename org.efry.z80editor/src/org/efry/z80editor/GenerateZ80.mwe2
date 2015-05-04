@@ -5,7 +5,7 @@ import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
 var grammarURI = "classpath:/org/efry/z80editor/Z80.xtext"
-var fileExtensions = "z80asm,inc"
+var fileExtensions = "z80asm, inc"
 var projectName = "org.efry.z80editor"
 var runtimeProject = "../${projectName}"
 var generateXtendStub = true
@@ -75,7 +75,7 @@ Workflow {
     		// Xtend-based API for validation
     		fragment = validation.ValidatorFragment auto-inject {
     		//    composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
-    		//    composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+    		    composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
     		}
     
     		// old scoping and exporting API

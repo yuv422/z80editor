@@ -1,0 +1,43 @@
+<p>Shift left arithmetic. m=m*2<p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>sla op8</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>SLA A
+SLA B
+SLA C
+SLA D
+SLA E
+SLA H
+SLA L
+SLA (HL)
+SLA (IX+n)
+SLA (IY+n)</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>S and Z by definition, H and N reset, C from bit 7, P/V set if result is even.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>8</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>15</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>23</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>23</td>
+</tr>
+</table>

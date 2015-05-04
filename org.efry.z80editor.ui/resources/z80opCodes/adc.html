@@ -1,0 +1,64 @@
+<p>The sum of the two operands plus the carry flag (0 or 1) is calculated, and the result is written back into the first operand.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>adc a,op8        ;8 bit
+adc hl,op16        ;16 bit</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed instructions</span></h3>
+<div class="code">
+<pre>
+<code>adc a,a
+adc a,b
+adc a,c
+adc a,d
+adc a,e
+adc a,h
+adc a,l
+adc a,ixh
+adc a,ixl
+adc a,iyh
+adc a,iyl
+adc a,(hl)
+adc a,(ix+n)
+adc a,(iy+n)
+adc a,n        ;(8-bit number)
+
+adc hl,bc
+adc hl,de
+adc hl,hl
+adc hl,sp</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>The N flag is reset, P/V is interpreted as overflow. The rest of the flags is modified by definition. In the case of 16-bit addition the H flag is undefined.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>Multiple precision adding</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.<br />
+rr represents a two byte register pair: BC, DE, HL, SP<br /></p>
+<table class="wiki-content-table">
+<tr>
+<td>a, r</td>
+<td>4</td>
+</tr>
+<tr>
+<td>a, X</td>
+<td>7</td>
+</tr>
+<tr>
+<td>a, (hl)</td>
+<td>7</td>
+</tr>
+<tr>
+<td>a, (ix+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>a, (iy+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>hl, rr</td>
+<td>15</td>
+</tr>
+</table>

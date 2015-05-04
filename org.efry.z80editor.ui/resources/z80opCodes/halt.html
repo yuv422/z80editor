@@ -1,0 +1,13 @@
+<p>Suspends all actions until the next interrupt.</p>
+<p><strong>Note:</strong> Since halt does wait for the next interrupt, if you disable interrupts halt will run forever, resulting in a crash. Make sure that you always either know the interrupts will be on, or turn it on right before you use the halt instruction.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>halt</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>All flags preserved.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<p>Exactly what it says: if you need a delay, halt will provide a split second delay. You can chain halts</p>
+<h2 id="toc3"><span>T-States</span></h2>
+<p>4&#160;t-states</p>

@@ -1,0 +1,57 @@
+<p>Or is an instruction that takes an 8-bit input an compare sit with the accumulator. It checks to see if anything is set, and if neither are set, it results in a zero.</p>
+<p><strong>0 and 0</strong> result: 0<br />
+<strong>0 and 1</strong> result: 1<br />
+<strong>1 and 0</strong> result: 1<br />
+<strong>1 and 1</strong> result: 1</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>OR op8</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>or a
+or b
+or c
+or d
+or e
+or h
+or l
+or ixh
+or ixl
+or iyh
+or iyl
+or (hl)
+or (ix+n)
+or (iy+n)
+or n        ;8 bit constant</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>C and N flags cleared, P/V detects parity, and rest are modified by definition.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>Used in bit-masking.</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>r denotes 8-bit register.</p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>4</td>
+</tr>
+<tr>
+<td>X</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>19</td>
+</tr>
+</table>

@@ -1,0 +1,16 @@
+<p>Multiple instructions combined into one. CPD does these things in this order:</p>
+<ol>
+<li>CP (HL)</li>
+<li>DEC HL</li>
+<li>DEC BC</li>
+</ol>
+<h2 id="toc0"><span>Syntax</span></h2>
+<p>No operands.</p>
+<div class="code">
+<pre>
+<code>CPD</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>The carry is preserved, N is set and all the other flags are affected as defined. P/V denotes the overflowing of BC, while the Z flag is set if A=(HL) <strong>before</strong> HL is decreased.</p>
+<h2 id="toc1"><span>T-States</span></h2>
+16 t-states 

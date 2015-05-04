@@ -1,0 +1,65 @@
+<p>CP is a subtraction from A that doesn't update A, only the flags it would have set/reset if it really was subtracted.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>CP op8</code>
+</pre></div>
+<br />
+op8 is any one of the allowed inputs.
+<p><strong>Allowed instructions</strong></p>
+<div class="code">
+<pre>
+<code>cp a
+cp b
+cp c
+cp d
+cp e
+cp h
+cp l
+cp ixh
+cp ixl
+cp iyh
+cp iyl
+cp (ix+n)
+cp (iy+n)
+cp n        ;8 bit constant</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>C, S, and Z flags modified by definition<br />
+P/V detects overflow</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<p>Here are some general rules on using CP</p>
+<h3 id="toc3"><span>Unsigned</span></h3>
+<p>If A == N, then Z flag is set.<br />
+If A != N, then Z flag is reset.<br />
+If A &lt; N, then C flag is set.<br />
+If A &gt;= N, then C flag is reset.</p>
+<h3 id="toc4"><span>Signed</span></h3>
+<p>If A == N, then Z flag is set.<br />
+If A != N, then Z flag is reset.<br />
+If A &lt; N, then S and P/V are different.<br />
+A &gt;= N, then S and P/V are the same.</p>
+<h2 id="toc5"><span>T-States</span></h2>
+<p>r denotes 8-bit register.</p>
+<table class="wiki-content-table">
+<tr>
+<td>r</td>
+<td>4</td>
+</tr>
+<tr>
+<td>X</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(hl)</td>
+<td>7</td>
+</tr>
+<tr>
+<td>(ix+X)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>(iy+X)</td>
+<td>19</td>
+</tr>
+</table>

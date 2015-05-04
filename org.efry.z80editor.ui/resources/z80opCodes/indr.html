@@ -1,0 +1,20 @@
+<p>Reads the (C) port and writes the result to (HL). HL and B are decremented. Repeats until B = 0.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>INDR</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>Z is set, carry is preserved, N is set, S,H, and P/V are undefined.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<h2 id="toc3"><span>T-States</span></h2>
+<table class="wiki-content-table">
+<tr>
+<td>B = 0</td>
+<td>B != 0</td>
+</tr>
+<tr>
+<td>16</td>
+<td>21</td>
+</tr>
+</table>

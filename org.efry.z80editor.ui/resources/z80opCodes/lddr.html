@@ -1,0 +1,21 @@
+<p>Repeats the instruction LDD (Does a LD (DE),(HL) and decrements each of DE, HL, and BC) until BC=0. Note that if BC=0 before the start of the routine, it will try loop around until BC=0 again.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>LDDR</code>
+</pre></div>
+<h2 id="toc1"><span>Effects</span></h2>
+<p>P/V is reset.</p>
+<h2 id="toc2"><span>Uses</span></h2>
+<p>Copying over sections of data.</p>
+<h2 id="toc3"><span>T-States</span></h2>
+<table class="wiki-content-table">
+<tr>
+<td>BC is not 0</td>
+<td>21</td>
+</tr>
+<tr>
+<td>BC equals 0</td>
+<td>16</td>
+</tr>
+</table>

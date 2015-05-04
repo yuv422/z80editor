@@ -1,0 +1,36 @@
+<p>Copies the two bytes from (SP) into the operand, then increases SP by 2.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>pop reg16</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>pop af
+pop bc
+pop de
+pop hl
+pop ix
+pop iy</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>Flags are unaffected except when popping AF.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>Used for retrieving values saved on the stack. Also used when you want to load a 16-bit register into another 16-bit register (the LD instruction won't work for this).</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>rr represents a two byte register pair: BC, DE, HL, SP</p>
+<table class="wiki-content-table">
+<tr>
+<td>rr</td>
+<td>10</td>
+</tr>
+<tr>
+<td>ix</td>
+<td>14</td>
+</tr>
+<tr>
+<td>iy</td>
+<td>14</td>
+</tr>
+</table>

@@ -1,0 +1,36 @@
+<p>Copies the operand into (SP), then increments SP by 2.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>push reg16</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>push af
+push bc
+push de
+push hl
+push ix
+push iy</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<p>Flags are unaffected.</p>
+<h2 id="toc3"><span>Uses</span></h2>
+<p>Used for saving register values onto the stack. Also used when you want to load a 16-bit register into another 16-bit register (the LD instruction won't work for this).</p>
+<h2 id="toc4"><span>T-States</span></h2>
+<p>rr represents a two byte register pair: BC, DE, HL, SP</p>
+<table class="wiki-content-table">
+<tr>
+<td>rr</td>
+<td>11</td>
+</tr>
+<tr>
+<td>ix</td>
+<td>15</td>
+</tr>
+<tr>
+<td>iy</td>
+<td>15</td>
+</tr>
+</table>

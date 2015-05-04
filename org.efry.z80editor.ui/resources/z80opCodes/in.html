@@ -1,0 +1,39 @@
+<p>Reads a value from a hardware port.</p>
+<h2 id="toc0"><span>Syntax</span></h2>
+<div class="code">
+<pre>
+<code>in op8,(op8)</code>
+</pre></div>
+<h3 id="toc1"><span>Allowed Instructions</span></h3>
+<div class="code">
+<pre>
+<code>in a,(n)        ;8-bit constant
+in a,(c)
+in b,(c)
+in c,(c)
+in d,(c)
+in e,(c)
+in h,(c)
+in l,(c)
+in (c)          ;undocumented command</code>
+</pre></div>
+<h2 id="toc2"><span>Effects</span></h2>
+<h3 id="toc3"><span>IN A,(N)</span></h3>
+<p>This command alters no flags.</p>
+<h3 id="toc4"><span>Others</span></h3>
+<p>N flag reset, P/V represents parity, C flag preserved, all other flags affected by definition.</p>
+<h2 id="toc5"><span>Uses</span></h2>
+<p>This command, along with OUT, is used for hardware interfacing.<br />
+The undocumented command IN (C) reads from the port and affects flags, but does not store the value to a register.</p>
+<h2 id="toc6"><span>T-States</span></h2>
+<p>r denotes 8-bit register.</p>
+<table class="wiki-content-table">
+<tr>
+<td>A, X</td>
+<td>11</td>
+</tr>
+<tr>
+<td>r, (C)</td>
+<td>12</td>
+</tr>
+</table>
