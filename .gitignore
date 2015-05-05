@@ -1,10 +1,10 @@
-org.efry.z80editor/src-gen/
+org.efry.z80editor/src-gen/*
 org.efry.z80editor/xtend-gen/
 org.efry.z80editor/bin/
 org.efry.z80editor.ui/bin/
-org.efry.z80editor.ui/src-gen/
+org.efry.z80editor.ui/src-gen/*
 org.efry.z80editor.ui/xtend-gen/
-org.efry.z80editor.tests/src-gen/
+org.efry.z80editor.tests/src-gen/*
 org.efry.z80editor.tests/bin/
 org.efry.z80editor.ui/plugin.xml_gen
 org.efry.z80editor/model/
