@@ -3,7 +3,10 @@
  */
 package org.efry.z80editor.validation
 
-//import org.eclipse.xtext.validation.Check
+import org.eclipse.xtext.validation.Check
+import org.efry.z80editor.z80.SignedByteOffset
+import org.efry.z80editor.z80.Z80Package
+import org.efry.z80editor.z80.BitType
 
 /**
  * This class contains custom validation rules. 
@@ -12,14 +15,21 @@ package org.efry.z80editor.validation
  */
 class Z80Validator extends AbstractZ80Validator {
 
-//  public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					MyDslPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
+	@Check
+	def checkOffsetRange(SignedByteOffset offset) {
+		var value = offset.value;
+		if ("-".equals(offset.sign)) {
+			value = -value;
+		}
+		if (value < -128 || value > 127) {
+			error('Signed offset must be in the range (-128 to +127)', Z80Package.Literals.SIGNED_BYTE_OFFSET__VALUE)
+		}
+	}
+	
+	@Check
+	def checkBitType(BitType type) {
+		if (type.value > 7) {
+			error('Bit type must be in the range (0 to 7)', Z80Package.Literals.BIT_TYPE__VALUE);
+		}
+	}
 }

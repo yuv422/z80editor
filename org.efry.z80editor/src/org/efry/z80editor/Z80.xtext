@@ -2,7 +2,7 @@ grammar org.efry.z80editor.Z80 with org.eclipse.xtext.common.Terminals
 
 generate z80 "http://www.efry.org/z80editor/Z80"
 
-Model:
+Z80Model:
     commands+=Line*;
 
 terminal REGISTER_A: 'a';
@@ -18,7 +18,7 @@ terminal REGISTER_R: 'r';
 terminal REGISTER_AF: 'af';
 terminal REGISTER_AF_SHADOW: 'af\'';
 terminal REGISTER_BC: 'bc';
-REGISTER_DE: 'de';
+terminal REGISTER_DE: 'de';
 terminal REGISTER_HL: 'hl';
 terminal REGISTER_IX: 'ix';
 terminal REGISTER_IY: 'iy';
@@ -182,7 +182,7 @@ Xor: {Operation} opcode='xor' operand=s;
 terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
 
-BitOperand: {BitType} INT; //FIXME '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7';
+BitOperand: {BitType} value=INT;//Must be in range 0..7 This is checked for by a validator
 B returns Operand: bitType=BitOperand;
 NumericLiteral : BANKLABEL|referencedObj=[LabelType]|NUMBER; //ID
 NUMBER: i=INT|str=(HEX|BINARY);
@@ -198,10 +198,11 @@ HLIndirect: ('[' REGISTER_HL ']')|('(' REGISTER_HL ')');
 SPIndirect: ('[' REGISTER_SP ']')|('(' REGISTER_SP ')');
 NumericLiteralIndirect: ('[' NumericLiteral ']')|('(' NumericLiteral ')');
 
-IndexIndirectPlusOffset: ('[' IndexPlusOffset ']')|('(' IndexPlusOffset ')');
+IndexIndirectPlusOffset returns Operand: ('[' IndexPlusOffset ']')|('(' IndexPlusOffset ')');
 IndexIndirect: ('[' xx ']')|('(' xx ')');
 
-IndexPlusOffset: xx PLUS INT;
+IndexPlusOffset: xx SignedByteOffset;
+SignedByteOffset: sign=(PLUS|MINUS) value=INT; //Must be in the range -128..+127 This is checked for by a validator
 
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
 jrCc: 'c'|'nc'|'nz'|'z';
@@ -209,7 +210,7 @@ jrCc: 'c'|'nc'|'nz'|'z';
 dst returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect)|=>NumericLiteralIndirect;
 
 e returns Operand: (lit=NumericLiteral|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS)); //fixme -126 to +129
-m returns Operand: op=r|reg=(HLIndirect|IndexIndirectPlusOffset);
+m returns Operand: op=(r|IndexIndirectPlusOffset)|reg=(HLIndirect);
 p returns Operand: intType=INT; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
 pp returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP);
 r returns Operand: reg=(REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|REGISTER_H|REGISTER_L);
@@ -218,4 +219,4 @@ s returns Operand:  op=m|expr=Expression;
 ss returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP);
 src returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect|REGISTER_I|REGISTER_R)|=>NumericLiteralIndirect;
 xx: (REGISTER_IX|REGISTER_IY);
-incOps returns Operand: op=(r|ss)|reg=(HLIndirect|xx|IndexIndirectPlusOffset);
+incOps returns Operand: op=(r|ss|IndexIndirectPlusOffset)|reg=(HLIndirect|xx);

@@ -10,7 +10,10 @@ public class Z80QualifiedNameProvider extends IQualifiedNameProvider.AbstractImp
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
 		if(obj instanceof VarName) {
-			return QualifiedName.create(((VarName) obj).getName());
+			String name = ((VarName) obj).getName();
+			if(name != null && name.charAt(0) != '_') { //labels that start with an underscore are locally scoped so they should be ignored here.
+				return QualifiedName.create(name);
+			}
 		}
 
 		return null;

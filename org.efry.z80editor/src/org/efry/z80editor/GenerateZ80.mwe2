@@ -75,7 +75,8 @@ Workflow {
     		// Xtend-based API for validation
     		fragment = validation.ValidatorFragment auto-inject {
     		//    composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
-    		    composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+    		// temporarily disabled until I fix local scoping for _Lables.
+    		//    composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
     		}
     
     		// old scoping and exporting API
