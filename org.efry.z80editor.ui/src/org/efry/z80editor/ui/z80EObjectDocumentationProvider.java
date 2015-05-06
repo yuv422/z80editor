@@ -17,31 +17,12 @@ public class z80EObjectDocumentationProvider implements
 	public String getDocumentation(EObject o) {
 		if(o instanceof Operation) {
 			String opCode = ((Operation)o).getOpcode();
-			if("nop".equalsIgnoreCase(opCode)) {
-				return nopCommandDesc();
-			} else if("jp".equalsIgnoreCase(opCode)) {
-				return "JP: Jump";
-			} else if("adc".equalsIgnoreCase(opCode)) {
-				InputStream in = this.getClass().getClassLoader().getResourceAsStream("resources/z80opCodes/adc.txt");
-				InputStreamReader r = new InputStreamReader(in);
-				try {
-					String desc = CharStreams.toString(r);
-					r.close();
-					in.close();
-					return desc;
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			} else {
+			if(opCode != null) {
 				return loadHtmlDescription(opCode);
 			}
 		}
 		
 		return null;
-	}
-
-	private String nopCommandDesc() {
-		return "<b>Opcode:</b> 00<br><b>Size (In Bytes):</b> 1<br><b>Time (Clock Cycles)</b>: 4";
 	}
 	
 	private String getStyleSheet() {
