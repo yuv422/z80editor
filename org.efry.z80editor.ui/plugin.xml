@@ -9,7 +9,7 @@
             class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="z80asm"
+            extensions="z80asm,inc,asm"
             id="org.efry.z80editor.Z80"
             name="Z80 Editor">
         </editor>
@@ -223,6 +223,34 @@
         </resourceServiceProvider>
     </extension>
 
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="inc">
+		</parser>
+	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="inc">
+        </resourceServiceProvider>
+    </extension>
+
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="asm">
+		</parser>
+	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="asm">
+        </resourceServiceProvider>
+    </extension>
+
 
 	<!-- marker definitions for org.efry.z80editor.Z80 -->
 	<extension
@@ -251,7 +279,7 @@
          point="org.eclipse.xtext.builder.participant">
       <participant
             class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-            fileExtensions="z80asm"
+            fileExtensions="z80asm,inc,asm"
             >
       </participant>
    </extension>
@@ -400,24 +428,32 @@
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.efry.z80editor.Z80.compare.contentViewers"
             class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="z80asm">
+            extensions="z80asm,inc,asm">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="org.efry.z80editor.Z80.compare.contentMergeViewers"
             class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="z80asm" label="Z80 Compare">
+            extensions="z80asm,inc,asm" label="Z80 Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="org.efry.z80editor.Z80.editors.documentProviders"
             class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="z80asm">
+            extensions="z80asm,inc,asm">
     </provider>
   </extension>
   <extension point="org.eclipse.team.core.fileTypes">
     <fileTypes
             extension="z80asm"
+            type="text">
+    </fileTypes>
+    <fileTypes
+            extension="inc"
+            type="text">
+    </fileTypes>
+    <fileTypes
+            extension="asm"
             type="text">
     </fileTypes>
   </extension>
