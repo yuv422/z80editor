@@ -1,4 +1,4 @@
-package org.efry.z80editor.ui;
+package org.efry.z80editor;
 
 public enum Z80OpCodes {
 

@@ -2,6 +2,7 @@ package org.efry.z80editor.ui;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
+import org.efry.z80editor.Z80OpCodes;
 import org.efry.z80editor.z80.Operation;
 
 
