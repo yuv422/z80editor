@@ -29,10 +29,17 @@ terminal NEWLINE:
     '\r'? '\n';
 
 Line:
-	(Define | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | RamSection | Rept | Db | Dw | IncludeType | Label | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
+	(Define | Redefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Repeat | Rept | Db | Dw | IncludeType | IfCmd | Label | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
 
+//Lines: first=Line extra+=SubsequentLine*;
+//SubsequentLine: nl=NEWLINE line=Line?;
 
-Define: '.define' name=VarName expr=Expression;
+Define: ('.define'|'.def') name=VarName expr=Expression;
+Redefine: ('.redefine'|'.redef') name=VarName expr=Expression;
+
+IfCmd: '.if' lop=IfOperand comparison=IfOperator rop=IfOperand NEWLINE block+=Line+ ('.else' NEWLINE elseBlock+=Line+)? '.endif';
+IfOperator: ('<'|'<='|'>'|'>='|'=='|'!=');
+IfOperand: number=NUMBER|str=ID;
 
 MemoryMap: '.memorymap' NEWLINE cmds+=MemoryMapCommands+ '.endme';
 MemoryMapCommands: ('defaultslot' INT NEWLINE) |
@@ -47,14 +54,26 @@ RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
 ;
 
 Rept: '.rept' INT NEWLINE block+=Line+ '.endr';
+Repeat: '.repeat' INT NEWLINE block+=Line+ '.endr';
+
 Bank: {BankCmd} '.bank' INT ('slot' slot=INT)?;
 Org: '.org' value=(NUMBER);
 Section: '.section' sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
 
+Struct: '.struct' structName=ID NEWLINE definitions+=VarDefinitionStruct* '.endst';
+EnumCmd: '.enum' startAddress=NUMBER order=('asc'|'desc')? NEWLINE definitions+=VarDefinitionEnum* '.ende';
+
 RamSection: '.ramsection' sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
 
-VarDefinition: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))? NEWLINE;
 
+VarDefinitionEnum: {VarDef} (varName=VarName type=(EnumType))? NEWLINE;
+
+EnumType: ('.'?)(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct);
+
+VarDefinitionStruct: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))? NEWLINE;
+VarDefinition: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct))? NEWLINE;
+
+VarTypeStruct: {VarType} 'instanceof' structName=VarName repeatAmount=INT?;
 VarTypeByte: {VarType} 'db';
 VarTypeWord: {VarType} 'dw';
 VarTypeByteString: {VarType} 'ds'|'dsb' size=Expression (',' initalValue=Expression)?;
@@ -111,7 +130,7 @@ DoubleRegisters:
     (REGISTER_AF|REGISTER_BC|REGISTER_DE|REGISTER_HL|xx)
 ;
 
-Adc: {Operation} opcode='adc' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss));
+Adc: {Operation} opcode='adc' ((reg=REGISTER_A ',' rightOp=s)|(reg=REGISTER_HL ',' rightOp=ss));
 Add: {Operation} opcode='add' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss)|(REGISTER_IX ',' rightOp=pp)|(REGISTER_IY ',' rightOp=rr));
 And: {Operation} opcode='and' operand=s;
 Bit: {Operation} opcode='bit' leftOp=B ',' rightOp=m;

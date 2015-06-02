@@ -10,6 +10,7 @@ import org.efry.z80editor.z80.LabelType
 import org.efry.z80editor.z80.VarDef
 import org.efry.z80editor.z80.Org
 import org.efry.z80editor.z80.IncludeType
+import org.efry.z80editor.z80.IfOperand
 
 /**
  * Customization of the default outline structure.
@@ -41,4 +42,9 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
 	def _isLeaf(IncludeType operation) {
 		true
 	}
+	
+	def _isLeaf(IfOperand operation) {
+		true
+	}
+
 }

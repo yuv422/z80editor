@@ -1,5 +1,7 @@
 package org.efry.z80editor;
 
+import org.efry.z80editor.z80.Operation;
+
 public enum Z80OpCodes {
 
 	ADC("Add with Carry"),
@@ -77,5 +79,17 @@ public enum Z80OpCodes {
 
 	public String getDescription() {
 		return description;
+	}
+	
+	public static Z80OpCodes valueOf(Operation o) {
+		Z80OpCodes opcode = null;
+		if(o != null && o.getOpcode() != null) {
+			try {
+				opcode = Z80OpCodes.valueOf(o.getOpcode().toUpperCase());
+			} catch(IllegalArgumentException e) {
+				return null;
+			}
+		}
+		return opcode;
 	}
 }
