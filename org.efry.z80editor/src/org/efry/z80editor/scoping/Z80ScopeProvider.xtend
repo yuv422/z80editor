@@ -3,15 +3,12 @@
  */
 package org.efry.z80editor.scoping
 
-import org.eclipse.emf.ecore.EReference
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.Scopes
-import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
-import org.eclipse.emf.ecore.EObject
 import com.google.inject.Inject
-import org.eclipse.xtext.scoping.IGlobalScopeProvider
-import org.efry.z80editor.z80.VarName
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.xtext.scoping.IScope
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
+import org.eclipse.xtext.scoping.impl.SimpleLocalScopeProvider
 
 /**
  * This class contains custom scoping description.
@@ -22,13 +19,21 @@ import org.efry.z80editor.z80.VarName
  */
 class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 
+	//@Inject
+	//private IGlobalScopeProvider globalScopeProvider;
+	
 	@Inject
-	private IGlobalScopeProvider globalScopeProvider;
+	private SimpleLocalScopeProvider localScopeProvider;
+	
+	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
 
+		localScopeProvider.getScope(varName, ref);
+	}
+/*
 	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
 		
 		var locals = EcoreUtil2::getAllContentsOfType(EcoreUtil2::getRootContainer(varName), typeof(VarName));
 		Scopes::scopeFor(locals, globalScopeProvider.getScope(varName.eResource, ref, null));		
 	}
-	
+	*/
 }

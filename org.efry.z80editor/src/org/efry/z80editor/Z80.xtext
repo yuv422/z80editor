@@ -61,7 +61,7 @@ Org: '.org' value=(NUMBER);
 Section: '.section' sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
 
 Struct: '.struct' structName=ID NEWLINE definitions+=VarDefinitionStruct* '.endst';
-EnumCmd: '.enum' startAddress=NUMBER order=('asc'|'desc')? NEWLINE definitions+=VarDefinitionEnum* '.ende';
+EnumCmd: '.enum' startAddress=NUMBER order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* '.ende';
 
 RamSection: '.ramsection' sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
 
@@ -80,7 +80,9 @@ VarTypeByteString: {VarType} 'ds'|'dsb' size=Expression (',' initalValue=Express
 VarTypeWordString: {VarType} 'dsw' size=Expression (',' initalValue=Expression)?;
 
 Db: {DbCmd} '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
-Dw: {DwCmd} '.dw' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
+Dw: {DwCmd} '.dw' first=NumericLiteral others+=DwAdditionalValueType*;
+DwAdditionalValueType: ','? value=NumericLiteral;
+
 IncludeType: inc=(Include|Incbin);
 Include: '.include' file=STRING;
 Incbin: '.incbin' file=STRING;
@@ -134,7 +136,7 @@ Adc: {Operation} opcode='adc' ((reg=REGISTER_A ',' rightOp=s)|(reg=REGISTER_HL '
 Add: {Operation} opcode='add' ((REGISTER_A ',' rightOp=s)|(REGISTER_HL ',' rightOp=ss)|(REGISTER_IX ',' rightOp=pp)|(REGISTER_IY ',' rightOp=rr));
 And: {Operation} opcode='and' operand=s;
 Bit: {Operation} opcode='bit' leftOp=B ',' rightOp=m;
-Call: {Operation} opcode='call' (CC ',')? literal=NumericLiteral;
+Call: {Operation} opcode='call' (CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS);
 Ccf: {Operation} opcode='ccf';
 Cp: {Operation} opcode='cp' operand=s;
 Cpd: {Operation} opcode='cpd';
@@ -159,7 +161,7 @@ Ini: {Operation} opcode='ini';
 Inir: {Operation} opcode='inir';
 Jp: {Operation} opcode='jp' (reg=(HLIndirect|IndexIndirect)|((jumpCondition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
 Jr: {Operation} opcode='jr' (jumpCondition=jrCc ',')? operand=e;
-Ld: {Operation} opcode='ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
+Ld: {Operation} opcode='ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It also needs some changes to handle ix,iy in dst. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: {Operation} opcode='ldd';
 Lddr: {Operation} opcode='lddr';
 Ldi: {Operation} opcode='ldi';
@@ -226,11 +228,11 @@ SignedByteOffset: sign=(PLUS|MINUS) value=INT; //Must be in the range -128..+127
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
 jrCc: 'c'|'nc'|'nz'|'z';
 
-dst returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect)|=>NumericLiteralIndirect;
+dst returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect|xx)|=>NumericLiteralIndirect;
 
 e returns Operand: (lit=NumericLiteral|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS)); //fixme -126 to +129
 m returns Operand: op=(r|IndexIndirectPlusOffset)|reg=(HLIndirect);
-p returns Operand: intType=INT; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
+p returns Operand: intType=NUMBER; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
 pp returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP);
 r returns Operand: reg=(REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|REGISTER_H|REGISTER_L);
 rr returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IY|REGISTER_SP);
