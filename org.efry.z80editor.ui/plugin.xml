@@ -14,8 +14,29 @@
             name="Z80 Editor">
         </editor>
     </extension>
+    <extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?after=copy">
+			<command
+				commandId="org.efry.z80editor.ui.InstructionCounter"
+				tooltip="Count Z80 Instructions"
+				style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.efry.z80editor.Z80.Editor.opened" />
+					</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
     <extension
         point="org.eclipse.ui.handlers">
+        <handler
+            class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.efry.z80editor.ui.InstructionCounterHandler"
+            commandId="org.efry.z80editor.ui.InstructionCounter">
+            <activeWhen>
+                <reference
+                    definitionId="org.efry.z80editor.Z80.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>        
         <handler
             class="org.efry.z80editor.ui.Z80ExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
             commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
@@ -138,6 +159,12 @@
             categoryId="org.eclipse.ui.category.edit"
             description="Copy the qualified name for the selected element"
             name="Copy Qualified Name">
+      </command>
+      <command
+            id="org.efry.z80editor.ui.InstructionCounter"
+            categoryId="org.eclipse.ui.category.edit"
+            description="Display size and cycle counts for selected Z80 instructions"
+            name="Count Z80 Instructions">
       </command>
     </extension>
     <extension point="org.eclipse.ui.menus">
