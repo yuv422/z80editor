@@ -145,7 +145,7 @@ Cpi: {Operation} opcode='cpi';
 Cpir: {Operation} opcode='cpir';
 Cpl: {Operation} opcode='cpl';
 Daa: {Operation} opcode='daa';
-Dec: {Operation} opcode='dec' operand=(s|ss)|indexReg=xx;
+Dec: {Operation} opcode='dec' operand=dd;
 Di: {Operation} opcode='di';
 Djnz: {Operation} opcode='djnz' operand=e;
 Ei: {Operation} opcode='ei';
@@ -159,7 +159,7 @@ Ind: {Operation} opcode='ind';
 Indr: {Operation} opcode='indr';
 Ini: {Operation} opcode='ini';
 Inir: {Operation} opcode='inir';
-Jp: {Operation} opcode='jp' (reg=(IndexIndirect)|indirectOp=HLIndirect|((jumpCondition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
+Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((jumpCondition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
 Jr: {Operation} opcode='jr' (jumpCondition=jrCc ',')? operand=e;
 Ld: {Operation} opcode='ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It also needs some changes to handle ix,iy in dst. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: {Operation} opcode='ldd';
@@ -220,7 +220,7 @@ SPIndirect returns Operand: ('[' reg=REGISTER_SP ']')|('(' reg=REGISTER_SP ')');
 NumericLiteralIndirect: ('[' NumericLiteral ']')|('(' NumericLiteral ')');
 
 IndexIndirectPlusOffset returns Operand: ('[' indexPlusOffset=IndexPlusOffset ']')|('(' indexPlusOffset=IndexPlusOffset ')');
-IndexIndirect: ('[' xx ']')|('(' xx ')');
+IndexIndirect returns Operand: ('[' reg=xx ']')|('(' reg=xx ')');
 
 IndexPlusOffset returns Operand: reg=xx offset=SignedByteOffset;
 SignedByteOffset: sign=(PLUS|MINUS) value=INT; //Must be in the range -128..+127 This is checked for by a validator
@@ -240,5 +240,6 @@ s returns Operand:  op=m|expr=Expression;
 ss returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP);
 src returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect|REGISTER_I|REGISTER_R)|=>NumericLiteralIndirect;
 xx: (REGISTER_IX|REGISTER_IY);
+dd returns Operand: op=(m|ss)|reg=xx;
 ee returns Operand: reg=(REGISTER_HL|xx);
 incOps returns Operand: op=(r|ss|IndexIndirectPlusOffset)|reg=(xx)|indirectOp=HLIndirect;

@@ -198,7 +198,7 @@ public class Z80CycleCalculator {
 			switch(getRightOperand(o)) {
 			case BC : return Z80Instruction.getInstruction(0x9fd);
 			case DE : return Z80Instruction.getInstruction(0x19fd);
-			case IX : return Z80Instruction.getInstruction(0x29fd);
+			case IY : return Z80Instruction.getInstruction(0x29fd);
 			case SP : return Z80Instruction.getInstruction(0x39fd);
 			default : break;
 			}

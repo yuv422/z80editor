@@ -1,12 +1,15 @@
 package org.efry.z80editor.tests;
 
 
+import java.util.Iterator;
+
 import org.eclipse.xtext.junit4.InjectWith;
 import org.eclipse.xtext.junit4.XtextRunner;
 import org.eclipse.xtext.junit4.util.ParseHelper;
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper;
 import org.efry.z80editor.Z80CycleCalculator;
 import org.efry.z80editor.Z80InjectorProvider;
+import org.efry.z80editor.Z80Instruction;
 import org.efry.z80editor.z80.Z80Model;
 import org.junit.Assert;
 import org.junit.Test;
@@ -73,5 +76,29 @@ public class CycleCountTests {
 		  Assert.assertNotNull(model);
 		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
 		  Assert.assertEquals(cycleCalc.calculateCyclesForModel(model), 4); 
+	  }
+	  
+	  private String formatInstructionDescription(String d) {
+		  d = d.replace("nnnn", "0xbeef");
+		  d = d.replace("nn", "0xbe");
+		  d = d.replace("n", "5").toLowerCase();
+		  return d;
+	  }
+	  
+	  @Test
+	  public void testAllInstructionCycles() throws Exception {
+		  Z80CycleCalculator calculator = new Z80CycleCalculator();
+		  Iterator<Z80Instruction> iterator = Z80Instruction.getInstructionIterator();
+		  while(iterator.hasNext()) {
+			  Z80Instruction i = iterator.next();
+			  final Z80Model model = this.parser.parse(formatInstructionDescription(i.getDescription()+"\n"));
+			  Assert.assertNotNull(model);
+			  
+			  if(formatInstructionDescription(i.getDescription()).startsWith("add ")) {
+				  int cycles = calculator.calculateCyclesForModel(model);
+				  System.out.println(formatInstructionDescription(i.getDescription()) + "; Cycles: " + cycles + " Expected: " + i.getoClock());
+			  }
+			  //Assert.assertEquals(i.getoClock(), cycles); 
+		  }
 	  }
 }
