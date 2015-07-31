@@ -159,8 +159,8 @@ Ind: {Operation} opcode='ind';
 Indr: {Operation} opcode='indr';
 Ini: {Operation} opcode='ini';
 Inir: {Operation} opcode='inir';
-Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((jumpCondition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
-Jr: {Operation} opcode='jr' (jumpCondition=jrCc ',')? operand=e;
+Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((condition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
+Jr: {Operation} opcode='jr' (condition=jrCc ',')? operand=e;
 Ld: {Operation} opcode='ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It also needs some changes to handle ix,iy in dst. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: {Operation} opcode='ldd';
 Lddr: {Operation} opcode='lddr';

@@ -94,7 +94,7 @@ public class CycleCountTests {
 			  final Z80Model model = this.parser.parse(formatInstructionDescription(i.getDescription()+"\n"));
 			  Assert.assertNotNull(model);
 			  
-			  if(formatInstructionDescription(i.getDescription()).startsWith("add ")) {
+			  if(formatInstructionDescription(i.getDescription()).startsWith("ld ")) {
 				  int cycles = calculator.calculateCyclesForModel(model);
 				  System.out.println(formatInstructionDescription(i.getDescription()) + "; Cycles: " + cycles + " Expected: " + i.getoClock());
 			  }
