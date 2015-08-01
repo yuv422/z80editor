@@ -17,7 +17,7 @@ class Z80Validator extends AbstractZ80Validator {
 
 	@Check
 	def checkOffsetRange(SignedByteOffset offset) {
-		var value = offset.value;
+		var value = offset.value.i; //FIXME need to validate binary and hex numbers too.
 		if ("-".equals(offset.sign)) {
 			value = -value;
 		}

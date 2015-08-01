@@ -1,6 +1,8 @@
 package org.efry.z80editor.tests;
 
 
+import static org.junit.Assert.fail;
+
 import java.util.Iterator;
 
 import org.eclipse.xtext.junit4.InjectWith;
@@ -79,26 +81,50 @@ public class CycleCountTests {
 	  }
 	  
 	  private String formatInstructionDescription(String d) {
-		  d = d.replace("nnnn", "0xbeef");
-		  d = d.replace("nn", "0xbe");
+		  d = d.replace("nnnn", "$beef");
+		  d = d.replace("nn", "$be");
 		  d = d.replace("n", "5").toLowerCase();
 		  return d;
 	  }
 	  
+	  private boolean isUnofficialInstruction(String command) {
+		  return (command.contains("ixl") || command.contains("ixh") || command.contains("iyl") || command.contains("iyh"));
+	  }
+
+	  @Test
+	  public void testParseAllInstructions() throws Exception {
+		  Iterator<Z80Instruction> iterator = Z80Instruction.getInstructionIterator();
+		  while(iterator.hasNext()) {
+			  Z80Instruction i = iterator.next();
+			  String command = formatInstructionDescription(i.getDescription());
+			  final Z80Model model = this.parser.parse("\n"+command+"\n");
+			  Assert.assertNotNull(model);
+
+			  if(!isUnofficialInstruction(command)) {
+				  try {
+					  validationHelper.assertNoErrors(model);
+				  } catch(AssertionError e) {
+					  fail("Parse error: \"" + command + "\" - " + e.getMessage());
+				  }
+			  }
+		  }
+	  }
+
 	  @Test
 	  public void testAllInstructionCycles() throws Exception {
 		  Z80CycleCalculator calculator = new Z80CycleCalculator();
 		  Iterator<Z80Instruction> iterator = Z80Instruction.getInstructionIterator();
 		  while(iterator.hasNext()) {
 			  Z80Instruction i = iterator.next();
-			  final Z80Model model = this.parser.parse(formatInstructionDescription(i.getDescription()+"\n"));
+			  String command = formatInstructionDescription(i.getDescription());
+			  final Z80Model model = this.parser.parse("\n"+command+"\n");
 			  Assert.assertNotNull(model);
-			  
-			  if(formatInstructionDescription(i.getDescription()).startsWith("ld ")) {
+
+			  if(!isUnofficialInstruction(command) && command.startsWith("ld ")) {
 				  int cycles = calculator.calculateCyclesForModel(model);
-				  System.out.println(formatInstructionDescription(i.getDescription()) + "; Cycles: " + cycles + " Expected: " + i.getoClock());
+				  System.out.println(command + "; Cycles: " + cycles + " Expected: " + i.getoClock());
+				  Assert.assertEquals(i.getoClock(), cycles);
 			  }
-			  //Assert.assertEquals(i.getoClock(), cycles); 
 		  }
 	  }
 }

@@ -80,8 +80,15 @@ public class Z80CycleCalculator {
 	}
 	
 	private Z80OperandType getIndirectOp(Operand op) {
-		String reg = op.getReg().toUpperCase() + "_INDIRECT";
-		return getOperandEnumType(reg);
+		if(op.getIndexPlusOffset() != null) {
+			return getOperandEnumType(op.getIndexPlusOffset().getReg().toUpperCase() + "_OFFSET_INDIRECT");
+		}
+		
+		if(op.getReg() != null) {
+			return getOperandEnumType(op.getReg().toUpperCase() + "_INDIRECT");
+		}
+		
+		return Z80OperandType.NUMERIC_INDIRECT;
 	}
 
 	private Z80OperandType getLeftOperand(Operation o) {
@@ -536,7 +543,7 @@ public class Z80CycleCalculator {
 			case DE : return Z80Instruction.getInstruction(0x53ed);
 			case HL : return Z80Instruction.getInstruction(0x22);
 			case IY : return Z80Instruction.getInstruction(0x22fd);
-			case SP : return Z80Instruction.getInstruction(0x73fd);
+			case SP : return Z80Instruction.getInstruction(0x73ed);
 			case IX : return Z80Instruction.getInstruction(0x22dd);
 			default : break;
 			}

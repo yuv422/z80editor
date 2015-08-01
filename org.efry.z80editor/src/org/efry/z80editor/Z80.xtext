@@ -153,7 +153,7 @@ Ex: {Operation} opcode='ex' ((indirectOp=SPIndirect ',' rightOp=ee)|(reg=REGISTE
 Exx: {Operation} opcode='exx';
 Halt: {Operation} opcode='halt';
 Im: {Operation} opcode='im' literal=NumericLiteral;
-In: {Operation} opcode='in' ((reg=REGISTER_A ',' rightOp=NumericLiteralIndirect)|(leftOp=r ',' CIndirect));
+In: {Operation} opcode='in' ((reg=REGISTER_A ',' rightOp=NumericLiteralIndirect)|(leftOp=r ',' rightOp=CIndirect));
 Inc: {Operation} opcode='inc' operand=incOps;
 Ind: {Operation} opcode='ind';
 Indr: {Operation} opcode='indr';
@@ -161,7 +161,7 @@ Ini: {Operation} opcode='ini';
 Inir: {Operation} opcode='inir';
 Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((condition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
 Jr: {Operation} opcode='jr' (condition=jrCc ',')? operand=e;
-Ld: {Operation} opcode='ld' leftOp=dst ',' rightOp=src; //FIXME src shouldn't contain 'i','r'. It also needs some changes to handle ix,iy in dst. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
+Ld: {Operation} opcode='ld' ((reg=REGISTER_I ',' REGISTER_A)|(reg=REGISTER_R ',' REGISTER_A)|=>(leftOp=dst ',' rightOp=src)); //FIXME src shouldn't contain 'i','r'. It also needs some changes to handle ix,iy in dst. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: {Operation} opcode='ldd';
 Lddr: {Operation} opcode='lddr';
 Ldi: {Operation} opcode='ldi';
@@ -171,7 +171,7 @@ Nop: {Operation} opcode='nop';
 Or: {Operation} opcode='or' operand=s;
 Otdr: {Operation} opcode='otdr';
 Otir: {Operation} opcode='otir';
-Out: {Operation} opcode='out' ((CIndirect ',' rightOp=r)|(literal=NumericLiteralIndirect ',' REGISTER_A));
+Out: {Operation} opcode='out' ((leftOp=CIndirect ',' rightOp=r)|(literal=NumericLiteralIndirect ',' REGISTER_A));
 Outd: {Operation} opcode='outd';
 Outi: {Operation} opcode='outi';
 Pop: {Operation} opcode='pop' DoubleRegisters;
@@ -187,7 +187,7 @@ Rlca: {Operation} opcode='rlca';
 Rld: {Operation} opcode='rld';
 RrCmd: {Operation} opcode='rr' operand=m;
 Rra: {Operation} opcode='rra';
-Rrc: {Operation} opcode='rrca' operand=m;
+Rrc: {Operation} opcode='rrc' operand=m;
 Rrca: {Operation} opcode='rrca';
 Rrd: {Operation} opcode='rrd';
 Rst: {Operation} opcode='rst' operand=p;
@@ -212,33 +212,33 @@ terminal BINARY: '%'('0'..'1')+;
 
 AnonymousLabel: PLUS|PLUSPLUS|MINUS|MINUSMINUS;
 
-CIndirect: ('[' REGISTER_C ']')|('(' REGISTER_C ')');
-BCIndirect: ('[' REGISTER_BC ']')|('(' REGISTER_BC ')');
-DEIndirect: ('[' REGISTER_DE ']')|('(' REGISTER_DE ')');
+CIndirect returns Operand: ('[' reg=REGISTER_C ']')|('(' reg=REGISTER_C ')');
+BCIndirect returns Operand: ('[' reg=REGISTER_BC ']')|('(' reg=REGISTER_BC ')');
+DEIndirect returns Operand: ('[' reg=REGISTER_DE ']')|('(' reg=REGISTER_DE ')');
 HLIndirect returns Operand: ('[' reg=REGISTER_HL ']')|('(' reg=REGISTER_HL ')');
 SPIndirect returns Operand: ('[' reg=REGISTER_SP ']')|('(' reg=REGISTER_SP ')');
-NumericLiteralIndirect: ('[' NumericLiteral ']')|('(' NumericLiteral ')');
+NumericLiteralIndirect returns Operand: ('[' lit=NumericLiteral ']')|('(' =>lit=NumericLiteral ')');
 
 IndexIndirectPlusOffset returns Operand: ('[' indexPlusOffset=IndexPlusOffset ']')|('(' indexPlusOffset=IndexPlusOffset ')');
 IndexIndirect returns Operand: ('[' reg=xx ']')|('(' reg=xx ')');
 
 IndexPlusOffset returns Operand: reg=xx offset=SignedByteOffset;
-SignedByteOffset: sign=(PLUS|MINUS) value=INT; //Must be in the range -128..+127 This is checked for by a validator
+SignedByteOffset: sign=(PLUS|MINUS) value=NUMBER; //Must be in the range -128..+127 This is checked for by a validator
 
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
 jrCc: 'c'|'nc'|'nz'|'z';
 
-dst returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect|xx)|=>NumericLiteralIndirect;
+dst returns Operand: =>indirectOp=NumericLiteralIndirect|op=(s|ss)|indirectOp=(BCIndirect|DEIndirect)|reg=(xx);
 
 e returns Operand: (lit=NumericLiteral|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS)); //fixme -126 to +129
-m returns Operand: op=(r|IndexIndirectPlusOffset)|indirectOp=(HLIndirect);
+m returns Operand: op=(r)|indirectOp=(HLIndirect|IndexIndirectPlusOffset);
 p returns Operand: intType=NUMBER; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
 pp returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP);
 r returns Operand: reg=(REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|REGISTER_H|REGISTER_L);
 rr returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IY|REGISTER_SP);
 s returns Operand:  op=m|expr=Expression;
 ss returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP);
-src returns Operand: op=(s|ss)|reg=(BCIndirect|DEIndirect|REGISTER_I|REGISTER_R)|=>NumericLiteralIndirect;
+src returns Operand: =>indirectOp=NumericLiteralIndirect|op=(s|ss)|indirectOp=(BCIndirect|DEIndirect)|reg=(REGISTER_I|REGISTER_R|xx);
 xx: (REGISTER_IX|REGISTER_IY);
 dd returns Operand: op=(m|ss)|reg=xx;
 ee returns Operand: reg=(REGISTER_HL|xx);
