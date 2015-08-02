@@ -120,7 +120,7 @@ public class CycleCountTests {
 			  final Z80Model model = this.parser.parse("\n"+command+"\n");
 			  Assert.assertNotNull(model);
 
-			  if(!isUnofficialInstruction(command) && command.startsWith("ld ")) {
+			  if(!isUnofficialInstruction(command)) { //&& command.startsWith("xor")) {
 				  int cycles = calculator.calculateCyclesForModel(model);
 				  System.out.println(command + "; Cycles: " + cycles + " Expected: " + i.getoClock());
 				  Assert.assertEquals(i.getoClock(), cycles);
