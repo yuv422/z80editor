@@ -34,7 +34,7 @@ public class CycleCountTests {
 		  final Z80Model model = this.parser.parse("adc hl, bc\nadc hl, de\nadc a, 1 + 2 * 3\n");
 		  Assert.assertNotNull(model);
 		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  System.out.println(cycleCalc.calculateCyclesForModel(model));
+		  System.out.println(cycleCalc.calculateOClockCyclesForModel(model));
 		  
 	  }
 	  
@@ -44,7 +44,7 @@ public class CycleCountTests {
 		  final Z80Model model = this.parser.parse("adc a, (hl)\n");
 		  Assert.assertNotNull(model);
 		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateCyclesForModel(model), 7);
+		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 7);
 		  
 	  }
 	  
@@ -53,7 +53,7 @@ public class CycleCountTests {
 		  final Z80Model model = this.parser.parse("adc a, (ix + 1)\n");
 		  Assert.assertNotNull(model);
 		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateCyclesForModel(model), 19); 
+		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 19); 
 	  }
 
 	  @Test
@@ -61,7 +61,7 @@ public class CycleCountTests {
 		  final Z80Model model = this.parser.parse("adc a, (iy + 1)\n");
 		  Assert.assertNotNull(model);
 		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateCyclesForModel(model), 19); 
+		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 19); 
 	  }
 	  
 	  @Test
@@ -69,7 +69,7 @@ public class CycleCountTests {
 		  final Z80Model model = this.parser.parse("adc a, a\n");
 		  Assert.assertNotNull(model);
 		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateCyclesForModel(model), 4); 
+		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 4); 
 	  }
 	  
 	  @Test
@@ -77,7 +77,7 @@ public class CycleCountTests {
 		  final Z80Model model = this.parser.parse("adc a, b\n");
 		  Assert.assertNotNull(model);
 		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateCyclesForModel(model), 4); 
+		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 4); 
 	  }
 	  
 	  private String formatInstructionDescription(String d) {
@@ -121,7 +121,7 @@ public class CycleCountTests {
 			  Assert.assertNotNull(model);
 
 			  if(!isUnofficialInstruction(command)) { //&& command.startsWith("xor")) {
-				  int cycles = calculator.calculateCyclesForModel(model);
+				  int cycles = calculator.calculateOClockCyclesForModel(model);
 				  System.out.println(command + "; Cycles: " + cycles + " Expected: " + i.getoClock());
 				  Assert.assertEquals(i.getoClock(), cycles);
 			  }

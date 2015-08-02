@@ -51,15 +51,13 @@ public class InstructionCounterHandler extends AbstractHandler {
                             Z80CycleCalculator calc = new Z80CycleCalculator();
                             Z80OperationTypeWalker operationInstructions = new Z80OperationTypeWalker(state, locationInFileProvider, offset, offset + length);
                             
-                            int totalCycles = 0;
+                            calc = new Z80CycleCalculator();
                             for(Operation o : operationInstructions) {
-                                int cycles = calc.calculateCyclesForOperation(o);
-                                ITextRegion region = locationInFileProvider.getFullTextRegion(o);
-                                System.out.println(doc.get(region.getOffset(), region.getLength()) + " ; " + cycles + " cycles.");
-                                totalCycles += cycles;
+                            	ITextRegion region = locationInFileProvider.getFullTextRegion(o);
+                                calc.addOperation(o, doc.get(region.getOffset(), region.getLength()));
                             }
-                            
-                            System.out.println(";Total Cycles: " + totalCycles);
+                            System.out.println(calc.getFormattedText());
+                            System.out.println(calc.getSingleLineTotals());
                             return Boolean.TRUE;
                         }
                     });

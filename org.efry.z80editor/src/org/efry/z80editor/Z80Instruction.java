@@ -107,7 +107,7 @@ public class Z80Instruction {
         map.put(0xEC, new Z80Instruction(Z80OpCodes.CALL, "CALL PE, nnnn", 0xEC, "EC(*2)", 3, 17, 17, 1, 12));
         map.put(0xE4, new Z80Instruction(Z80OpCodes.CALL, "CALL PO, nnnn", 0xE4, "E4(*2)", 3, 17, 17, 1, 12));
         map.put(0xCC, new Z80Instruction(Z80OpCodes.CALL, "CALL Z, nnnn", 0xCC, "CC(*2)", 3, 17, 17, 1, 12));
-        map.put(0xCD, new Z80Instruction(Z80OpCodes.CALL, "CALL nnnn", 0xCD, "CD(*2)", 3, 17, 17, 0, 12));
+        map.put(0xCD, new Z80Instruction(Z80OpCodes.CALL, "CALL nnnn", 0xCD, "CD(*2)", 3, 17, 17, 0, 0));
 
         map.put(0x3F, new Z80Instruction(Z80OpCodes.CCF, "CCF", 0x3F, "3F", 1, 4, 4, 0, 0));
 
