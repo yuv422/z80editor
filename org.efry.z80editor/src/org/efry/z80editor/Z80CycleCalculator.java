@@ -51,7 +51,7 @@ public class Z80CycleCalculator {
 	}
 	
 	public String getSingleLineTotals() {
-		return String.format("; oClock: %d/%d rClock: %d/%d size: %d", oClockTotal, oClockUnmetTotal, rClockTotal, rClockUnmetTotal, sizeTotal);
+		return String.format("oClock: %d/%d rClock: %d/%d size: %d", oClockTotal, oClockUnmetTotal, rClockTotal, rClockUnmetTotal, sizeTotal);
 	}
 
 	public String getFormattedText() {
