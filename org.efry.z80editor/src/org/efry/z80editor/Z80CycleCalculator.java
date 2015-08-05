@@ -12,9 +12,8 @@ public class Z80CycleCalculator {
 	private ArrayList<LineData> lines = new ArrayList<LineData>();
 	private int maxLineLength = 0;
 	private int oClockTotal = 0;
-	private int rClockTotal = 0;
 	private int oClockUnmetTotal = 0;
-	private int rClockUnmetTotal = 0;
+
 	private int sizeTotal = 0;
 	
 	public Z80CycleCalculator() {}
@@ -43,30 +42,32 @@ public class Z80CycleCalculator {
 			}
 			oClockTotal += i.getoClock();
 			oClockUnmetTotal += i.getoClockUnmet() > 0 ? i.getoClockUnmet() : i.getoClock();
-			rClockTotal += i.getrClock();
-			rClockUnmetTotal += i.getrClockUnmet() > 0 ? i.getrClockUnmet() : i.getrClock();
 			sizeTotal += i.getSize();
 			lines.add(new LineData(operationText, i));
 		}
 	}
 	
 	public String getSingleLineTotals() {
-		return String.format("oClock: %d/%d rClock: %d/%d size: %d", oClockTotal, oClockUnmetTotal, rClockTotal, rClockUnmetTotal, sizeTotal);
+		return String.format("Clock: %d/%d size: %d", oClockTotal, oClockUnmetTotal, sizeTotal);
 	}
 
 	public String getFormattedText() {
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb);
-
+		int assemblyMaxLength = maxLineLength;
+		if(assemblyMaxLength < "assembly".length()) {
+			assemblyMaxLength = "assembly".length();
+		}
 		try {
-			String fmt = "%-" + maxLineLength + "s ; %3d%-3s, %3d%-3s, %2d: %s\n";
+			formatter.format("%-" + assemblyMaxLength + "s ; clock ,size: Op-Code\n", "assembly");
+			String fmt = "%-" + assemblyMaxLength + "s ; %3d%-3s, %3d: %s\n";
 	
 			for(LineData data : lines) {
 				Z80Instruction i = data.getInstruction();
-				formatter.format(fmt, data.getLine(), i.getoClock(), i.getoClockUnmet() != 0 ? "/"+i.getoClockUnmet() : "", i.getrClock(), i.getrClockUnmet() != 0 ? "/"+i.getrClockUnmet() : "", i.getSize(), i.getHexString());
+				formatter.format(fmt, data.getLine(), i.getoClock(), i.getoClockUnmet() != 0 ? "/"+i.getoClockUnmet() : "", i.getSize(), i.getHexString());
 			}
 			
-			formatter.format(fmt, "", oClockTotal, "", rClockTotal, "", sizeTotal, "");
+			formatter.format(fmt, "", oClockTotal, "", sizeTotal, "");
 		} finally {
 			formatter.close();
 		}
