@@ -48,18 +48,19 @@ public class Z80CycleCalculator {
 	}
 	
 	public String getSingleLineTotals() {
-		return String.format("Clock: %d/%d size: %d", oClockTotal, oClockUnmetTotal, sizeTotal);
+		return String.format("Clock met/unmet: %d/%d size in bytes: %d", oClockTotal, oClockUnmetTotal, sizeTotal);
 	}
 
 	public String getFormattedText() {
+		final String assemblyColumnName = ";assembly";
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb);
 		int assemblyMaxLength = maxLineLength;
-		if(assemblyMaxLength < "assembly".length()) {
-			assemblyMaxLength = "assembly".length();
+		if(assemblyMaxLength < assemblyColumnName.length()) {
+			assemblyMaxLength = assemblyColumnName.length();
 		}
 		try {
-			formatter.format("%-" + assemblyMaxLength + "s ; clock ,size: Op-Code\n", "assembly");
+			formatter.format("%-" + assemblyMaxLength + "s ; clock ,size: Op-Code\n", assemblyColumnName);
 			String fmt = "%-" + assemblyMaxLength + "s ; %3d%-3s, %3d: %s\n";
 	
 			for(LineData data : lines) {
