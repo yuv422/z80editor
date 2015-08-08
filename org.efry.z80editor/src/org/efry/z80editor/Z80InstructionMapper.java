@@ -130,6 +130,11 @@ public final class Z80InstructionMapper {
 		if(o.getRightOp() != null) {
 			return getOperand(o.getRightOp());
 		}
+		
+		if(o.getRightIndirectOp() != null) {
+		    return getIndirectOp(o.getRightIndirectOp());
+		}
+		
 		return Z80OperandType.UNKNOWN;
 	}
 	
@@ -210,6 +215,7 @@ public final class Z80InstructionMapper {
 			case NUMERIC : return Z80Instruction.getInstruction(0xc6);
 			default: break;
 			}
+			break;
 		case HL :
 			switch(getRightOperand(o)) {
 			case BC : return Z80Instruction.getInstruction(0x9);
@@ -218,6 +224,7 @@ public final class Z80InstructionMapper {
 			case SP : return Z80Instruction.getInstruction(0x39);
 			default : break;
 			}
+			break;
 		case IX :
 			switch(getRightOperand(o)) {
 			case BC : return Z80Instruction.getInstruction(0x9dd);
@@ -226,6 +233,7 @@ public final class Z80InstructionMapper {
 			case SP : return Z80Instruction.getInstruction(0x39dd);
 			default : break;
 			}
+			break;
 		case IY :
 			switch(getRightOperand(o)) {
 			case BC : return Z80Instruction.getInstruction(0x9fd);
@@ -234,6 +242,7 @@ public final class Z80InstructionMapper {
 			case SP : return Z80Instruction.getInstruction(0x39fd);
 			default : break;
 			}
+			break;
 		default: break;
 		}
 		
@@ -387,6 +396,7 @@ public final class Z80InstructionMapper {
 			case IY : return Z80Instruction.getInstruction(0xe3fd);
 			default : break;
 			}
+			break;
 		case AF : return Z80Instruction.getInstruction(0x08);
 		case DE : return Z80Instruction.getInstruction(0xeb);
 		default : break;
@@ -415,6 +425,7 @@ public final class Z80InstructionMapper {
 			case C_INDIRECT : return Z80Instruction.getInstruction(0x78ed);
 			default : break;
 			}
+			break;
 		case B : return Z80Instruction.getInstruction(0x40ed);
 		case C : return Z80Instruction.getInstruction(0x48ed);
 		case D : return Z80Instruction.getInstruction(0x50ed);
@@ -863,7 +874,7 @@ public final class Z80InstructionMapper {
 			case L : return Z80Instruction.getInstruction(0x85cb);
 			default : break;
 			}
-
+			break;
 		default : break;
 		}
 		
@@ -1051,7 +1062,7 @@ public final class Z80InstructionMapper {
 			case L : return Z80Instruction.getInstruction(0xc5cb);
 			default : break;
 			}
-
+			break;
 		default : break;
 		}
 		

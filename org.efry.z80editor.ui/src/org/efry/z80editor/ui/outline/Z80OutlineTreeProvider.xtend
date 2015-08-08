@@ -6,11 +6,11 @@ package org.efry.z80editor.ui.outline
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.efry.z80editor.z80.Command
 import org.efry.z80editor.z80.Define
-import org.efry.z80editor.z80.LabelType
-import org.efry.z80editor.z80.VarDef
-import org.efry.z80editor.z80.Org
-import org.efry.z80editor.z80.IncludeType
 import org.efry.z80editor.z80.IfOperand
+import org.efry.z80editor.z80.IncludeType
+import org.efry.z80editor.z80.LabelType
+import org.efry.z80editor.z80.Org
+import org.efry.z80editor.z80.VarDef
 
 /**
  * Customization of the default outline structure.
@@ -18,11 +18,14 @@ import org.efry.z80editor.z80.IfOperand
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#outline
  */
 class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
-	  
+    	  
 	def _isLeaf(Command operation) {
 		true
 	}
-	
+    
+    def _text(Command operation) {
+        null
+    }
 	def _isLeaf(Org operation) {
 		true
 	}

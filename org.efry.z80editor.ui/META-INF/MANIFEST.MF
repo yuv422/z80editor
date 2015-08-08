@@ -15,11 +15,18 @@ Require-Bundle: org.efry.z80editor;visibility:=reexport,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.common.types.ui,
  org.eclipse.xtext.ui.codetemplates.ui,
- org.eclipse.compare
+ org.eclipse.compare,
+ org.eclipse.ui.views
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.efry.z80editor.ui.quickfix,
- org.efry.z80editor.ui.contentassist,
- org.efry.z80editor.ui.internal,
- org.efry.z80editor.ui.contentassist.antlr
+Export-Package: org.efry.z80editor.ui.contentassist,
+ org.efry.z80editor.ui.contentassist.antlr;
+  uses:="org.eclipse.xtext,
+   org.efry.z80editor.services,
+   org.eclipse.xtext.ui.editor.contentassist.antlr.internal,
+   org.eclipse.xtext.ui.codetemplates.ui.partialEditing,
+   org.eclipse.xtext.ui.editor.contentassist.antlr,
+   org.efry.z80editor.ui.contentassist.antlr.internal",
+ org.efry.z80editor.ui.internal;uses:="org.eclipse.ui.plugin,org.osgi.framework,com.google.inject",
+ org.efry.z80editor.ui.quickfix;uses:="org.eclipse.xtext.ui.editor.quickfix"
 Bundle-Activator: org.efry.z80editor.ui.internal.Z80Activator

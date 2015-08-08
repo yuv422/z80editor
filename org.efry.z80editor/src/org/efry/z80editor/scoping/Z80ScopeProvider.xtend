@@ -29,6 +29,7 @@ class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 
 		localScopeProvider.getScope(varName, ref);
 	}
+
 /*
 	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
 		

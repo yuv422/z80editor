@@ -484,5 +484,11 @@
             type="text">
     </fileTypes>
   </extension>
+  <extension point="org.eclipse.ui.views">
+    <view id="org.efry.z80editor.ui.view.z80instructionhelpview"
+             name="Z80 Instruction View"
+             class="org.efry.z80editor.ui.view.Z80InstructionHelpView"
+             icon="icons/information.gif"/>
+  </extension>
 
 </plugin>

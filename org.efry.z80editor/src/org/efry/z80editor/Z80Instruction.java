@@ -386,7 +386,7 @@ public class Z80Instruction {
         map.put(0x47ED, new Z80Instruction(Z80OpCodes.LD, "LD I, A", 0x47ED, "ED 47", 2, 9, 0));
 
         map.put(0x4FED, new Z80Instruction(Z80OpCodes.LD, "LD R, A", 0x4FED, "ED 4F", 2, 9, 0));
-
+/*
         map.put(0x66DD, new Z80Instruction(Z80OpCodes.LD, "LD IXH, (HL)", 0x66DD, "66DD", 2, 0, 0));
         map.put(0x67DD, new Z80Instruction(Z80OpCodes.LD, "LD IXH, A", 0x67DD, "67DD", 2, 0, 0));
         map.put(0x60DD, new Z80Instruction(Z80OpCodes.LD, "LD IXH, B", 0x60DD, "60DD", 2, 0, 0));
@@ -426,7 +426,7 @@ public class Z80Instruction {
         map.put(0x6CFD, new Z80Instruction(Z80OpCodes.LD, "LD IYL, H", 0x6CFD, "6CFD", 2, 0, 0));
         map.put(0x6DFD, new Z80Instruction(Z80OpCodes.LD, "LD IYL, L", 0x6DFD, "6DFD", 2, 0, 0));
         map.put(0x2EFD, new Z80Instruction(Z80OpCodes.LD, "LD IYL, nn", 0x2EFD, "2EFD nn", 3, 0, 0));
-
+*/
         map.put(0x4BED, new Z80Instruction(Z80OpCodes.LD, "LD BC, (nnnn)", 0x4BED, "ED 4B nn nn", 4, 20, 0));
         map.put(0x01, new Z80Instruction(Z80OpCodes.LD, "LD BC, nnnn", 0x01, "01 nn nn", 3, 10, 0));
         map.put(0x5BED, new Z80Instruction(Z80OpCodes.LD, "LD DE, (nnnn)", 0x5BED, "ED 5B nn nn", 4, 20, 0));

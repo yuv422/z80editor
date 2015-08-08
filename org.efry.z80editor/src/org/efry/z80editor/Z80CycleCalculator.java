@@ -76,6 +76,10 @@ public class Z80CycleCalculator {
 		return sb.toString();
 	}
 
+	public String getHtmlFormattedText() {
+		return "<pre>" + getFormattedText() + "</pre>";
+	}
+
 	private class LineData {
 		private String line;
 		private Z80Instruction instruction;

@@ -28,57 +28,7 @@ public class CycleCountTests {
 	  
 	  @Inject
 	  private ValidationTestHelper validationHelper;
-	  
-	  @Test
-	  public void calculateAdcCyclesForHlOperandTest() throws Exception {
-		  final Z80Model model = this.parser.parse("adc hl, bc\nadc hl, de\nadc a, 1 + 2 * 3\n");
-		  Assert.assertNotNull(model);
-		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  System.out.println(cycleCalc.calculateOClockCyclesForModel(model));
-		  
-	  }
-	  
-	  
-	  @Test
-	  public void calculateAdcCyclesFor8E() throws Exception {
-		  final Z80Model model = this.parser.parse("adc a, (hl)\n");
-		  Assert.assertNotNull(model);
-		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 7);
-		  
-	  }
-	  
-	  @Test
-	  public void calculateAdcCyclesFor8EDD() throws Exception {
-		  final Z80Model model = this.parser.parse("adc a, (ix + 1)\n");
-		  Assert.assertNotNull(model);
-		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 19); 
-	  }
 
-	  @Test
-	  public void calculateAdcCyclesFor8EFD() throws Exception {
-		  final Z80Model model = this.parser.parse("adc a, (iy + 1)\n");
-		  Assert.assertNotNull(model);
-		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 19); 
-	  }
-	  
-	  @Test
-	  public void calculateAdcCyclesFor8F() throws Exception {
-		  final Z80Model model = this.parser.parse("adc a, a\n");
-		  Assert.assertNotNull(model);
-		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 4); 
-	  }
-	  
-	  @Test
-	  public void calculateAdcCyclesFor88() throws Exception {
-		  final Z80Model model = this.parser.parse("adc a, b\n");
-		  Assert.assertNotNull(model);
-		  Z80CycleCalculator cycleCalc = new Z80CycleCalculator();
-		  Assert.assertEquals(cycleCalc.calculateOClockCyclesForModel(model), 4); 
-	  }
 	  
 	  private String formatInstructionDescription(String d) {
 		  d = d.replace("nnnn", "$beef");
@@ -112,7 +62,6 @@ public class CycleCountTests {
 
 	  @Test
 	  public void testAllInstructionCycles() throws Exception {
-		  Z80CycleCalculator calculator = new Z80CycleCalculator();
 		  Iterator<Z80Instruction> iterator = Z80Instruction.getInstructionIterator();
 		  while(iterator.hasNext()) {
 			  Z80Instruction i = iterator.next();
@@ -121,7 +70,7 @@ public class CycleCountTests {
 			  Assert.assertNotNull(model);
 
 			  if(!isUnofficialInstruction(command)) { //&& command.startsWith("xor")) {
-				  int cycles = calculator.calculateOClockCyclesForModel(model);
+				  int cycles = Z80CycleCalculator.calculateOClockCyclesForModel(model);
 				  System.out.println(command + "; Cycles: " + cycles + " Expected: " + i.getoClock());
 				  Assert.assertEquals(i.getoClock(), cycles);
 			  }
