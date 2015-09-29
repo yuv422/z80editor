@@ -29,7 +29,7 @@ terminal NEWLINE:
     '\r'? '\n';
 
 Line:
-	(Define | Redefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Repeat | Rept | Db | Dw | IncludeType | IfCmd | Label | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
+	(Define | Redefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Repeat | Rept | Asc | Db | Dw | IncludeType | IfCmd | Label | Asciitable | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
 
 //Lines: first=Line extra+=SubsequentLine*;
 //SubsequentLine: nl=NEWLINE line=Line?;
@@ -78,6 +78,13 @@ VarTypeByte: {VarType} 'db';
 VarTypeWord: {VarType} 'dw';
 VarTypeByteString: {VarType} 'ds'|'dsb' size=Expression (',' initalValue=Expression)?;
 VarTypeWordString: {VarType} 'dsw' size=Expression (',' initalValue=Expression)?;
+
+Asciitable: ('.asciitable'|'.asctable') NEWLINE definitions+=MapTableEntry+ '.enda';
+
+MapTableEntry: {MapDef} ('map' from=AsciiChar ('to' to=AsciiChar)? '=' startOffset=NUMBER)? NEWLINE;
+AsciiChar: (intVal=NUMBER|char=STRING);
+
+Asc: '.asc' value=STRING;
 
 Db: {DbCmd} '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
 Dw: {DwCmd} '.dw' first=NumericLiteral others+=DwAdditionalValueType*;

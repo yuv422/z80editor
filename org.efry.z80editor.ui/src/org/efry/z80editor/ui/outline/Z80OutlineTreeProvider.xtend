@@ -11,6 +11,8 @@ import org.efry.z80editor.z80.IncludeType
 import org.efry.z80editor.z80.LabelType
 import org.efry.z80editor.z80.Org
 import org.efry.z80editor.z80.VarDef
+import org.efry.z80editor.z80.Asciitable
+import org.efry.z80editor.z80.Asc
 
 /**
  * Customization of the default outline structure.
@@ -50,4 +52,7 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
 		true
 	}
 
+    def _isLeaf(Asciitable asciiTable) {
+        true
+    }
 }

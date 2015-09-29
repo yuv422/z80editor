@@ -7,6 +7,7 @@ import org.eclipse.xtext.validation.Check
 import org.efry.z80editor.z80.SignedByteOffset
 import org.efry.z80editor.z80.Z80Package
 import org.efry.z80editor.z80.BitType
+import org.efry.z80editor.z80.AsciiChar
 
 /**
  * This class contains custom validation rules. 
@@ -31,5 +32,13 @@ class Z80Validator extends AbstractZ80Validator {
 		if (type.value > 7) {
 			error('Bit type must be in the range (0 to 7)', Z80Package.Literals.BIT_TYPE__VALUE);
 		}
+	}
+	
+	@Check
+	def checkAsciiChar(AsciiChar asciiChar) {
+	    var charString = asciiChar.char;
+	    if (charString != null && charString.length > 1) {
+	        error('Single ascii character required', Z80Package.Literals.ASCII_CHAR__CHAR);
+	    }
 	}
 }
