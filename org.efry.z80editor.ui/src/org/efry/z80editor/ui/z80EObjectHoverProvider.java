@@ -59,7 +59,7 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
                     if (def.eContainer() != null) {
                         System.out.println(def.eContainer().toString());
                         if(def.eContainer() instanceof EnumCmd) {
-                            parent = "enum " + Z80DisplayFormatterUtil.convertNUMBERToString(((EnumCmd)def.eContainer()).getStartAddress()) + "\n...\n";
+                            //FIXME parent = "enum " + Z80DisplayFormatterUtil.convertNUMBERToString(((EnumCmd)def.eContainer()).getStartAddress()) + "\n...\n";
                         }
                     }
                     ICompositeNode node = NodeModelUtils.getNode(def);

@@ -41,4 +41,6 @@ class Z80Validator extends AbstractZ80Validator {
 	        error('Single ascii character required', Z80Package.Literals.ASCII_CHAR__CHAR);
 	    }
 	}
+	
+	//FIXME check for macro numeric arg. It must be inside a macro block.
 }

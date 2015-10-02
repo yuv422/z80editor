@@ -46,10 +46,14 @@ class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelPro
 	}
 
 	def text(EnumCmd ele) {
+	    return "enum";
+	    /* FIXME
 		if(ele.startAddress.str != null) {
 			return "enum " + ele.startAddress.str
 		}
 		return "enum " + ele.startAddress.i
+		
+		*/
 	}
 		
 	def text(VarDef ele) {

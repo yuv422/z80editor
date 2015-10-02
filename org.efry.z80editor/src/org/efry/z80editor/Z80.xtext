@@ -29,10 +29,20 @@ terminal NEWLINE:
     '\r'? '\n';
 
 Line:
-	(Define | Redefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Repeat | Rept | Asc | Db | Dw | IncludeType | IfCmd | Label | Asciitable | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
+	(Macro | MacroUsage | Smstag | EmptyFill | Asm | EndAsm | Define | Redefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Repeat | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | IfCmd | Label | Asciitable | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
 
 //Lines: first=Line extra+=SubsequentLine*;
 //SubsequentLine: nl=NEWLINE line=Line?;
+Macro: '.macro' MacroName (('nargs' INT)|('args' ID (',' ID)?))? NEWLINE lines+=Line* '.endm';
+MacroName: name=ID;
+
+MacroUsage: ref=[MacroName] (first=NumericLiteral (',' others+=NumericLiteral)*)?;
+
+Smstag: {SmsTagType} '.smstag' ;
+
+EmptyFill: '.emptyfill' NUMBER;
+Asm: {asmDirective} '.asm';
+EndAsm: {asmDirective} '.endasm';
 
 Define: ('.define'|'.def') name=VarName expr=Expression;
 Redefine: ('.redefine'|'.redef') name=VarName expr=Expression;
@@ -61,23 +71,23 @@ Org: '.org' value=(NUMBER);
 Section: '.section' sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
 
 Struct: '.struct' structName=ID NEWLINE definitions+=VarDefinitionStruct* '.endst';
-EnumCmd: '.enum' startAddress=NUMBER order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* '.ende';
+EnumCmd: '.enum' startAddress=NumericLiteral order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* '.ende';
 
 RamSection: '.ramsection' sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
 
 
-VarDefinitionEnum: {VarDef} (varName=VarName type=(EnumType))? NEWLINE;
+VarDefinitionEnum: {VarDef} (varName=VarName ':'? type=(EnumType))? NEWLINE;
 
-EnumType: ('.'?)(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct);
+EnumType: (VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct);
 
 VarDefinitionStruct: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))? NEWLINE;
 VarDefinition: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct))? NEWLINE;
 
-VarTypeStruct: {VarType} 'instanceof' structName=VarName repeatAmount=INT?;
-VarTypeByte: {VarType} 'db';
-VarTypeWord: {VarType} 'dw';
-VarTypeByteString: {VarType} 'ds'|'dsb' size=Expression (',' initalValue=Expression)?;
-VarTypeWordString: {VarType} 'dsw' size=Expression (',' initalValue=Expression)?;
+VarTypeStruct: {VarType} type=('.instanceof'|'instanceof') structName=VarName repeatAmount=INT?;
+VarTypeByte: {VarType} type=('.db'|'db');
+VarTypeWord: {VarType} type=('.dw'|'dw');
+VarTypeByteString: {VarType} type=('.ds'|'ds'|'.dsb'|'dsb') size=Expression (',' initalValue=Expression)?;
+VarTypeWordString: {VarType} type=('.dsw'|'dsw') size=Expression (',' initalValue=Expression)?;
 
 Asciitable: ('.asciitable'|'.asctable') NEWLINE definitions+=MapTableEntry+ '.enda';
 
@@ -86,8 +96,16 @@ AsciiChar: (intVal=NUMBER|char=STRING);
 
 Asc: '.asc' value=STRING;
 
-Db: {DbCmd} '.db' (INT|HEX|BINARY) (','? (INT|HEX|BINARY))*;
+Dsb: ('.dsb'|'.ds') count=NUMBER ',' value=NUMBER;
+Dsw: '.dsw' count=NUMBER ',' value=NUMBER;
+
+Db: {DbCmd} ('.db'|'.byt') (first=DbDataType (numLitData=DbAdditionalValuesSeparatedBySpace|exprData=DbAdditionalValuesSeparatedByComma)?);
+DbAdditionalValuesSeparatedBySpace: others+=DbNonExprDataType+;
+DbAdditionalValuesSeparatedByComma: others+=DbAdditionalValueType+;
+DbDataType: expr=Expression|str=STRING;
+DbNonExprDataType hidden(): MINUS? NumericLiteral;
 Dw: {DwCmd} '.dw' first=NumericLiteral others+=DwAdditionalValueType*;
+DbAdditionalValueType: ',' value=DbDataType;
 DwAdditionalValueType: ','? value=NumericLiteral;
 
 IncludeType: inc=(Include|Incbin);
@@ -116,8 +134,12 @@ Expression returns Expr:
     BitwiseOp;
 
 BitwiseOp returns Expr:
+    BitshiftOp
+    ({BinaryExpr.left=current} op1=('|' | '&' | '~') right=Addition)*;
+    
+BitshiftOp returns Expr:
     Addition
-    ({BinaryExpr.left=current} op1=('|' | '&') right=Addition)*;
+    ({BinaryExpr.left=current} op1=('<<' | '>>') right=Addition)*;
 
 Addition returns Expr:
     Multiplication
@@ -125,7 +147,7 @@ Addition returns Expr:
 
 Multiplication returns Expr:
     PrimaryExpression
-    ({BinaryExpr.left=current} op1=('*' | '/') right=PrimaryExpression)*;
+    ({BinaryExpr.left=current} op1=('*' | '/' | '#') right=PrimaryExpression)*;
 
 PrimaryExpression returns Expr:
     '(' Expression ')' |
@@ -210,10 +232,14 @@ Xor: {Operation} opcode='xor' operand=s;
 terminal SL_COMMENT     : ';' !('\n'|'\r')*;
 terminal WS            : (' '|'\t')+;
 
+MacroNumericArg hidden(): arg='\\'INT;
+
 BitOperand: {BitType} value=INT;//Must be in range 0..7 This is checked for by a validator
 B returns Operand: bitType=BitOperand;
-NumericLiteral : BANKLABEL|referencedObj=[LabelType]|NUMBER; //ID
+NumericLiteral : BANKLABEL|referencedObj=[LabelType]|NUMBER|MacroNumericArg; //ID
 NUMBER: i=INT|str=(HEX|BINARY);
+NegNumber hidden(): MINUS? NUMBER;
+
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
 terminal BINARY: '%'('0'..'1')+;
 
