@@ -23,14 +23,14 @@ class Z80Validator extends AbstractZ80Validator {
 			value = -value;
 		}
 		if (value < -128 || value > 127) {
-			error('Signed offset must be in the range (-128 to +127)', Z80Package.Literals.SIGNED_BYTE_OFFSET__VALUE)
+			error('Signed offset must be in the range (-128 to +127)', Z80Package::eINSTANCE.signedByteOffset_Value)
 		}
 	}
 	
 	@Check
 	def checkBitType(BitType type) {
 		if (type.value > 7) {
-			error('Bit type must be in the range (0 to 7)', Z80Package.Literals.BIT_TYPE__VALUE);
+			error('Bit type must be in the range (0 to 7)', Z80Package::eINSTANCE.bitType_Value);
 		}
 	}
 	
@@ -38,7 +38,7 @@ class Z80Validator extends AbstractZ80Validator {
 	def checkAsciiChar(AsciiChar asciiChar) {
 	    var charString = asciiChar.char;
 	    if (charString != null && charString.length > 1) {
-	        error('Single ascii character required', Z80Package.Literals.ASCII_CHAR__CHAR);
+	        error('Single ascii character required', Z80Package::eINSTANCE.asciiChar_Char);
 	    }
 	}
 	

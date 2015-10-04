@@ -29,14 +29,16 @@ terminal NEWLINE:
     '\r'? '\n';
 
 Line:
-	(Macro | MacroUsage | Smstag | EmptyFill | Asm | EndAsm | Define | Redefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Repeat | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | IfCmd | Label | Asciitable | Command) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
+	(Macro | MacroUsage | Smstag | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
+	    IfCmd | IfDefCmd | IfnDefCmd | IfDefMCmd | IfnDefMCmd | IExistsCmd | IfEqCmd | IfnEqCmd | IfLeCmd | IfLeeqCmd | IfGrCmd | IfGreqCmd | 
+	    Label | Asciitable | Command
+	) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
 
 //Lines: first=Line extra+=SubsequentLine*;
 //SubsequentLine: nl=NEWLINE line=Line?;
-Macro: '.macro' MacroName (('nargs' INT)|('args' ID (',' ID)?))? NEWLINE lines+=Line* '.endm';
-MacroName: name=ID;
+Macro: '.macro' name=ID (("nargs" INT)|('args' ID (',' ID)?))? NEWLINE lines+=Line* '.endm';
 
-MacroUsage: ref=[MacroName] (first=NumericLiteral (',' others+=NumericLiteral)*)?;
+MacroUsage: ref=[Macro] (first=NumericLiteral (',' others+=NumericLiteral)*)?;
 
 Smstag: {SmsTagType} '.smstag' ;
 
@@ -44,12 +46,26 @@ EmptyFill: '.emptyfill' NUMBER;
 Asm: {asmDirective} '.asm';
 EndAsm: {asmDirective} '.endasm';
 
-Define: ('.define'|'.def') name=VarName expr=Expression;
+Define: ('.define'|'.def'|'.equ') name=VarName expr=Expression;
 Redefine: ('.redefine'|'.redef') name=VarName expr=Expression;
+Undefine: ('.undefine'|'.undef') first=VarName (',' others+=VarName)*;
 
-IfCmd: '.if' lop=IfOperand comparison=IfOperator rop=IfOperand NEWLINE block+=Line+ ('.else' NEWLINE elseBlock+=Line+)? '.endif';
+IfCmd: '.if' lop=IfOperand comparison=IfOperator rop=IfOperand NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+ElseCmd: {ElseCmd} '.else' NEWLINE elseBlock+=Line*;
 IfOperator: ('<'|'<='|'>'|'>='|'=='|'!=');
-IfOperand: number=NUMBER|str=ID;
+IfOperand: number=NUMBER|str=ID|oth='nargs';
+IfDefCmd: '.ifdef' define=VarName NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfnDefCmd: '.ifndef' define=VarName NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfDefMCmd: '.ifdefm' arg=MacroNumericArg NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfnDefMCmd: '.ifndefm' arg=MacroNumericArg NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IExistsCmd: '.ifexists' filename=FileName NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+FileName: str=STRING|define=VarName;
+IfEqCmd: '.ifeq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfnEqCmd: '.ifneq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfLeCmd: '.ifle' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfLeeqCmd: '.ifleeq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfGrCmd: '.ifgr' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfGreqCmd: '.ifgreq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
 
 MemoryMap: '.memorymap' NEWLINE cmds+=MemoryMapCommands+ '.endme';
 MemoryMapCommands: ('defaultslot' INT NEWLINE) |
@@ -63,14 +79,15 @@ RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
 	('banks' (INT|HEX) NEWLINE)
 ;
 
-Rept: '.rept' INT NEWLINE block+=Line+ '.endr';
-Repeat: '.repeat' INT NEWLINE block+=Line+ '.endr';
+Rept: ('.rept'|'.repeat') repeatCount=NumericLiteral NEWLINE block+=Line+ '.endr';
 
 Bank: {BankCmd} '.bank' INT ('slot' slot=INT)?;
 Org: '.org' value=(NUMBER);
 Section: '.section' sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
 
-Struct: '.struct' structName=ID NEWLINE definitions+=VarDefinitionStruct* '.endst';
+Struct: '.struct' name=ID NEWLINE definitions+=VarDefinitionStruct* '.endst';
+
+
 EnumCmd: '.enum' startAddress=NumericLiteral order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* '.ende';
 
 RamSection: '.ramsection' sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
@@ -83,7 +100,7 @@ EnumType: (VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeSt
 VarDefinitionStruct: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))? NEWLINE;
 VarDefinition: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct))? NEWLINE;
 
-VarTypeStruct: {VarType} type=('.instanceof'|'instanceof') structName=VarName repeatAmount=INT?;
+VarTypeStruct: {VarType} type=('.instanceof'|'instanceof') ref=[Struct] repeatAmount=INT?;
 VarTypeByte: {VarType} type=('.db'|'db');
 VarTypeWord: {VarType} type=('.dw'|'dw');
 VarTypeByteString: {VarType} type=('.ds'|'ds'|'.dsb'|'dsb') size=Expression (',' initalValue=Expression)?;
