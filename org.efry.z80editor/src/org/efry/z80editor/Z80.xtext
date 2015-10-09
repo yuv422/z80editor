@@ -29,6 +29,10 @@ Z80Model:
 terminal NEWLINE:
 // New line on DOS or Unix
     '\r'? '\n';
+    
+    
+VarName: ID| '_sizeof_' | 'a' | 'adc' | 'add' | 'af' | 'align' | 'and' | 'args' | 'asc' | 'asciitable' | 'asctable' | 'asm' | 'b' | 'bank' | 'banks' | 'banksize' | 'bankstotal' | 'bc' | 'bit' | 'byt' | 'c' | 'call' | 'ccf' | 'cp' | 'cpd' | 'cpdr' | 'cpi' | 'cpir' | 'cpl' | 'd' | 'daa' | 'db' | 'de' | 'dec' | 'def' | 'defaultslot' | 'define' | 'desc' | 'di' | 'djnz' | 'ds' | 'dsb' | 'dsw' | 'dw' | 'e' | 'ei' | 'else' | 'emptyfill' | 'enda' | 'endasm' | 'ende' | 'endif' | 'endm' | 'endme' | 'endr' | 'endro' | 'ends' | 'endst' | 'enum' | 'equ' | 'ex' | 'export' | 'exx' | 'force' | 'free' | 'h' | 'halt' | 'hl' | 'i' | 'if' | 'ifdef' | 'ifdefm' | 'ifeq' | 'ifexists' | 'ifgr' | 'ifgreq' | 'ifle' | 'ifleeq' | 'ifndef' | 'ifndefm' | 'ifneq' | 'im' | 'in' | 'inc' | 'incbin' | 'include' | 'ind' | 'indr' | 'ini' | 'inir' | 'instanceof' | 'ix' | 'iy' | 'jp' | 'jr' | 'l' | 'ld' | 'ldd' | 'lddr' | 'ldi' | 'ldir' | 'm' | 'macro' | 'map' | 'memorymap' | 'nargs' | 'nc' | 'neg' | 'nop' | 'nz' | 'or' | 'org' | 'otdr' | 'otir' | 'out' | 'outd' | 'outi' | 'overwrite' | 'p' | 'pe' | 'po' | 'pop' | 'push' | 'r' | 'ramsection' | 'redef' | 'redefine' | 'repeat' | 'rept' | 'res' | 'ret' | 'reti' | 'retn' | 'rl' | 'rla' | 'rlc' | 'rlca' | 'rld' | 'rombankmap' | 'rr' | 'rra' | 'rrc' | 'rrca' | 'rrd' | 'rst' | 'sbc' | 'scf' | 'sdsctag' | 'section' | 'semifree' | 'set' | 'size' | 'sla' | 'slot' | 'slotsize' | 'smstag' | 'sp' | 'sra' | 'srl' | 'start' | 'struct' | 'sub' | 'superfree' | 'to' | 'undef' | 'undefine' | 'xor' | 'z';
+
 AsciiTableTag hidden(): DOT 'asciitable';
 AscTableTag hidden(): DOT 'asctable';
 AscTag hidden(): DOT 'asc';
@@ -95,8 +99,8 @@ Line:
 
 //Lines: first=Line extra+=SubsequentLine*;
 //SubsequentLine: nl=NEWLINE line=Line?;
-MacroNamedArg returns LabelType: {LabelType} name=ID;
-Macro: MacroTag name=ID (("nargs" INT)|('args' macroArgs+=MacroNamedArg (',' macroArgs+=MacroNamedArg)*))? NEWLINE lines+=Line* EndMTag;
+//MacroNamedArg returns LabelType: {LabelType} name=ID;
+Macro: MacroTag name=ID (("nargs" INT)|('args' macroArgs+=LabelType (',' macroArgs+=LabelType)*))? NEWLINE lines+=Line* EndMTag;
 
 MacroUsage: ref=[Macro] (macroArgs+=Expression (',' macroArgs+=Expression)*)?;
 
@@ -106,8 +110,8 @@ EmptyFill: EmptyFillTag NUMBER;
 Asm: {asmDirective} AsmTag;
 EndAsm: {asmDirective} EndAsmTag;
 
-Define: {LabelType} (DefineTag|DefTag|EquTag) varName=VarName expr=Expression;
-Redefine: (RedefineTag|RedefTag) name=VarName expr=Expression;
+Define: (DefineTag|DefTag|EquTag) varName=LabelType expr=Expression;
+Redefine: (RedefineTag|RedefTag) name=LabelType expr=Expression;
 Undefine: (UndefineTag|UndefTag) first=VarName (',' others+=VarName)*;
 
 IfCmd: IfTag lop=IfOperand comparison=IfOperator rop=IfOperand NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
@@ -146,7 +150,7 @@ Org: ORG_TAG value=(NUMBER);
 
 Section: SectionTag sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ END_S_TAG;
 
-Struct: {LabelType} StructTag name=ID definitions+=VarDefinitionStruct* NEWLINE END_ST_TAG;
+Struct: StructTag name=LabelType definitions+=VarDefinitionStruct* NEWLINE END_ST_TAG;
 
 
 EnumCmd: EnumTag startAddress=Expression order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* EndETag;
@@ -167,11 +171,11 @@ VarTypeWord: {VarType} DOT? type=('dw');
 VarTypeByteString: {VarType} DOT? type=('ds'|'dsb') size=Expression (',' initalValue=Expression)?;
 VarTypeWordString: {VarType} DOT? type=('dsw') size=Expression (',' initalValue=Expression)?;
 
-VarStruct: {LabelType} varName=VarName ':'? DOT? type=('instanceof') ref=[Struct] repeatAmount=INT?;
-VarByte: {LabelType} varName=VarName ':'? DOT? type=('db');
-VarWord: {LabelType} varName=VarName ':'? DOT? type=('dw');
-VarByteString: {LabelType} varName=VarName ':'? DOT? type=('ds'|'dsb') size=Expression (',' initalValue=Expression)?;
-VarWordString: {LabelType} varName=VarName ':'? DOT? type=('dsw') size=Expression (',' initalValue=Expression)?;
+VarStruct:  varName=LabelType ':'? DOT? type=('instanceof') structRef=[LabelType] repeatAmount=INT?;
+VarByte:  varName=LabelType ':'? DOT? type=('db');
+VarWord:  varName=LabelType ':'? DOT? type=('dw');
+VarByteString:  varName=LabelType ':'? DOT? type=('ds'|'dsb') size=Expression (',' initalValue=Expression)?;
+VarWordString:  varName=LabelType ':'? DOT? type=('dsw') size=Expression (',' initalValue=Expression)?;
 
 Asciitable: (AsciiTableTag|AscTableTag) NEWLINE definitions+=MapTableEntry+ EndATag;
 
@@ -206,11 +210,11 @@ terminal MINUS: '-';
 terminal MINUSMINUS: '-''-'+;
 
 
-BANKLABEL hidden(): ':'referencedObj=[VarName];
+BANKLABEL hidden(): ':'referencedObj=[LabelType];
 
-VarName: name=ID;
+LabelType: name=VarName;
 
-Label hidden() : {LabelType} (PLUSLABEL|MINUSLABEL|((varName=VarName|PLUSPLUS|MINUSMINUS)':'));
+Label hidden() : {Label} (PLUSLABEL|MINUSLABEL|((varName=LabelType|PLUSPLUS|MINUSMINUS)':'));
 
 DotExpression  returns Ref hidden():
    EntityRef  ({DotExpression.ref=current} DOT tail=[VarDefinitionStruct])*

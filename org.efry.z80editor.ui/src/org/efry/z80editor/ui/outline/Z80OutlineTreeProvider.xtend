@@ -4,16 +4,29 @@
 package org.efry.z80editor.ui.outline
 
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
+import org.efry.z80editor.z80.Asciitable
 import org.efry.z80editor.z80.Command
+import org.efry.z80editor.z80.Db
 import org.efry.z80editor.z80.Define
+import org.efry.z80editor.z80.Dsb
+import org.efry.z80editor.z80.Dw
+import org.efry.z80editor.z80.EmptyFill
+import org.efry.z80editor.z80.IfCmd
 import org.efry.z80editor.z80.IfOperand
 import org.efry.z80editor.z80.IncludeType
 import org.efry.z80editor.z80.LabelType
+import org.efry.z80editor.z80.Macro
+import org.efry.z80editor.z80.MacroUsage
+import org.efry.z80editor.z80.MemoryMap
 import org.efry.z80editor.z80.Org
 import org.efry.z80editor.z80.VarDef
-import org.efry.z80editor.z80.Asciitable
-import org.efry.z80editor.z80.IfCmd
-import org.efry.z80editor.z80.Macro
+import org.efry.z80editor.z80.Label
+import org.efry.z80editor.z80.Asc
+import org.efry.z80editor.z80.VarStruct
+import org.efry.z80editor.z80.VarByte
+import org.efry.z80editor.z80.VarWord
+import org.efry.z80editor.z80.VarByteString
+import org.efry.z80editor.z80.VarWordString
 
 /**
  * Customization of the default outline structure.
@@ -29,6 +42,19 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
     def _text(Command operation) {
         null
     }
+    
+    def _text(LabelType operation) {
+        null
+    }
+    
+    def _text(Asc asc) {
+        null
+    }
+    
+    def _text(EmptyFill emptyFill) {
+        null
+    }
+
 	def _isLeaf(Org operation) {
 		true
 	}
@@ -64,4 +90,64 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
     def _isLeaf(Macro macro) {
         true
     }
+    
+    def _isLeaf(MemoryMap mmap) {
+        true
+    }
+
+    def _isLeaf(EmptyFill emptyFill) {
+        true
+    }
+
+    def _isLeaf(Db db) {
+        true
+    }
+    
+    def _isLeaf(Dw dw) {
+        true
+    }
+    
+    def _isLeaf(Dsb dsb) {
+        true
+    }
+        
+    def _isLeaf(MacroUsage label) {
+        true
+    }
+    def _text(MacroUsage macroUsage) {
+        null
+    }
+    
+    def _text(Label label) {
+        if(label.varName != null && label.varName.name != null) {
+            label.varName.name
+        } else {
+            null
+        }
+    }
+   
+    def _isLeaf(Label label) {
+        true
+    }
+    
+    def _text(VarStruct v) {
+        v.varName.name
+    }   
+    
+    def _text(VarByte v) {
+        v.varName.name
+    }  
+     
+    def _text(VarWord v) {
+        v.varName.name
+    }
+    
+    def _text(VarByteString v) {
+        v.varName.name
+    }
+      
+    def _text(VarWordString v) {
+        v.varName.name
+    }  
+
 }

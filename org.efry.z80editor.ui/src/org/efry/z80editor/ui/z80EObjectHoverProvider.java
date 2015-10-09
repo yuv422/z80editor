@@ -18,9 +18,9 @@ import org.efry.z80editor.Z80DisplayFormatterUtil;
 import org.efry.z80editor.Z80OpCodes;
 import org.efry.z80editor.z80.Define;
 import org.efry.z80editor.z80.EnumCmd;
+import org.efry.z80editor.z80.LabelType;
 import org.efry.z80editor.z80.Operation;
 import org.efry.z80editor.z80.VarDef;
-import org.efry.z80editor.z80.VarName;
 
 import com.google.inject.Inject;
 
@@ -41,19 +41,19 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
                     return "Unknown opcode";
                 }
             }
-        } else if (o instanceof VarName) {
+        } else if (o instanceof LabelType) {
 
-//            if (o.eContainer() != null) {
-//                System.out.println(o.eContainer().toString());
-//                if(o.eContainer() instanceof Define) {
-//                    Define def = (Define) o.eContainer();
-//                    ICompositeNode node = NodeModelUtils.getNode(def.getExpr());
-//                    
-//                    if(node != null) {
-//                        return def.getName().getName() + ": " + node.getText();
-//    
-//                    }
-//                } else if(o.eContainer() instanceof VarDef) {
+            if (o.eContainer() != null) {
+                System.out.println(o.eContainer().toString());
+                if(o.eContainer() instanceof Define) {
+                    Define def = (Define) o.eContainer();
+                    ICompositeNode node = NodeModelUtils.getNode(def.getExpr());
+                    
+                    if(node != null) {
+                        return def.getVarName().getName() + ": " + node.getText();
+    
+                    }
+                } //else if(o.eContainer() instanceof VarDef) {
 //                    VarDef def = (VarDef)o.eContainer();
 //                    String parent = "";
 //                    if (def.eContainer() != null) {
@@ -69,7 +69,7 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
 //    
 //                    }
 //                }
-//            }
+            }
             return o.toString();
         }
 
@@ -82,7 +82,7 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
             return true;
         }
 
-        if (o instanceof VarName) {
+        if (o instanceof LabelType) {
             return true;
         }
 

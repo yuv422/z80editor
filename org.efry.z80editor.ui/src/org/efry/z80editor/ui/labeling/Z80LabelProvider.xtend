@@ -13,6 +13,13 @@ import org.efry.z80editor.z80.IfCmd
 import org.efry.z80editor.z80.Struct
 import org.efry.z80editor.Z80DisplayFormatterUtil
 import org.efry.z80editor.z80.VarDefinitionStruct
+import org.efry.z80editor.z80.Label
+import org.efry.z80editor.z80.Macro
+import org.efry.z80editor.z80.VarStruct
+import org.efry.z80editor.z80.VarByte
+import org.efry.z80editor.z80.VarWord
+import org.efry.z80editor.z80.VarByteString
+import org.efry.z80editor.z80.VarWordString
 
 /**
  * Provides labels for EObjects.
@@ -26,16 +33,6 @@ class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelPro
 		super(delegate);
 	}
 
-	// Labels and icons can be computed like this:
-	
-//	def text(Greeting ele) {
-//		'A greeting to ' + ele.name
-//	}
-//
-//	def image(Greeting ele) {
-//		'Greeting.gif'
-//	}
-
 	def image(Section ele) {
 		's.png'
 	}
@@ -45,10 +42,21 @@ class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelPro
 	}
 	
 	def text(Define ele) {
-		var label = ele as LabelType
-		label.varName.name
+		ele.varName.name
 	}
 
+    def image(Struct ele) {
+        'struct_obj.gif'
+    }
+    
+    def text(Struct struct) {
+        struct.name.name
+    }
+
+    def image(Macro macro) {
+        'macro_obj.gif'
+    }
+        
 	def text(EnumCmd ele) {
 
 //	    if(ele.startAddress != null) {
@@ -57,21 +65,33 @@ class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelPro
 
 		return "enum";
 	}
-    		
-//	def text(VarDef ele) {
-//		ele.varName.name
-//	}
-    
-	def text(IfCmd ele) {
-		"if"
-	}
 	
-	def text(LabelType ele) {
-		ele.varName.name
+	def text(Label label) {
+		label.varName.name
 	}
 
-	def image(LabelType ele) {
+	def image(Label ele) {
 		'public_co.gif'
 	}
-		
+	
+	def text(VarStruct v) {
+        v.varName.name
+    }	
+    
+    def text(VarByte v) {
+        v.varName.name
+    }  
+     
+    def text(VarWord v) {
+        v.varName.name
+    }
+    
+    def text(VarByteString v) {
+        v.varName.name
+    }
+      
+    def text(VarWordString v) {
+        v.varName.name
+    }   
+
 }

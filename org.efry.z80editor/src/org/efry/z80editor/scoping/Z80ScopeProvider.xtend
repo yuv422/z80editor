@@ -14,6 +14,8 @@ import org.efry.z80editor.z80.EntityRef
 import org.efry.z80editor.z80.LabelType
 import org.efry.z80editor.z80.DotExpression
 import org.efry.z80editor.z80.Macro
+import org.efry.z80editor.z80.Struct
+import org.efry.z80editor.z80.VarStruct
 
 /**
  * This class contains custom scoping description.
@@ -50,15 +52,31 @@ class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 	    val head = exp.ref;
         switch (head) {
             EntityRef : {
-                    var struct = head.entity
-                    if(struct != null) {
-                        if(struct.definitions != null && !struct.definitions.empty) {
-                            Scopes::scopeFor(struct.definitions)
-                        } else {
-                            struct = struct.ref as LabelType
-                            Scopes::scopeFor(struct.definitions)
-                        }
+                var label = head.entity
+                var struct = null as Struct
+                if(label.eContainer instanceof Struct) {
+                    struct = label.eContainer as Struct
+                } else if(label.eContainer instanceof VarStruct) {
+                    var varStruct = label.eContainer as VarStruct
+                    var structLabel = varStruct.structRef
+                    if(structLabel.eContainer instanceof Struct) {
+                        struct = structLabel.eContainer as Struct
                     }
+                }
+                
+                if(struct != null) {
+                    return Scopes::scopeFor(struct.definitions)
+                }
+//                    var struct = head.entity
+//                    if(struct != null) {
+//                        if(struct.definitions != null && !struct.definitions.empty) {
+//                            Scopes::scopeFor(struct.definitions)
+//                        } else {
+//                            struct = struct.ref as LabelType
+//                            Scopes::scopeFor(struct.definitions)
+//                        }
+//                    }
+        IScope::NULLSCOPE
                 }
             DotExpression : {
                 val tail = head.tail
@@ -85,6 +103,7 @@ class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 //             
 //            default: IScope::NULLSCOPE
 //        }
+
     }
     
     def IScope scope_LabelType(Macro macro, EReference ref) {

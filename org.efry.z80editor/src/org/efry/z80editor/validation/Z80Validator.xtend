@@ -9,6 +9,8 @@ import org.efry.z80editor.z80.Z80Package
 import org.efry.z80editor.z80.BitType
 import org.efry.z80editor.z80.AsciiChar
 import org.efry.z80editor.Z80DisplayFormatterUtil
+import org.efry.z80editor.z80.VarStruct
+import org.efry.z80editor.z80.Struct
 
 /**
  * This class contains custom validation rules. 
@@ -42,6 +44,14 @@ class Z80Validator extends AbstractZ80Validator {
 	    if (charString != null && charString.length > 1) {
 	        error('Single ascii character required', Z80Package::eINSTANCE.asciiChar_Char);
 	    }
+	}
+	
+	@Check
+	def checkVarStruct(VarStruct varStruct) {
+	    var label = varStruct.structRef
+	    if(!(label.eContainer instanceof Struct) && label.name != null) {
+            error('\'' + label.name + '\' not a Struct variable', Z80Package::eINSTANCE.varStruct_StructRef);
+        }
 	}
 	
 	//FIXME check for macro numeric arg. It must be inside a macro block.
