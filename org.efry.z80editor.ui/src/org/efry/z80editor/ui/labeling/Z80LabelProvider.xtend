@@ -12,6 +12,7 @@ import org.efry.z80editor.z80.EnumCmd
 import org.efry.z80editor.z80.IfCmd
 import org.efry.z80editor.z80.Struct
 import org.efry.z80editor.Z80DisplayFormatterUtil
+import org.efry.z80editor.z80.VarDefinitionStruct
 
 /**
  * Provides labels for EObjects.
@@ -44,22 +45,23 @@ class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelPro
 	}
 	
 	def text(Define ele) {
-		ele.name.name
+		var label = ele as LabelType
+		label.varName.name
 	}
 
 	def text(EnumCmd ele) {
 
-	    if(ele.startAddress != null) {
-	        return "enum " + Z80DisplayFormatterUtil.convertNumericLiteralToString(ele.startAddress);
-	    }
+//	    if(ele.startAddress != null) {
+//	        return "enum " + Z80DisplayFormatterUtil.convertNumericLiteralToString(ele.startAddress);
+//	    }
 
 		return "enum";
 	}
     		
-	def text(VarDef ele) {
-		ele.varName.name
-	}
-	
+//	def text(VarDef ele) {
+//		ele.varName.name
+//	}
+    
 	def text(IfCmd ele) {
 		"if"
 	}

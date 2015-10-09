@@ -5,133 +5,197 @@ generate z80 "http://www.efry.org/z80editor/Z80"
 Z80Model:
     commands+=Line*;
 
-terminal REGISTER_A: 'a';
-terminal REGISTER_B: 'b';
-REGISTER_C: 'c'; //cannot be a terminal because it clashes with the 'C'arry flag.
-terminal REGISTER_D: 'd';
-terminal REGISTER_E: 'e';
-terminal REGISTER_H: 'h';
-terminal REGISTER_I: 'i';
-terminal REGISTER_L: 'l';
-terminal REGISTER_R: 'r';
+ REGISTER_A: 'a';
+ REGISTER_B: 'b';
+ REGISTER_C: 'c'; //cannot be a terminal because it clashes with the 'C'arry flag.
+ REGISTER_D: 'd';
+ REGISTER_E: 'e';
+ REGISTER_H: 'h';
+ REGISTER_I: 'i';
+ REGISTER_L: 'l';
+ REGISTER_R: 'r';
 
-terminal REGISTER_AF: 'af';
-terminal REGISTER_AF_SHADOW: 'af\'';
-terminal REGISTER_BC: 'bc';
-terminal REGISTER_DE: 'de';
-terminal REGISTER_HL: 'hl';
-terminal REGISTER_IX: 'ix';
-terminal REGISTER_IY: 'iy';
-terminal REGISTER_SP: 'sp';
+ REGISTER_AF: 'af';
+ REGISTER_AF_SHADOW: 'af\'';
+ REGISTER_BC: 'bc';
+ REGISTER_DE: 'de';
+ REGISTER_HL: 'hl';
+ REGISTER_IX: 'ix';
+ REGISTER_IY: 'iy';
+ REGISTER_SP: 'sp';
+
+ DOT: '.';
 
 terminal NEWLINE:
 // New line on DOS or Unix
     '\r'? '\n';
+AsciiTableTag hidden(): DOT 'asciitable';
+AscTableTag hidden(): DOT 'asctable';
+AscTag hidden(): DOT 'asc';
+AsmTag hidden(): DOT 'asm';
+BankTag hidden(): DOT 'bank';
+BytTag hidden(): DOT 'byt';
+DbTag hidden(): DOT 'db';
+DefineTag hidden(): DOT 'define';
+DefTag hidden(): DOT 'def';
+DsbTag hidden(): DOT 'dsb';
+DsTag hidden(): DOT 'ds';
+DswTag hidden(): DOT 'dsw';
+DwTag hidden(): DOT 'dw';
+ElseTag hidden(): DOT 'else';
+EndATag hidden(): DOT 'enda';
+EndAsmTag hidden(): DOT 'endasm';
+EndETag hidden(): DOT 'ende';
+EndIfTag hidden(): DOT 'endif';
+EndMTag hidden(): DOT 'endm';
+END_ME_TAG hidden(): DOT 'endme';
+EndRTag hidden(): DOT 'endr';
+EndRoTag hidden(): DOT 'endro';
+ END_ST_TAG hidden(): DOT 'endst';
+ END_S_TAG hidden():  DOT 'ends';
+EmptyFillTag hidden(): DOT 'emptyfill';
+EnumTag hidden(): DOT 'enum';
+EquTag hidden(): DOT 'equ';
+IfTag hidden(): DOT 'if';
+IfDefTag hidden(): DOT 'ifdef';
+IfNDefTag hidden(): DOT 'ifndef';
+IfDefMTag hidden(): DOT 'ifdefm';
+IfNDefMTag hidden(): DOT 'ifndefm';
+IfExistsTag hidden(): DOT 'ifexists';
+IfEqTag hidden(): DOT 'ifeq';
+IfNEqTag hidden(): DOT 'ifneq';
+IfLeTag hidden(): DOT 'ifle';
+IfLeeqTag hidden(): DOT 'ifleeq';
+IfGrTag hidden(): DOT 'ifgr';
+IfGreqTag hidden(): DOT 'ifgreq';
+IncBinTag hidden(): DOT 'incbin';
+IncludeTag hidden(): DOT 'include';
+
+MacroTag hidden(): DOT 'macro';
+MemoryMapTag hidden(): DOT 'memorymap';
+ORG_TAG hidden(): DOT 'org';
+RamSectionTag hidden(): DOT 'ramsection';
+RedefineTag hidden(): DOT 'redefine';
+RedefTag hidden(): DOT 'redef';
+RepeatTag hidden(): DOT 'repeat';
+ReptTag hidden(): DOT 'rept';
+RomBankMapTag hidden(): DOT 'rombankmap';
+SdscTag hidden(): DOT 'sdsctag';
+SectionTag hidden(): DOT 'section';
+SmsTag hidden(): DOT 'smstag';
+StructTag hidden(): DOT 'struct';
+UndefineTag hidden(): DOT 'undefine';
+UndefTag hidden(): DOT 'undef';
 
 Line:
-	(Macro | MacroUsage | Smstag | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | Sdsctag | Bank | Org | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
+	(Macro | MacroUsage | Sms | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | SdscTagCmd | Bank | Org | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
 	    IfCmd | IfDefCmd | IfnDefCmd | IfDefMCmd | IfnDefMCmd | IExistsCmd | IfEqCmd | IfnEqCmd | IfLeCmd | IfLeeqCmd | IfGrCmd | IfGreqCmd | 
 	    Label | Asciitable | Command
-	) NEWLINE | (Label c=Command NEWLINE) | {EmptyLine} NEWLINE;
+	) NEWLINE | (Label (c=Command) NEWLINE) | {EmptyLine} NEWLINE;
 
 //Lines: first=Line extra+=SubsequentLine*;
 //SubsequentLine: nl=NEWLINE line=Line?;
-Macro: '.macro' name=ID (("nargs" INT)|('args' ID (',' ID)?))? NEWLINE lines+=Line* '.endm';
+MacroNamedArg returns LabelType: {LabelType} name=ID;
+Macro: MacroTag name=ID (("nargs" INT)|('args' macroArgs+=MacroNamedArg (',' macroArgs+=MacroNamedArg)*))? NEWLINE lines+=Line* EndMTag;
 
-MacroUsage: ref=[Macro] (first=NumericLiteral (',' others+=NumericLiteral)*)?;
+MacroUsage: ref=[Macro] (macroArgs+=Expression (',' macroArgs+=Expression)*)?;
 
-Smstag: {SmsTagType} '.smstag' ;
+Sms: {SmsTagType} SmsTag ;
 
-EmptyFill: '.emptyfill' NUMBER;
-Asm: {asmDirective} '.asm';
-EndAsm: {asmDirective} '.endasm';
+EmptyFill: EmptyFillTag NUMBER;
+Asm: {asmDirective} AsmTag;
+EndAsm: {asmDirective} EndAsmTag;
 
-Define: ('.define'|'.def'|'.equ') name=VarName expr=Expression;
-Redefine: ('.redefine'|'.redef') name=VarName expr=Expression;
-Undefine: ('.undefine'|'.undef') first=VarName (',' others+=VarName)*;
+Define: {LabelType} (DefineTag|DefTag|EquTag) varName=VarName expr=Expression;
+Redefine: (RedefineTag|RedefTag) name=VarName expr=Expression;
+Undefine: (UndefineTag|UndefTag) first=VarName (',' others+=VarName)*;
 
-IfCmd: '.if' lop=IfOperand comparison=IfOperator rop=IfOperand NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-ElseCmd: {ElseCmd} '.else' NEWLINE elseBlock+=Line*;
+IfCmd: IfTag lop=IfOperand comparison=IfOperator rop=IfOperand NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+ElseCmd: {ElseCmd} ElseTag NEWLINE elseBlock+=Line*;
 IfOperator: ('<'|'<='|'>'|'>='|'=='|'!=');
 IfOperand: number=NUMBER|str=ID|oth='nargs';
-IfDefCmd: '.ifdef' define=VarName NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfnDefCmd: '.ifndef' define=VarName NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfDefMCmd: '.ifdefm' arg=MacroNumericArg NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfnDefMCmd: '.ifndefm' arg=MacroNumericArg NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IExistsCmd: '.ifexists' filename=FileName NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfDefCmd: IfDefTag define=VarName NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfnDefCmd: IfNDefTag define=VarName NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfDefMCmd: IfDefMTag arg=MacroNumericArg NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfnDefMCmd: IfNDefMTag arg=MacroNumericArg NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IExistsCmd: IfExistsTag filename=FileName NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
 FileName: str=STRING|define=VarName;
-IfEqCmd: '.ifeq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfnEqCmd: '.ifneq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfLeCmd: '.ifle' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfLeeqCmd: '.ifleeq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfGrCmd: '.ifgr' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
-IfGreqCmd: '.ifgreq' lhs=Expression rhs=Expression NEWLINE block+=Line* elseCmd=ElseCmd? '.endif';
+IfEqCmd: IfEqTag lhs=Expression rhs=NumericLiteral NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfnEqCmd: IfNEqTag lhs=Expression rhs=NumericLiteral NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfLeCmd: IfLeTag lhs=Expression rhs=NumericLiteral NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfLeeqCmd: IfLeeqTag lhs=Expression rhs=NumericLiteral NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfGrCmd: IfGrTag lhs=Expression rhs=NumericLiteral NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
+IfGreqCmd: IfGreqTag lhs=Expression rhs=NumericLiteral NEWLINE block+=Line* elseCmd=ElseCmd? EndIfTag;
 
-MemoryMap: '.memorymap' NEWLINE cmds+=MemoryMapCommands+ '.endme';
-MemoryMapCommands: ('defaultslot' INT NEWLINE) |
-	('slotsize' (HEX|INT) NEWLINE) |
-	('slot' (HEX|INT) (HEX|INT)? NEWLINE)
+MemoryMap: MemoryMapTag NEWLINE cmds+=MemoryMapCommands+ END_ME_TAG;
+MemoryMapCommands: {MemoryMapCommands} ('defaultslot' defaultSlot=INT NEWLINE) |
+	('slotsize' size=NUMBER NEWLINE) |
+	('slot' slotNumber=INT 'start'? startAddress=NUMBER 'size'? size=NUMBER? NEWLINE)
 ;
 
-RomBankMap: '.rombankmap' NEWLINE cmds+=RomBankCommands+ '.endro';
+RomBankMap: RomBankMapTag NEWLINE cmds+=RomBankCommands+ EndRoTag;
 RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
 	('banksize' (INT|HEX) NEWLINE) |
 	('banks' (INT|HEX) NEWLINE)
 ;
 
-Rept: ('.rept'|'.repeat') repeatCount=NumericLiteral NEWLINE block+=Line+ '.endr';
+Rept: (RepeatTag|ReptTag) repeatCount=NumericLiteral NEWLINE block+=Line+ EndRTag;
 
-Bank: {BankCmd} '.bank' INT ('slot' slot=INT)?;
-Org: '.org' value=(NUMBER);
-Section: '.section' sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ '.ends';
+Bank: {BankCmd} BankTag INT ('slot' slot=INT)?;
+Org: ORG_TAG value=(NUMBER);
 
-Struct: '.struct' name=ID NEWLINE definitions+=VarDefinitionStruct* '.endst';
+Section: SectionTag sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ END_S_TAG;
 
-
-EnumCmd: '.enum' startAddress=NumericLiteral order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* '.ende';
-
-RamSection: '.ramsection' sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* '.ends';
+Struct: {LabelType} StructTag name=ID definitions+=VarDefinitionStruct* NEWLINE END_ST_TAG;
 
 
-VarDefinitionEnum: {VarDef} (varName=VarName ':'? type=(EnumType))? NEWLINE;
+EnumCmd: EnumTag startAddress=Expression order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* EndETag;
 
-EnumType: (VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct);
+RamSection: RamSectionTag sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* END_S_TAG;
 
-VarDefinitionStruct: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))? NEWLINE;
-VarDefinition: {VarDef} (varName=VarName type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString|VarTypeStruct))? NEWLINE;
 
-VarTypeStruct: {VarType} type=('.instanceof'|'instanceof') ref=[Struct] repeatAmount=INT?;
-VarTypeByte: {VarType} type=('.db'|'db');
-VarTypeWord: {VarType} type=('.dw'|'dw');
-VarTypeByteString: {VarType} type=('.ds'|'ds'|'.dsb'|'dsb') size=Expression (',' initalValue=Expression)?;
-VarTypeWordString: {VarType} type=('.dsw'|'dsw') size=Expression (',' initalValue=Expression)?;
+//VarDefinitionEnum: {VarDef} (varName=VarName ':'? type=(EnumType))? NEWLINE;
+VarDefinitionEnum: {VarDef} (type=(EnumType))? NEWLINE;
 
-Asciitable: ('.asciitable'|'.asctable') NEWLINE definitions+=MapTableEntry+ '.enda';
+EnumType: (VarByte|VarWord|VarByteString|VarWordString|VarStruct);
+
+VarDefinitionStruct: {VarDefinitionStruct} NEWLINE ( name=ID type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))?;
+VarDefinition: {VarDef} (type=(VarByte|VarWord|VarByteString|VarWordString|VarStruct))? NEWLINE;
+
+VarTypeByte: {VarType} DOT? type=('db');
+VarTypeWord: {VarType} DOT? type=('dw');
+VarTypeByteString: {VarType} DOT? type=('ds'|'dsb') size=Expression (',' initalValue=Expression)?;
+VarTypeWordString: {VarType} DOT? type=('dsw') size=Expression (',' initalValue=Expression)?;
+
+VarStruct: {LabelType} varName=VarName ':'? DOT? type=('instanceof') ref=[Struct] repeatAmount=INT?;
+VarByte: {LabelType} varName=VarName ':'? DOT? type=('db');
+VarWord: {LabelType} varName=VarName ':'? DOT? type=('dw');
+VarByteString: {LabelType} varName=VarName ':'? DOT? type=('ds'|'dsb') size=Expression (',' initalValue=Expression)?;
+VarWordString: {LabelType} varName=VarName ':'? DOT? type=('dsw') size=Expression (',' initalValue=Expression)?;
+
+Asciitable: (AsciiTableTag|AscTableTag) NEWLINE definitions+=MapTableEntry+ EndATag;
 
 MapTableEntry: {MapDef} ('map' from=AsciiChar ('to' to=AsciiChar)? '=' startOffset=NUMBER)? NEWLINE;
 AsciiChar: (intVal=NUMBER|char=STRING);
 
-Asc: '.asc' value=STRING;
+Asc: AscTag value=STRING;
 
-Dsb: ('.dsb'|'.ds') count=NUMBER ',' value=NUMBER;
-Dsw: '.dsw' count=NUMBER ',' value=NUMBER;
+Dsb: (DsbTag|DsTag) count=NUMBER ',' value=NUMBER;
+Dsw: DswTag count=NUMBER ',' value=NUMBER;
 
-Db: {DbCmd} ('.db'|'.byt') (first=DbDataType (numLitData=DbAdditionalValuesSeparatedBySpace|exprData=DbAdditionalValuesSeparatedByComma)?);
+Db: {DbCmd} (DbTag|BytTag) (first=DbDataType (numLitData=DbAdditionalValuesSeparatedBySpace|exprData=DbAdditionalValuesSeparatedByComma)?);
 DbAdditionalValuesSeparatedBySpace: others+=DbNonExprDataType+;
 DbAdditionalValuesSeparatedByComma: others+=DbAdditionalValueType+;
-DbDataType: expr=Expression|str=STRING;
+DbDataType: Expression|str=STRING;
 DbNonExprDataType hidden(): MINUS? NumericLiteral;
-Dw: {DwCmd} '.dw' first=NumericLiteral others+=DwAdditionalValueType*;
+Dw: {DwCmd} DwTag (first=DbDataType (numLitData=DbAdditionalValuesSeparatedBySpace|exprData=DbAdditionalValuesSeparatedByComma)?);
 DbAdditionalValueType: ',' value=DbDataType;
-DwAdditionalValueType: ','? value=NumericLiteral;
 
 IncludeType: inc=(Include|Incbin);
-Include: '.include' file=STRING;
-Incbin: '.incbin' file=STRING;
+Include: IncludeTag file=STRING;
+Incbin: IncBinTag file=STRING;
 
-Sdsctag: {SdscTagCmd} '.sdsctag' INT('.'INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID); //FIXME need to make a better version number type
-
-//terminal UnHandledWlaDxCommand: '.' ID !('\n'|'\r')*; //FIXME
+SdscTagCmd: {SdscTagCmd} SdscTag INT(DOT INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID); //FIXME need to make a better version number type
 
 PLUS: '+';
 terminal PLUSLABEL: '+:';
@@ -141,11 +205,20 @@ terminal MINUSLABEL: '-:';
 terminal MINUS: '-';
 terminal MINUSMINUS: '-''-'+;
 
+
 BANKLABEL hidden(): ':'referencedObj=[VarName];
 
 VarName: name=ID;
 
 Label hidden() : {LabelType} (PLUSLABEL|MINUSLABEL|((varName=VarName|PLUSPLUS|MINUSMINUS)':'));
+
+DotExpression  returns Ref hidden():
+   EntityRef  ({DotExpression.ref=current} DOT tail=[VarDefinitionStruct])*
+;
+
+EntityRef returns Ref hidden():
+    {EntityRef} entity=[LabelType] (DOT structArrayIndex=INT)?
+; 
 
 Expression returns Expr:
     BitwiseOp;
@@ -168,7 +241,7 @@ Multiplication returns Expr:
 
 PrimaryExpression returns Expr:
     '(' Expression ')' |
-    {NumLiteral} sign=MINUS? value=NumericLiteral;
+    {NumLiteral} sign=MINUS? nibbleOp=('<'|'>')? value=NumericLiteral;
       
 Command:
      (Adc|Add|And|Bit|Call|Ccf|Cp|Cpd|Cpdr|Cpi|Cpir|Cpl|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrc|Rrca|Rrd|Rst|Sbc|Scf|Set|Sla|Sra|Srl|Sub|Xor)
@@ -182,7 +255,7 @@ Adc: {Operation} opcode='adc' ((reg=REGISTER_A ',' rightOp=s)|(reg=REGISTER_HL '
 Add: {Operation} opcode='add' ((reg=REGISTER_A ',' rightOp=s)|(reg=REGISTER_HL ',' rightOp=ss)|(reg=REGISTER_IX ',' rightOp=pp)|(reg=REGISTER_IY ',' rightOp=rr));
 And: {Operation} opcode='and' operand=s;
 Bit: {Operation} opcode='bit' leftOp=B ',' rightOp=m;
-Call: {Operation} opcode='call' (condition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS);
+Call: {Operation} opcode='call' (condition=CC ',')? (expr=Expression|PLUS|PLUSPLUS|MINUS|MINUSMINUS);
 Ccf: {Operation} opcode='ccf';
 Cp: {Operation} opcode='cp' operand=s;
 Cpd: {Operation} opcode='cpd';
@@ -205,7 +278,7 @@ Ind: {Operation} opcode='ind';
 Indr: {Operation} opcode='indr';
 Ini: {Operation} opcode='ini';
 Inir: {Operation} opcode='inir';
-Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((condition=CC ',')? (lit=NumericLiteral|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
+Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((condition=CC ',')? (lit=Expression|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
 Jr: {Operation} opcode='jr' (condition=jrCc ',')? operand=e;
 Ld: {Operation} opcode='ld' ((reg=REGISTER_I ',' REGISTER_A)|(reg=REGISTER_R ',' REGISTER_A)|=>(leftOp=dst ',' rightOp=src)); //FIXME src shouldn't contain 'i','r'. It also needs some changes to handle ix,iy in dst. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: {Operation} opcode='ldd';
@@ -251,9 +324,10 @@ terminal WS            : (' '|'\t')+;
 
 MacroNumericArg hidden(): arg='\\'INT;
 
-BitOperand: {BitType} value=INT;//Must be in range 0..7 This is checked for by a validator
+BitOperand: {BitType} value=NumericLiteral;//Must be in range 0..7 This is checked for by a validator
 B returns Operand: bitType=BitOperand;
-NumericLiteral : BANKLABEL|referencedObj=[LabelType]|NUMBER|MacroNumericArg; //ID
+NumericLiteral : BANKLABEL|StructSizeOfDefine|structRef=DotExpression|NUMBER|MacroNumericArg; //ID referencedObj=[VarName]|
+StructSizeOfDefine hidden() : {StructSizeOfDefine} '_sizeof_' sizeofRef=[Struct];
 NUMBER: i=INT|str=(HEX|BINARY);
 NegNumber hidden(): MINUS? NUMBER;
 
@@ -273,14 +347,14 @@ IndexIndirectPlusOffset returns Operand: ('[' indexPlusOffset=IndexPlusOffset ']
 IndexIndirect returns Operand: ('[' reg=xx ']')|('(' reg=xx ')');
 
 IndexPlusOffset returns Operand: reg=xx offset=SignedByteOffset;
-SignedByteOffset: sign=(PLUS|MINUS) value=NUMBER; //Must be in the range -128..+127 This is checked for by a validator
+SignedByteOffset: sign=(PLUS|MINUS)? value=Expression; //FIXME Decision can match input such as "RULE_MINUS" using multiple alternatives //Must be in the range -128..+127 This is checked for by a validator
 
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
 jrCc: 'c'|'nc'|'nz'|'z';
 
 dst returns Operand: =>indirectOp=NumericLiteralIndirect|op=(s|ss)|indirectOp=(BCIndirect|DEIndirect)|reg=(xx);
 
-e returns Operand: (lit=NumericLiteral|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS)); //fixme -126 to +129
+e returns Operand: (expr=Expression|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS)); //fixme -126 to +129
 m returns Operand: op=(r)|indirectOp=(HLIndirect|IndexIndirectPlusOffset);
 p returns Operand: intType=NUMBER; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
 pp returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP);
@@ -288,7 +362,7 @@ r returns Operand: reg=(REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|R
 rr returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IY|REGISTER_SP);
 s returns Operand:  op=m|expr=Expression;
 ss returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP);
-src returns Operand: =>indirectOp=NumericLiteralIndirect|op=(s|ss)|indirectOp=(BCIndirect|DEIndirect)|reg=(REGISTER_I|REGISTER_R|xx);
+src returns Operand: =>indirectOp=NumericLiteralIndirect|op=(s|ss)|indirectOp=(BCIndirect|DEIndirect)|reg=(REGISTER_I|REGISTER_R|xx)|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS);
 xx: (REGISTER_IX|REGISTER_IY);
 dd returns Operand: op=(m|ss)|reg=xx;
 ee returns Operand: reg=(REGISTER_HL|xx);

@@ -9,6 +9,11 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
 import org.eclipse.xtext.scoping.impl.SimpleLocalScopeProvider
+import org.eclipse.xtext.scoping.Scopes
+import org.efry.z80editor.z80.EntityRef
+import org.efry.z80editor.z80.LabelType
+import org.efry.z80editor.z80.DotExpression
+import org.efry.z80editor.z80.Macro
 
 /**
  * This class contains custom scoping description.
@@ -24,11 +29,11 @@ class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	@Inject
 	private SimpleLocalScopeProvider localScopeProvider;
-	
-	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
-
-		localScopeProvider.getScope(varName, ref);
-	}
+//	
+//	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
+//
+//		localScopeProvider.getScope(varName, ref);
+//	}
 
 /*
 	def IScope scope_NumericLiteral_referencedObj(EObject varName, EReference ref) {
@@ -37,4 +42,54 @@ class Z80ScopeProvider extends AbstractDeclarativeScopeProvider {
 		Scopes::scopeFor(locals, globalScopeProvider.getScope(varName.eResource, ref, null));		
 	}
 	*/
+    
+	def IScope scope_DotExpression_tail(DotExpression exp, EReference ref) {
+	        //IScope::NULLSCOPE
+	    //Scopes::scopeFor(exp.entity.ref.definitions);
+	    
+	    val head = exp.ref;
+        switch (head) {
+            EntityRef : {
+                    var struct = head.entity
+                    if(struct != null) {
+                        if(struct.definitions != null && !struct.definitions.empty) {
+                            Scopes::scopeFor(struct.definitions)
+                        } else {
+                            struct = struct.ref as LabelType
+                            Scopes::scopeFor(struct.definitions)
+                        }
+                    }
+                }
+            DotExpression : {
+                val tail = head.tail
+                switch (tail) {
+ //                   Attribute : IScope::NULLSCOPE
+                    default: IScope::NULLSCOPE
+                }
+            }
+             
+            default: IScope::NULLSCOPE
+        }
+
+//        val head = exp.entity;
+//        switch (head) {
+//            EntityRef : Scopes::scopeFor(head.entity.features)
+//            DotExpression : {
+//                val tail = head.tail
+//                switch (tail) {
+//                    Attribute : IScope::NULLSCOPE
+//                    Reference : Scopes::scopeFor(tail.type.features)
+//                    default: IScope::NULLSCOPE
+//                }
+//            }
+//             
+//            default: IScope::NULLSCOPE
+//        }
+    }
+    
+    def IScope scope_LabelType(Macro macro, EReference ref) {
+        if(macro.macroArgs != null && !macro.macroArgs.empty) {
+            Scopes::scopeFor(macro.macroArgs, localScopeProvider.getScope(macro, ref));
+        }
+    }
 }

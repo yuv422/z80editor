@@ -1,23 +1,36 @@
 package org.efry.z80editor;
 
-import org.efry.z80editor.z80.LabelType;
 import org.efry.z80editor.z80.NUMBER;
 import org.efry.z80editor.z80.NumericLiteral;
-import org.efry.z80editor.z80.VarName;
 
 public final class Z80DisplayFormatterUtil {
 
+    public static Integer convertNumericLiteralToInt(NumericLiteral n) {
+        if(n == null) {
+            return null;
+        }
+        if(n instanceof NUMBER) {
+            if(((NUMBER)n).getStr() != null) {
+                String s = ((NUMBER)n).getStr();
+                if(s.startsWith("$")) {
+                    return Integer.valueOf(s.substring(1), 16);
+                } else if(s.startsWith("%")) {
+                    return Integer.valueOf(s.substring(1), 2);
+                }
+            } else {
+                return Integer.valueOf(((NUMBER)n).getI());
+            }
+        }
+        
+        return null;
+    }
     public static String convertNumericLiteralToString(NumericLiteral n) {
         if(n == null) {
             return null;
         }
         if(n instanceof NUMBER) {
             return convertNUMBERToString((NUMBER)n); 
-        } else if(n.getReferencedObj() != null && n.getReferencedObj() instanceof VarName) {
-            VarName label = (VarName)n.getReferencedObj();
-            return label.getName();
-            
-        }
+        } 
 
         return null;
     }

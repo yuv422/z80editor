@@ -8,6 +8,7 @@ import org.efry.z80editor.z80.SignedByteOffset
 import org.efry.z80editor.z80.Z80Package
 import org.efry.z80editor.z80.BitType
 import org.efry.z80editor.z80.AsciiChar
+import org.efry.z80editor.Z80DisplayFormatterUtil
 
 /**
  * This class contains custom validation rules. 
@@ -15,7 +16,7 @@ import org.efry.z80editor.z80.AsciiChar
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class Z80Validator extends AbstractZ80Validator {
-
+/*FIXME removed when I added NumericLiteral as an offset type.
 	@Check
 	def checkOffsetRange(SignedByteOffset offset) {
 		var value = offset.value.i; //FIXME need to validate binary and hex numbers too.
@@ -26,10 +27,11 @@ class Z80Validator extends AbstractZ80Validator {
 			error('Signed offset must be in the range (-128 to +127)', Z80Package::eINSTANCE.signedByteOffset_Value)
 		}
 	}
-	
+*/	
 	@Check
 	def checkBitType(BitType type) {
-		if (type.value > 7) {
+	    val value = Z80DisplayFormatterUtil.convertNumericLiteralToInt(type.value);
+		if (value != null && (value < 0 || value > 7)) {
 			error('Bit type must be in the range (0 to 7)', Z80Package::eINSTANCE.bitType_Value);
 		}
 	}

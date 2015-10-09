@@ -43,33 +43,33 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
             }
         } else if (o instanceof VarName) {
 
-            if (o.eContainer() != null) {
-                System.out.println(o.eContainer().toString());
-                if(o.eContainer() instanceof Define) {
-                    Define def = (Define) o.eContainer();
-                    ICompositeNode node = NodeModelUtils.getNode(def.getExpr());
-                    
-                    if(node != null) {
-                        return def.getName().getName() + ": " + node.getText();
-    
-                    }
-                } else if(o.eContainer() instanceof VarDef) {
-                    VarDef def = (VarDef)o.eContainer();
-                    String parent = "";
-                    if (def.eContainer() != null) {
-                        System.out.println(def.eContainer().toString());
-                        if(def.eContainer() instanceof EnumCmd) {
-                            //FIXME parent = "enum " + Z80DisplayFormatterUtil.convertNUMBERToString(((EnumCmd)def.eContainer()).getStartAddress()) + "\n...\n";
-                        }
-                    }
-                    ICompositeNode node = NodeModelUtils.getNode(def);
-                    
-                    if(node != null) {
-                        return parent + node.getText();
-    
-                    }
-                }
-            }
+//            if (o.eContainer() != null) {
+//                System.out.println(o.eContainer().toString());
+//                if(o.eContainer() instanceof Define) {
+//                    Define def = (Define) o.eContainer();
+//                    ICompositeNode node = NodeModelUtils.getNode(def.getExpr());
+//                    
+//                    if(node != null) {
+//                        return def.getName().getName() + ": " + node.getText();
+//    
+//                    }
+//                } else if(o.eContainer() instanceof VarDef) {
+//                    VarDef def = (VarDef)o.eContainer();
+//                    String parent = "";
+//                    if (def.eContainer() != null) {
+//                        System.out.println(def.eContainer().toString());
+//                        if(def.eContainer() instanceof EnumCmd) {
+//                            //FIXME parent = "enum " + Z80DisplayFormatterUtil.convertNUMBERToString(((EnumCmd)def.eContainer()).getStartAddress()) + "\n...\n";
+//                        }
+//                    }
+//                    ICompositeNode node = NodeModelUtils.getNode(def);
+//                    
+//                    if(node != null) {
+//                        return parent + node.getText();
+//    
+//                    }
+//                }
+//            }
             return o.toString();
         }
 
