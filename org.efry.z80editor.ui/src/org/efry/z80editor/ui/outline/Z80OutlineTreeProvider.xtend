@@ -19,7 +19,6 @@ import org.efry.z80editor.z80.Macro
 import org.efry.z80editor.z80.MacroUsage
 import org.efry.z80editor.z80.MemoryMap
 import org.efry.z80editor.z80.Org
-import org.efry.z80editor.z80.VarDef
 import org.efry.z80editor.z80.Label
 import org.efry.z80editor.z80.Asc
 import org.efry.z80editor.z80.VarStruct
@@ -27,6 +26,10 @@ import org.efry.z80editor.z80.VarByte
 import org.efry.z80editor.z80.VarWord
 import org.efry.z80editor.z80.VarByteString
 import org.efry.z80editor.z80.VarWordString
+import org.efry.z80editor.z80.Undefine
+import org.efry.z80editor.z80.Expr
+import org.efry.z80editor.z80.VarDefinitionEnum
+import org.efry.z80editor.z80.VarDefinitionStruct
 
 /**
  * Customization of the default outline structure.
@@ -43,7 +46,7 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
         null
     }
     
-    def _text(LabelType operation) {
+    def _text(LabelType label) {
         null
     }
     
@@ -54,7 +57,15 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
     def _text(EmptyFill emptyFill) {
         null
     }
+    
+    def _text(Expr expression) {
+        null
+    }
 
+    def _isLeaf(Expr expression) {
+        true
+    }
+    
 	def _isLeaf(Org operation) {
 		true
 	}
@@ -67,10 +78,6 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
 		true
 	}
 
-	def _isLeaf(VarDef operation) {
-		true
-	}
-	
 	def _isLeaf(IncludeType operation) {
 		true
 	}
@@ -130,6 +137,34 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
         true
     }
     
+    def _text(VarDefinitionEnum varDefEnum) {
+        null
+    }
+
+    def _isLeaf(VarDefinitionStruct varDef) {
+        true
+    }
+    
+    def _isLeaf(VarStruct varDef) {
+        true
+    }
+    
+    def _isLeaf(VarByte varDef) {
+        true
+    }
+    
+    def _isLeaf(VarWord varDef) {
+        true
+    }
+    
+    def _isLeaf(VarByteString varDef) {
+        true
+    }
+    
+    def _isLeaf(VarWordString varDef) {
+        true
+    }
+    
     def _text(VarStruct v) {
         v.varName.name
     }   
@@ -150,4 +185,7 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
         v.varName.name
     }  
 
+    def _text(Undefine v) {
+        null
+    }  
 }

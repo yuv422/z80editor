@@ -1,6 +1,7 @@
 package org.efry.z80editor.ui;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
@@ -19,8 +20,9 @@ import org.efry.z80editor.Z80OpCodes;
 import org.efry.z80editor.z80.Define;
 import org.efry.z80editor.z80.EnumCmd;
 import org.efry.z80editor.z80.LabelType;
+import org.efry.z80editor.z80.Macro;
+import org.efry.z80editor.z80.MacroUsage;
 import org.efry.z80editor.z80.Operation;
-import org.efry.z80editor.z80.VarDef;
 
 import com.google.inject.Inject;
 
@@ -53,7 +55,15 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
                         return def.getVarName().getName() + ": " + node.getText();
     
                     }
-                } //else if(o.eContainer() instanceof VarDef) {
+                } else if(o.eContainer() instanceof MacroUsage) {
+                    Macro macro = ((MacroUsage) o.eContainer()).getRef();
+                    ICompositeNode node = NodeModelUtils.getNode(macro);
+                    
+                    if(node != null) {
+                        return macro.getName() + ": " + node.getText();
+    
+                    }
+                }//else if(o.eContainer() instanceof VarDef) {
 //                    VarDef def = (VarDef)o.eContainer();
 //                    String parent = "";
 //                    if (def.eContainer() != null) {
@@ -71,6 +81,14 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
 //                }
             }
             return o.toString();
+        } else if (o instanceof Macro) {
+            Macro macro = (Macro) o;
+            ICompositeNode node = NodeModelUtils.getNode(macro);
+            
+            if(node != null) {
+                return "<pre>" + node.getText() + "</pre>";
+
+            } 
         }
 
         return super.getFirstLine(o);
@@ -83,6 +101,10 @@ public class z80EObjectHoverProvider extends DefaultEObjectHoverProvider {
         }
 
         if (o instanceof LabelType) {
+            return true;
+        }
+        
+        if (o instanceof Macro) {
             return true;
         }
 

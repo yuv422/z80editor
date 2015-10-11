@@ -4,21 +4,18 @@
 package org.efry.z80editor.ui.labeling
 
 import com.google.inject.Inject
-import org.efry.z80editor.z80.Section
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 import org.efry.z80editor.z80.Define
-import org.efry.z80editor.z80.LabelType;
-import org.efry.z80editor.z80.VarDef;
 import org.efry.z80editor.z80.EnumCmd
-import org.efry.z80editor.z80.IfCmd
-import org.efry.z80editor.z80.Struct
-import org.efry.z80editor.Z80DisplayFormatterUtil
-import org.efry.z80editor.z80.VarDefinitionStruct
 import org.efry.z80editor.z80.Label
 import org.efry.z80editor.z80.Macro
-import org.efry.z80editor.z80.VarStruct
+import org.efry.z80editor.z80.Section
+import org.efry.z80editor.z80.Struct
 import org.efry.z80editor.z80.VarByte
-import org.efry.z80editor.z80.VarWord
 import org.efry.z80editor.z80.VarByteString
+import org.efry.z80editor.z80.VarStruct
+import org.efry.z80editor.z80.VarWord
 import org.efry.z80editor.z80.VarWordString
 
 /**
@@ -26,10 +23,10 @@ import org.efry.z80editor.z80.VarWordString
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider {
+class Z80LabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
-	new(org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider delegate) {
+	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
 
@@ -94,4 +91,19 @@ class Z80LabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelPro
         v.varName.name
     }   
 
+    def image(VarStruct v) {
+        'field_instanceof_obj.gif'
+    }
+    
+    def image(VarByte v) {
+        'field_db_obj.gif'
+    }
+    
+    def image(VarWord v) {
+        'field_dw_obj.gif'
+    }
+    
+    def image(VarByteString v) {
+        'field_ds_obj.gif'
+    }
 }

@@ -77,7 +77,7 @@ IncludeTag hidden(): DOT 'include';
 
 MacroTag hidden(): DOT 'macro';
 MemoryMapTag hidden(): DOT 'memorymap';
-ORG_TAG hidden(): DOT 'org';
+ORG_TAG hidden():  DOT 'org';
 RamSectionTag hidden(): DOT 'ramsection';
 RedefineTag hidden(): DOT 'redefine';
 RedefTag hidden(): DOT 'redef';
@@ -153,18 +153,18 @@ Section: SectionTag sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUM
 Struct: StructTag name=LabelType definitions+=VarDefinitionStruct* NEWLINE END_ST_TAG;
 
 
-EnumCmd: EnumTag startAddress=Expression order=('asc'|'desc')? 'export'? NEWLINE definitions+=VarDefinitionEnum* EndETag;
+EnumCmd: EnumTag startAddress=Expression order=('asc'|'desc')? 'export'? NEWLINE (definitions+=(VarDefinitionEnum)|NEWLINE)* EndETag;
 
-RamSection: RamSectionTag sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE definitions+=VarDefinition* END_S_TAG;
+RamSection: RamSectionTag sectionName=STRING ('bank' bank=NUMBER)? ('slot' slot=NUMBER)? NEWLINE (definitions+=VarDefinition|NEWLINE)* END_S_TAG;
 
 
 //VarDefinitionEnum: {VarDef} (varName=VarName ':'? type=(EnumType))? NEWLINE;
-VarDefinitionEnum: {VarDef} (type=(EnumType))? NEWLINE;
+VarDefinitionEnum:  EnumType NEWLINE;
 
 EnumType: (VarByte|VarWord|VarByteString|VarWordString|VarStruct);
 
 VarDefinitionStruct: {VarDefinitionStruct} NEWLINE ( name=ID type=(VarTypeByte|VarTypeWord|VarTypeByteString|VarTypeWordString))?;
-VarDefinition: {VarDef} (type=(VarByte|VarWord|VarByteString|VarWordString|VarStruct))? NEWLINE;
+VarDefinition: (VarByte|VarWord|VarByteString|VarWordString|VarStruct) NEWLINE;
 
 VarTypeByte: {VarType} DOT? type=('db');
 VarTypeWord: {VarType} DOT? type=('dw');
@@ -240,12 +240,17 @@ Addition returns Expr:
     ({BinaryExpr.left=current} op1=(PLUS | MINUS) right=Multiplication)*;
 
 Multiplication returns Expr:
-    PrimaryExpression
-    ({BinaryExpr.left=current} op1=('*' | '/' | '#') right=PrimaryExpression)*;
+    UnaryMinus
+    ({BinaryExpr.left=current} op1=('*' | '/' | '#') right=UnaryMinus)*;
+
+UnaryMinus returns Expr:
+    PrimaryExpression |
+    op1=MINUS right=UnaryMinus
+;
 
 PrimaryExpression returns Expr:
     '(' Expression ')' |
-    {NumLiteral} sign=MINUS? nibbleOp=('<'|'>')? value=NumericLiteral;
+    {NumLiteral} nibbleOp=('<'|'>')? value=NumericLiteral;
       
 Command:
      (Adc|Add|And|Bit|Call|Ccf|Cp|Cpd|Cpdr|Cpi|Cpir|Cpl|Daa|Dec|Di|Djnz|Ei|Ex|Exx|Halt|Im|In|Inc|Ind|Indr|Ini|Inir|Jp|Jr|Ld|Ldd|Lddr|Ldi|Ldir|Neg|Nop|Or|Otdr|Otir|Out|Outi|Outd|Pop|Push|Res|Ret|Reti|Retn|Rl|Rla|Rlc|Rlca|Rld|RrCmd|Rra|Rrc|Rrca|Rrd|Rst|Sbc|Scf|Set|Sla|Sra|Srl|Sub|Xor)
@@ -351,7 +356,7 @@ IndexIndirectPlusOffset returns Operand: ('[' indexPlusOffset=IndexPlusOffset ']
 IndexIndirect returns Operand: ('[' reg=xx ']')|('(' reg=xx ')');
 
 IndexPlusOffset returns Operand: reg=xx offset=SignedByteOffset;
-SignedByteOffset: sign=(PLUS|MINUS)? value=Expression; //FIXME Decision can match input such as "RULE_MINUS" using multiple alternatives //Must be in the range -128..+127 This is checked for by a validator
+SignedByteOffset: sign=(PLUS)? value=Expression; //FIXME Decision can match input such as "RULE_MINUS" using multiple alternatives //Must be in the range -128..+127 This is checked for by a validator
 
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
 jrCc: 'c'|'nc'|'nz'|'z';

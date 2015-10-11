@@ -6,7 +6,7 @@ import org.efry.z80editor.z80.EmptyLine;
 
 
 public class z80FoldingRegionProvider extends DefaultFoldingRegionProvider {
-/*
+
 	@Override
 	protected boolean isHandled(EObject eObject) {
 		if(eObject instanceof EmptyLine) {
@@ -15,5 +15,5 @@ public class z80FoldingRegionProvider extends DefaultFoldingRegionProvider {
 		
 		return super.isHandled(eObject);
 	}
-	*/
+	
 }
