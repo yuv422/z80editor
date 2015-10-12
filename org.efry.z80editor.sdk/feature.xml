@@ -2,7 +2,7 @@
 <feature
       id="org.efry.z80editor.sdk"
       label="Z80 WLA-DX IDE"
-      version="1.0.6"
+      version="1.0.7"
       provider-name="Eric Fry">
 
    <description url="https://github.com/yuv422/z80editor">
