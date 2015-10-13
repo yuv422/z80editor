@@ -73,6 +73,7 @@ IfLeeqTag hidden(): DOT 'ifleeq';
 IfGrTag hidden(): DOT 'ifgr';
 IfGreqTag hidden(): DOT 'ifgreq';
 IncBinTag hidden(): DOT 'incbin';
+IncDirTag hidden(): DOT 'incdir';
 IncludeTag hidden(): DOT 'include';
 
 MacroTag hidden(): DOT 'macro';
@@ -195,9 +196,10 @@ DbNonExprDataType hidden(): MINUS? NumericLiteral;
 Dw: {DwCmd} DwTag (first=DbDataType (numLitData=DbAdditionalValuesSeparatedBySpace|exprData=DbAdditionalValuesSeparatedByComma)?);
 DbAdditionalValueType: ',' value=DbDataType;
 
-IncludeType: inc=(Include|Incbin);
+IncludeType: inc=(Include|Incbin|Incdir);
 Include: IncludeTag file=STRING;
 Incbin: IncBinTag file=STRING;
+Incdir: IncDirTag directory=STRING;
 
 SdscTagCmd: {SdscTagCmd} SdscTag INT(DOT INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID); //FIXME need to make a better version number type
 
@@ -335,8 +337,9 @@ MacroNumericArg hidden(): arg='\\'INT;
 
 BitOperand: {BitType} value=NumericLiteral;//Must be in range 0..7 This is checked for by a validator
 B returns Operand: bitType=BitOperand;
-NumericLiteral : BANKLABEL|StructSizeOfDefine|structRef=DotExpression|NUMBER|MacroNumericArg; //ID referencedObj=[VarName]|
-StructSizeOfDefine hidden() : {StructSizeOfDefine} '_sizeof_' sizeofRef=[Struct];
+terminal STRUCT_SIZE_OF_DEFINE:  '_sizeof_'ID;
+NumericLiteral : sizeof=STRUCT_SIZE_OF_DEFINE|BANKLABEL|structRef=DotExpression|NUMBER|MacroNumericArg; //ID referencedObj=[VarName]|
+
 NUMBER: i=INT|str=(HEX|BINARY);
 NegNumber hidden(): MINUS? NUMBER;
 
