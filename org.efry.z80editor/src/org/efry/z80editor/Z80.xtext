@@ -266,7 +266,7 @@ Adc: {Operation} opcode='adc' ((reg=REGISTER_A ',' rightOp=s)|(reg=REGISTER_HL '
 Add: {Operation} opcode='add' ((reg=REGISTER_A ',' rightOp=s)|(reg=REGISTER_HL ',' rightOp=ss)|(reg=REGISTER_IX ',' rightOp=pp)|(reg=REGISTER_IY ',' rightOp=rr));
 And: {Operation} opcode='and' operand=s;
 Bit: {Operation} opcode='bit' leftOp=B ',' rightOp=m;
-Call: {Operation} opcode='call' (condition=CC ',')? (expr=Expression|PLUS|PLUSPLUS|MINUS|MINUSMINUS);
+Call: {Operation} opcode='call' (condition=CC ',')? (expr=Expression|PLUS|PLUSPLUS|MINUS|MINUSMINUS|'_b'|'_f');
 Ccf: {Operation} opcode='ccf';
 Cp: {Operation} opcode='cp' operand=s;
 Cpd: {Operation} opcode='cpd';
@@ -289,7 +289,7 @@ Ind: {Operation} opcode='ind';
 Indr: {Operation} opcode='indr';
 Ini: {Operation} opcode='ini';
 Inir: {Operation} opcode='inir';
-Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((condition=CC ',')? (lit=Expression|PLUS|PLUSPLUS|MINUS|MINUSMINUS)));
+Jp: {Operation} opcode='jp' (indirectOp=(IndexIndirect|HLIndirect)|((condition=CC ',')? (lit=Expression|PLUS|PLUSPLUS|MINUS|MINUSMINUS|'_b'|'_f')));
 Jr: {Operation} opcode='jr' (condition=jrCc ',')? operand=e;
 Ld: {Operation} opcode='ld' ((reg=REGISTER_I ',' REGISTER_A)|(reg=REGISTER_R ',' REGISTER_A)|=>(leftOp=dst ',' rightOp=src)); //FIXME src shouldn't contain 'i','r'. It also needs some changes to handle ix,iy in dst. It should look like this 'ld' ((dst ',' src)|(REGISTER_A ',' ('i'|'r')))
 Ldd: {Operation} opcode='ldd';
@@ -366,7 +366,7 @@ jrCc: 'c'|'nc'|'nz'|'z';
 
 dst returns Operand: =>indirectOp=NumericLiteralIndirect|op=(s|ss)|indirectOp=(BCIndirect|DEIndirect)|reg=(xx);
 
-e returns Operand: (expr=Expression|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS)); //fixme -126 to +129
+e returns Operand: (expr=Expression|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS|'_b'|'_f')); //fixme -126 to +129
 m returns Operand: op=(r)|indirectOp=(HLIndirect|IndexIndirectPlusOffset);
 p returns Operand: intType=NUMBER; //FIXME need to restrict to $0000, $0008, $0010, $0018, $0020, $0028, $0030 or $0038 
 pp returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP);
