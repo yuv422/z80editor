@@ -36,10 +36,6 @@ public class CycleCountTests {
 		  d = d.replace("n", "5").toLowerCase();
 		  return d;
 	  }
-	  
-	  private boolean isUnofficialInstruction(String command) {
-		  return (command.contains("ixl") || command.contains("ixh") || command.contains("iyl") || command.contains("iyh"));
-	  }
 
 	  @Test
 	  public void testParseAllInstructions() throws Exception {
@@ -50,12 +46,10 @@ public class CycleCountTests {
 			  final Z80Model model = this.parser.parse("\n"+command+"\n");
 			  Assert.assertNotNull(model);
 
-			  if(!isUnofficialInstruction(command)) {
-				  try {
-					  validationHelper.assertNoErrors(model);
-				  } catch(AssertionError e) {
-					  fail("Parse error: \"" + command + "\" - " + e.getMessage());
-				  }
+			  try {
+				  validationHelper.assertNoErrors(model);
+			  } catch(AssertionError e) {
+				  fail("Parse error: \"" + command + "\" - " + e.getMessage());
 			  }
 		  }
 	  }
@@ -69,11 +63,9 @@ public class CycleCountTests {
 			  final Z80Model model = this.parser.parse("\n"+command+"\n");
 			  Assert.assertNotNull(model);
 
-			  if(!isUnofficialInstruction(command)) { //&& command.startsWith("xor")) {
-				  int cycles = Z80CycleCalculator.calculateOClockCyclesForModel(model);
-				  System.out.println(command + "; Cycles: " + cycles + " Expected: " + i.getoClock());
-				  Assert.assertEquals(i.getoClock(), cycles);
-			  }
+			  int cycles = Z80CycleCalculator.calculateOClockCyclesForModel(model);
+			  System.out.println(command + "; Cycles: " + cycles + " Expected: " + i.getoClock());
+			  Assert.assertEquals(i.getoClock(), cycles);
 		  }
 	  }
 }

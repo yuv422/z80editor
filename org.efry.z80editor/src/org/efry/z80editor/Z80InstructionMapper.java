@@ -190,6 +190,10 @@ public final class Z80InstructionMapper {
 			case L : return Z80Instruction.getInstruction(0x8d);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x8edd);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x8efd);
+	        case IXH : return Z80Instruction.getInstruction(0x8CDD);
+	        case IYH : return Z80Instruction.getInstruction(0x8CFD);
+	        case IXL : return Z80Instruction.getInstruction(0x8DDD);
+	        case IYL : return Z80Instruction.getInstruction(0x8DFD);
 			case NUMERIC : return Z80Instruction.getInstruction(0xce);
 			default : return Z80Instruction.dummyInstruction;
 				
@@ -212,6 +216,10 @@ public final class Z80InstructionMapper {
 			case HL_INDIRECT : return Z80Instruction.getInstruction(0x86);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x86dd);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x86fd);
+	        case IXH : return Z80Instruction.getInstruction(0x84DD);
+	        case IYH : return Z80Instruction.getInstruction(0x84FD);
+	        case IXL : return Z80Instruction.getInstruction(0x85DD);
+	        case IYL : return Z80Instruction.getInstruction(0x85FD);
 			case NUMERIC : return Z80Instruction.getInstruction(0xc6);
 			default: break;
 			}
@@ -261,6 +269,10 @@ public final class Z80InstructionMapper {
 		case HL_INDIRECT : return Z80Instruction.getInstruction(0xa6);
 		case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xa6dd);
 		case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xa6fd);
+        case IXH : return Z80Instruction.getInstruction(0xA4DD);
+        case IYH : return Z80Instruction.getInstruction(0xA4FD);
+        case IXL : return Z80Instruction.getInstruction(0xA5DD);
+        case IYL : return Z80Instruction.getInstruction(0xA5FD);
 		case NUMERIC : return Z80Instruction.getInstruction(0xe6);
 		default : break;
 		}
@@ -320,6 +332,10 @@ public final class Z80InstructionMapper {
 		case HL_INDIRECT : return Z80Instruction.getInstruction(0xbe);
 		case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xbedd);
 		case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xbefd);
+        case IXH : return Z80Instruction.getInstruction(0xBCDD);
+        case IYH : return Z80Instruction.getInstruction(0xBCFD);
+        case IXL : return Z80Instruction.getInstruction(0xBDDD);
+        case IYL : return Z80Instruction.getInstruction(0xBDFD);
 		case NUMERIC : return Z80Instruction.getInstruction(0xfe);
 		default : break;
 		}
@@ -363,6 +379,10 @@ public final class Z80InstructionMapper {
 		case HL_INDIRECT : return Z80Instruction.getInstruction(0x35);
 		case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x35dd);
 		case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x35fd);
+        case IXH : return Z80Instruction.getInstruction(0x25DD);
+        case IYH : return Z80Instruction.getInstruction(0x25FD);
+        case IXL : return Z80Instruction.getInstruction(0x2DDD);
+        case IYL : return Z80Instruction.getInstruction(0x2DFD);
 		case BC : return Z80Instruction.getInstruction(0x0b);
 		case DE : return Z80Instruction.getInstruction(0x1b);
 		case HL : return Z80Instruction.getInstruction(0x2b);
@@ -450,6 +470,10 @@ public final class Z80InstructionMapper {
 		case HL_INDIRECT : return Z80Instruction.getInstruction(0x34);
 		case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x34dd);
 		case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x34fd);
+        case IXH : return Z80Instruction.getInstruction(0x24DD);
+        case IYH : return Z80Instruction.getInstruction(0x24FD);
+        case IXL : return Z80Instruction.getInstruction(0x2CDD);
+        case IYL : return Z80Instruction.getInstruction(0x2CFD);
 		case BC : return Z80Instruction.getInstruction(0x03);
 		case DE : return Z80Instruction.getInstruction(0x13);
 		case HL : return Z80Instruction.getInstruction(0x23);
@@ -532,6 +556,10 @@ public final class Z80InstructionMapper {
 			case E : return Z80Instruction.getInstruction(0x73);
 			case H : return Z80Instruction.getInstruction(0x74);
 			case L : return Z80Instruction.getInstruction(0x75);
+	        case IXH : return Z80Instruction.getInstruction(0x74DD);
+	        case IYH : return Z80Instruction.getInstruction(0x74FD);
+	        case IXL : return Z80Instruction.getInstruction(0x75DD);
+	        case IYL : return Z80Instruction.getInstruction(0x75FD);
 			case NUMERIC : return Z80Instruction.getInstruction(0x36);
 			default : break;
 			}
@@ -582,6 +610,10 @@ public final class Z80InstructionMapper {
 			case HL_INDIRECT : return Z80Instruction.getInstruction(0x7e);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x7efd);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x7edd);
+	        case IXH : return Z80Instruction.getInstruction(0x7CDD);
+	        case IYH : return Z80Instruction.getInstruction(0x7CFD);
+	        case IXL : return Z80Instruction.getInstruction(0x7DDD);
+	        case IYL : return Z80Instruction.getInstruction(0x7DFD);
 			case NUMERIC_INDIRECT : return Z80Instruction.getInstruction(0x3a);
 			case A : return Z80Instruction.getInstruction(0x7f);
 			case B : return Z80Instruction.getInstruction(0x78);
@@ -602,6 +634,10 @@ public final class Z80InstructionMapper {
 			case HL_INDIRECT : return Z80Instruction.getInstruction(0x46);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x46dd);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x46fd);
+            case IXH : return Z80Instruction.getInstruction(0x44DD);
+            case IYH : return Z80Instruction.getInstruction(0x44FD);
+            case IXL : return Z80Instruction.getInstruction(0x45DD);
+            case IYL : return Z80Instruction.getInstruction(0x45FD);
 			case A : return Z80Instruction.getInstruction(0x47);
 			case B : return Z80Instruction.getInstruction(0x40);
 			case C : return Z80Instruction.getInstruction(0x41);
@@ -619,6 +655,10 @@ public final class Z80InstructionMapper {
 			case HL_INDIRECT : return Z80Instruction.getInstruction(0x4e);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x4edd);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x4efd);
+            case IXH : return Z80Instruction.getInstruction(0x4CDD);
+            case IYH : return Z80Instruction.getInstruction(0x4CFD);
+            case IXL : return Z80Instruction.getInstruction(0x4DDD);
+            case IYL : return Z80Instruction.getInstruction(0x4DFD);
 			case A : return Z80Instruction.getInstruction(0x4f);
 			case B : return Z80Instruction.getInstruction(0x48);
 			case C : return Z80Instruction.getInstruction(0x49);
@@ -636,6 +676,10 @@ public final class Z80InstructionMapper {
 			case HL_INDIRECT : return Z80Instruction.getInstruction(0x56);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x56dd);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x56fd);
+            case IXH : return Z80Instruction.getInstruction(0x54DD);
+            case IYH : return Z80Instruction.getInstruction(0x54FD);
+            case IXL : return Z80Instruction.getInstruction(0x55DD);
+            case IYL : return Z80Instruction.getInstruction(0x55FD);
 			case A : return Z80Instruction.getInstruction(0x57);
 			case B : return Z80Instruction.getInstruction(0x50);
 			case C : return Z80Instruction.getInstruction(0x51);
@@ -653,6 +697,10 @@ public final class Z80InstructionMapper {
 			case HL_INDIRECT : return Z80Instruction.getInstruction(0x5e);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x5edd);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x5efd);
+            case IXH : return Z80Instruction.getInstruction(0x5CDD);
+            case IYH : return Z80Instruction.getInstruction(0x5CFD);
+            case IXL : return Z80Instruction.getInstruction(0x5DDD);
+            case IYL : return Z80Instruction.getInstruction(0x5DFD);
 			case A : return Z80Instruction.getInstruction(0x5f);
 			case B : return Z80Instruction.getInstruction(0x58);
 			case C : return Z80Instruction.getInstruction(0x59);
@@ -735,6 +783,66 @@ public final class Z80InstructionMapper {
 			default : break;
 			}
 			break;
+        case IXH:
+            switch(getRightOperand(o)) {
+
+            case HL_INDIRECT : return Z80Instruction.getInstruction(0x66DD);
+            case A : return Z80Instruction.getInstruction(0x67DD);
+            case B : return Z80Instruction.getInstruction(0x60DD);
+            case C : return Z80Instruction.getInstruction(0x61DD);
+            case D : return Z80Instruction.getInstruction(0x62DD);
+            case E : return Z80Instruction.getInstruction(0x63DD);
+            case H : return Z80Instruction.getInstruction(0x64DD);
+            case L : return Z80Instruction.getInstruction(0x65DD);
+            case NUMERIC : return Z80Instruction.getInstruction(0x26DD);
+            default : break;
+            }
+            break;
+        case IYH:
+            switch(getRightOperand(o)) {
+
+            case HL_INDIRECT : return Z80Instruction.getInstruction(0x66FD);
+            case A : return Z80Instruction.getInstruction(0x67FD);
+            case B : return Z80Instruction.getInstruction(0x60FD);
+            case C : return Z80Instruction.getInstruction(0x61FD);
+            case D : return Z80Instruction.getInstruction(0x62FD);
+            case E : return Z80Instruction.getInstruction(0x63FD);
+            case H : return Z80Instruction.getInstruction(0x64FD);
+            case L : return Z80Instruction.getInstruction(0x65FD);
+            case NUMERIC : return Z80Instruction.getInstruction(0x26FD);
+            default : break;
+            }
+            break;
+        case IXL:
+            switch(getRightOperand(o)) {
+
+            case HL_INDIRECT : return Z80Instruction.getInstruction(0x6EDD);
+            case A : return Z80Instruction.getInstruction(0x6FDD);
+            case B : return Z80Instruction.getInstruction(0x68DD);
+            case C : return Z80Instruction.getInstruction(0x69DD);
+            case D : return Z80Instruction.getInstruction(0x6ADD);
+            case E : return Z80Instruction.getInstruction(0x6BDD);
+            case H : return Z80Instruction.getInstruction(0x6CDD);
+            case L : return Z80Instruction.getInstruction(0x6DDD);
+            case NUMERIC : return Z80Instruction.getInstruction(0x2EDD);
+            default : break;
+            }
+            break;
+        case IYL:
+            switch(getRightOperand(o)) {
+
+            case HL_INDIRECT : return Z80Instruction.getInstruction(0x6EFD);
+            case A : return Z80Instruction.getInstruction(0x6FFD);
+            case B : return Z80Instruction.getInstruction(0x68FD);
+            case C : return Z80Instruction.getInstruction(0x69FD);
+            case D : return Z80Instruction.getInstruction(0x6AFD);
+            case E : return Z80Instruction.getInstruction(0x6BFD);
+            case H : return Z80Instruction.getInstruction(0x6CFD);
+            case L : return Z80Instruction.getInstruction(0x6DFD);
+            case NUMERIC : return Z80Instruction.getInstruction(0x2EFD);
+            default : break;
+            }
+            break;
 		case SP:
 			switch(getRightOperand(o)) {
 			case NUMERIC_INDIRECT : return Z80Instruction.getInstruction(0x7bed);
@@ -787,6 +895,10 @@ public final class Z80InstructionMapper {
 		case HL_INDIRECT : return Z80Instruction.getInstruction(0xb6);
 		case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xb6dd);
 		case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xb6fd);
+        case IXH : return Z80Instruction.getInstruction(0x84DD);
+        case IYH : return Z80Instruction.getInstruction(0x84FD);
+        case IXL : return Z80Instruction.getInstruction(0x85DD);
+        case IYL : return Z80Instruction.getInstruction(0x85FD);
 		case NUMERIC : return Z80Instruction.getInstruction(0xf6);
 		default : break;
 		}
@@ -1023,6 +1135,10 @@ public final class Z80InstructionMapper {
 			case L : return Z80Instruction.getInstruction(0x9d);
 			case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x9edd);
 			case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x9efd);
+	        case IXH : return Z80Instruction.getInstruction(0x9CDD);
+	        case IYH : return Z80Instruction.getInstruction(0x9CFD);
+	        case IXL : return Z80Instruction.getInstruction(0x9DDD);
+	        case IYL : return Z80Instruction.getInstruction(0x9DFD);
 			case NUMERIC : return Z80Instruction.getInstruction(0xde);
 			default : return Z80Instruction.dummyInstruction;
 				
@@ -1128,6 +1244,10 @@ public final class Z80InstructionMapper {
 		case HL_INDIRECT : return Z80Instruction.getInstruction(0x96);
 		case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x96dd);
 		case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0x96fd);
+        case IXH : return Z80Instruction.getInstruction(0x94DD);
+        case IYH : return Z80Instruction.getInstruction(0x94FD);
+        case IXL : return Z80Instruction.getInstruction(0x95DD);
+        case IYL : return Z80Instruction.getInstruction(0x95FD);
 		case A : return Z80Instruction.getInstruction(0x97);
 		case B : return Z80Instruction.getInstruction(0x90);
 		case C : return Z80Instruction.getInstruction(0x91);
@@ -1147,6 +1267,10 @@ public final class Z80InstructionMapper {
 		case HL_INDIRECT : return Z80Instruction.getInstruction(0xae);
 		case IX_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xaedd);
 		case IY_OFFSET_INDIRECT : return Z80Instruction.getInstruction(0xaefd);
+        case IXH : return Z80Instruction.getInstruction(0xACDD);
+        case IYH : return Z80Instruction.getInstruction(0xACFD);
+        case IXL : return Z80Instruction.getInstruction(0xADDD);
+        case IYL : return Z80Instruction.getInstruction(0xADFD);
 		case A : return Z80Instruction.getInstruction(0xaf);
 		case B : return Z80Instruction.getInstruction(0xa8);
 		case C : return Z80Instruction.getInstruction(0xa9);

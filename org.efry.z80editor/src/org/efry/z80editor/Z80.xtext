@@ -7,7 +7,7 @@ Z80Model:
 
  REGISTER_A: 'a';
  REGISTER_B: 'b';
- REGISTER_C: 'c'; //cannot be a terminal because it clashes with the 'C'arry flag.
+ REGISTER_C: 'c';
  REGISTER_D: 'd';
  REGISTER_E: 'e';
  REGISTER_H: 'h';
@@ -16,7 +16,7 @@ Z80Model:
  REGISTER_R: 'r';
 
  REGISTER_AF: 'af';
- REGISTER_AF_SHADOW: 'af\'';
+ terminal REGISTER_AF_SHADOW: "af'";
  REGISTER_BC: 'bc';
  REGISTER_DE: 'de';
  REGISTER_HL: 'hl';
@@ -24,6 +24,11 @@ Z80Model:
  REGISTER_IY: 'iy';
  REGISTER_SP: 'sp';
 
+ REGISTER_IXH: 'ixh';
+ REGISTER_IXL: 'ixl';
+ REGISTER_IYH: 'iyh';
+ REGISTER_IYL: 'iyl';
+ 
  DOT: '.';
 
 terminal NEWLINE:
@@ -275,7 +280,7 @@ Cpi: {Operation} opcode='cpi';
 Cpir: {Operation} opcode='cpir';
 Cpl: {Operation} opcode='cpl';
 Daa: {Operation} opcode='daa';
-Dec: {Operation} opcode='dec' operand=dd;
+Dec: {Operation} opcode='dec' operand=(dd|undocRegs);
 Di: {Operation} opcode='di';
 Djnz: {Operation} opcode='djnz' operand=e;
 Ei: {Operation} opcode='ei';
@@ -372,10 +377,11 @@ p returns Operand: intType=NUMBER; //FIXME need to restrict to $0000, $0008, $00
 pp returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IX|REGISTER_SP);
 r returns Operand: reg=(REGISTER_A|REGISTER_B|REGISTER_C|REGISTER_D|REGISTER_E|REGISTER_H|REGISTER_L);
 rr returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_IY|REGISTER_SP);
-s returns Operand:  op=m|expr=Expression;
+s returns Operand:  op=(m|undocRegs)|expr=Expression;
 ss returns Operand: reg=(REGISTER_BC|REGISTER_DE|REGISTER_HL|REGISTER_SP);
 src returns Operand: =>indirectOp=NumericLiteralIndirect|op=(s|ss)|indirectOp=(BCIndirect|DEIndirect)|reg=(REGISTER_I|REGISTER_R|xx)|anonLabel=(PLUS|PLUSPLUS|MINUS|MINUSMINUS);
 xx: (REGISTER_IX|REGISTER_IY);
 dd returns Operand: op=(m|ss)|reg=xx;
 ee returns Operand: reg=(REGISTER_HL|xx);
-incOps returns Operand: op=(r|ss|IndexIndirectPlusOffset)|reg=(xx)|indirectOp=HLIndirect;
+incOps returns Operand: op=(r|ss|IndexIndirectPlusOffset|undocRegs)|reg=(xx)|indirectOp=HLIndirect;
+undocRegs returns Operand: reg=(REGISTER_IXH|REGISTER_IXL|REGISTER_IYH|REGISTER_IYL);
