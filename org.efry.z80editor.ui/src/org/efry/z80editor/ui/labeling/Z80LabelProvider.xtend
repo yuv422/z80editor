@@ -17,6 +17,9 @@ import org.efry.z80editor.z80.VarByteString
 import org.efry.z80editor.z80.VarStruct
 import org.efry.z80editor.z80.VarWord
 import org.efry.z80editor.z80.VarWordString
+import org.efry.z80editor.z80.RamSection
+import org.eclipse.xtext.nodemodel.ICompositeNode
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 /**
  * Provides labels for EObjects.
@@ -56,6 +59,11 @@ class Z80LabelProvider extends DefaultEObjectLabelProvider {
         
 	def text(EnumCmd ele) {
 
+        var node = NodeModelUtils.getNode(ele.startAddress);
+                    
+        if (node != null) {
+            return "enum " + node.getText();
+        }
 //	    if(ele.startAddress != null) {
 //	        return "enum " + Z80DisplayFormatterUtil.convertNumericLiteralToString(ele.startAddress);
 //	    }
@@ -84,11 +92,23 @@ class Z80LabelProvider extends DefaultEObjectLabelProvider {
     }
     
     def text(VarByteString v) {
-        v.varName.name
+        var node = NodeModelUtils.getNode(v.size);
+                    
+        if (node != null) {
+            return v.varName.name + "[" + node.getText() + "]";
+        }
+        
+        return v.varName.name
     }
       
     def text(VarWordString v) {
-        v.varName.name
+        var node = NodeModelUtils.getNode(v.size);
+                    
+        if (node != null) {
+            return v.varName.name + "[" + node.getText() + "]";
+        }
+        
+        return v.varName.name
     }   
 
     def image(VarStruct v) {
@@ -105,5 +125,9 @@ class Z80LabelProvider extends DefaultEObjectLabelProvider {
     
     def image(VarByteString v) {
         'field_ds_obj.gif'
+    }
+    
+    def image(RamSection v) {
+        'memory_16x16.png'
     }
 }

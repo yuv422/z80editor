@@ -30,6 +30,11 @@ import org.efry.z80editor.z80.Undefine
 import org.efry.z80editor.z80.Expr
 import org.efry.z80editor.z80.VarDefinitionEnum
 import org.efry.z80editor.z80.VarDefinitionStruct
+import org.efry.z80editor.z80.IfCommands
+import org.efry.z80editor.z80.Labels
+import org.efry.z80editor.z80.Line
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.efry.z80editor.z80.VarType
 
 /**
  * Customization of the default outline structure.
@@ -125,6 +130,36 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
         null
     }
     
+    def _text(Labels labels) {
+        if(labels.labels.size == 1) {
+            var l = labels.labels.get(0)
+            if(l.varName != null && l.varName.name != null) {
+               return l.varName.name
+           }
+        }
+
+        for(Label l : labels.labels) {
+           if(l.varName != null && l.varName.name != null) {
+               return "..."
+           }
+        }
+        
+        return null
+    }
+    
+    def _isLeaf(Labels labels) {
+        if(labels.labels.size == 1) {
+            return true
+        }
+        for(Label l : labels.labels) {
+           if(l.varName != null && l.varName.name != null) {
+               return false
+           }
+        }
+        
+        return true
+    }
+    
     def _text(Label label) {
         if(label.varName != null && label.varName.name != null) {
             label.varName.name
@@ -143,6 +178,18 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
 
     def _isLeaf(VarDefinitionStruct varDef) {
         true
+    }
+    
+    def _text(VarDefinitionStruct varDef) {
+        if(varDef.type != null) {
+            var type = varDef.type as VarType
+            var node = NodeModelUtils.getNode(type.size);
+                        
+            if (node != null) {
+                return varDef.name + "[" + node.getText().trim() + "]";
+            }
+        }
+        return varDef.name
     }
     
     def _isLeaf(VarStruct varDef) {
@@ -165,8 +212,12 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
         true
     }
     
-    def _text(VarStruct v) {
-        v.varName.name
+    def _text(VarStruct v) {                    
+        if (v.repeatAmount > 1) {
+            return v.varName.name + "[" + v.repeatAmount + "]";
+        }
+        
+        return v.varName.name
     }   
     
     def _text(VarByte v) {
@@ -178,14 +229,34 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
     
     def _text(VarByteString v) {
-        v.varName.name
+        var node = NodeModelUtils.getNode(v.size);
+                    
+        if (node != null) {
+            return v.varName.name + "[" + node.getText().trim() + "]";
+        }
+        
+        return v.varName.name
     }
       
     def _text(VarWordString v) {
-        v.varName.name
+        var node = NodeModelUtils.getNode(v.size);
+                    
+        if (node != null) {
+            return v.varName.name + "[" + node.getText().trim() + "]";
+        }
+        
+        return v.varName.name
     }  
 
     def _text(Undefine v) {
         null
-    }  
+    }
+    
+    def _isLeaf(IfCommands v) {
+        true
+    }
+    
+    def _text(IfCommands v) {
+        null
+    }
 }

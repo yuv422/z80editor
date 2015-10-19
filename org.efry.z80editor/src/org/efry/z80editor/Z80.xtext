@@ -98,11 +98,13 @@ UndefineTag hidden(): DOT 'undefine';
 UndefTag hidden(): DOT 'undef';
 
 Line:
-	(Macro | MacroUsage | Sms | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | SdscTagCmd | Bank | Org | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
-	    IfCmd | IfDefCmd | IfnDefCmd | IfDefMCmd | IfnDefMCmd | IExistsCmd | IfEqCmd | IfnEqCmd | IfLeCmd | IfLeeqCmd | IfGrCmd | IfGreqCmd | 
-	    Label | Asciitable | Command
-	) NEWLINE | (Label (c=Command) NEWLINE) | {EmptyLine} NEWLINE;
+	 (Macro | MacroUsage | Sms | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | SdscTagCmd | Bank | Org | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
+	    IfCommands | Label | Asciitable | Command) NEWLINE
+	    | (Labels (c=(Command | Asc | Dsb | Dsw | Db | Dw)) NEWLINE)
+	    | {EmptyLine} NEWLINE;
 
+IfCommands: IfCmd | IfDefCmd | IfnDefCmd | IfDefMCmd | IfnDefMCmd | IExistsCmd | IfEqCmd | IfnEqCmd | IfLeCmd | IfLeeqCmd | IfGrCmd | IfGreqCmd;
+Labels: labels+=Label+;
 //Lines: first=Line extra+=SubsequentLine*;
 //SubsequentLine: nl=NEWLINE line=Line?;
 //MacroNamedArg returns LabelType: {LabelType} name=ID;
