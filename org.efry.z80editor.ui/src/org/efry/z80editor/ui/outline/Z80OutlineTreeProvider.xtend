@@ -35,6 +35,7 @@ import org.efry.z80editor.z80.Labels
 import org.efry.z80editor.z80.Line
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.efry.z80editor.z80.VarType
+import org.efry.z80editor.z80.Orga
 
 /**
  * Customization of the default outline structure.
@@ -71,10 +72,14 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
         true
     }
     
-	def _isLeaf(Org operation) {
+	def _isLeaf(Org org) {
 		true
 	}
-	
+
+    def _isLeaf(Orga orga) {
+        true
+    }
+    	
 	def _isLeaf(Define operation) {
 		true
 	}

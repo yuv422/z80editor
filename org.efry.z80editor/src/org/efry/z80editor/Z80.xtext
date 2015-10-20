@@ -36,7 +36,7 @@ terminal NEWLINE:
     '\r'? '\n';
     
     
-VarName: ID| '_sizeof_' | 'a' | 'adc' | 'add' | 'af' | 'align' | 'and' | 'args' | 'asc' | 'asciitable' | 'asctable' | 'asm' | 'b' | 'bank' | 'banks' | 'banksize' | 'bankstotal' | 'bc' | 'bit' | 'byt' | 'c' | 'call' | 'ccf' | 'cp' | 'cpd' | 'cpdr' | 'cpi' | 'cpir' | 'cpl' | 'd' | 'daa' | 'db' | 'de' | 'dec' | 'def' | 'defaultslot' | 'define' | 'desc' | 'di' | 'djnz' | 'ds' | 'dsb' | 'dsw' | 'dw' | 'e' | 'ei' | 'else' | 'emptyfill' | 'enda' | 'endasm' | 'ende' | 'endif' | 'endm' | 'endme' | 'endr' | 'endro' | 'ends' | 'endst' | 'enum' | 'equ' | 'ex' | 'export' | 'exx' | 'force' | 'free' | 'h' | 'halt' | 'hl' | 'i' | 'if' | 'ifdef' | 'ifdefm' | 'ifeq' | 'ifexists' | 'ifgr' | 'ifgreq' | 'ifle' | 'ifleeq' | 'ifndef' | 'ifndefm' | 'ifneq' | 'im' | 'in' | 'inc' | 'incbin' | 'include' | 'ind' | 'indr' | 'ini' | 'inir' | 'instanceof' | 'ix' | 'iy' | 'jp' | 'jr' | 'l' | 'ld' | 'ldd' | 'lddr' | 'ldi' | 'ldir' | 'm' | 'macro' | 'map' | 'memorymap' | 'nargs' | 'nc' | 'neg' | 'nop' | 'nz' | 'or' | 'org' | 'otdr' | 'otir' | 'out' | 'outd' | 'outi' | 'overwrite' | 'p' | 'pe' | 'po' | 'pop' | 'push' | 'r' | 'ramsection' | 'redef' | 'redefine' | 'repeat' | 'rept' | 'res' | 'ret' | 'reti' | 'retn' | 'rl' | 'rla' | 'rlc' | 'rlca' | 'rld' | 'rombankmap' | 'rr' | 'rra' | 'rrc' | 'rrca' | 'rrd' | 'rst' | 'sbc' | 'scf' | 'sdsctag' | 'section' | 'semifree' | 'set' | 'sla' | 'slot' | 'slotsize' | 'smstag' | 'sp' | 'sra' | 'srl' | 'struct' | 'sub' | 'superfree' | 'to' | 'undef' | 'undefine' | 'xor' | 'z';
+VarName:  '_sizeof_' | 'a' | 'adc' | 'add' | 'af' | 'align' | 'and' | 'args' | 'asc' | 'asciitable' | 'asctable' | 'asm' | 'b' | 'bank' | 'banks' | 'banksize' | 'bankstotal' | 'bc' | 'bit' | 'byt' | 'c' | 'call' | 'ccf' | 'cp' | 'cpd' | 'cpdr' | 'cpi' | 'cpir' | 'cpl' | 'd' | 'daa' | 'db' | 'de' | 'dec' | 'def' | 'defaultslot' | 'define' | 'desc' | 'di' | 'djnz' | 'ds' | 'dsb' | 'dsw' | 'dw' | 'e' | 'ei' | 'else' | 'emptyfill' | 'enda' | 'endasm' | 'ende' | 'endif' | 'endm' | 'endme' | 'endr' | 'endro' | 'ends' | 'endst' | 'enum' | 'equ' | 'ex' | 'export' | 'exx' | 'filter' | 'force' | 'free' | 'fsize' | 'h' | 'halt' | 'hl' | 'i' | 'if' | 'ifdef' | 'ifdefm' | 'ifeq' | 'ifexists' | 'ifgr' | 'ifgreq' | 'ifle' | 'ifleeq' | 'ifndef' | 'ifndefm' | 'ifneq' | 'im' | 'in' | 'inc' | 'incbin' | 'include' | 'ind' | 'indr' | 'ini' | 'inir' | 'instanceof' | 'ix' | 'iy' | 'jp' | 'jr' | 'l' | 'ld' | 'ldd' | 'lddr' | 'ldi' | 'ldir' | 'm' | 'macro' | 'map' | 'memorymap' | 'nargs' | 'nc' | 'neg' | 'nop' | 'nz' | 'or' | 'org' | 'otdr' | 'otir' | 'out' | 'outd' | 'outi' | 'overwrite' | 'p' | 'pe' | 'po' | 'pop' | 'push' | 'r' | 'ramsection' | 'read' | 'redef' | 'redefine' | 'repeat' | 'rept' | 'res' | 'ret' | 'reti' | 'retn' | 'rl' | 'rla' | 'rlc' | 'rlca' | 'rld' | 'rombankmap' | 'rr' | 'rra' | 'rrc' | 'rrca' | 'rrd' | 'rst' | 'sbc' | 'scf' | 'sdsctag' | 'section' | 'semifree' | 'set' | 'skip' | 'sla' | 'slot' | 'slotsize' | 'smstag' | 'sp' | 'sra' | 'srl' | 'struct' | 'sub' | 'superfree' | 'swap' | 'to' | 'undef' | 'undefine' | 'xor' | 'z' | ID;
 
 AsciiTableTag hidden(): DOT 'asciitable';
 AscTableTag hidden(): DOT 'asctable';
@@ -83,7 +83,8 @@ IncludeTag hidden(): DOT 'include';
 
 MacroTag hidden(): DOT 'macro';
 MemoryMapTag hidden(): DOT 'memorymap';
-ORG_TAG hidden():  DOT 'org';
+OrgTag hidden():  DOT 'org';
+OrgaTag hidden():  DOT 'orga';
 RamSectionTag hidden(): DOT 'ramsection';
 RedefineTag hidden(): DOT 'redefine';
 RedefTag hidden(): DOT 'redef';
@@ -98,7 +99,7 @@ UndefineTag hidden(): DOT 'undefine';
 UndefTag hidden(): DOT 'undef';
 
 Line:
-	 (Macro | MacroUsage | Sms | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | SdscTagCmd | Bank | Org | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
+	 (Macro | MacroUsage | Sms | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | SdscTagCmd | Bank | Org | Orga | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
 	    IfCommands | Label | Asciitable | Command) NEWLINE
 	    | (Labels (c=(Command | Asc | Dsb | Dsw | Db | Dw)) NEWLINE)
 	    | {EmptyLine} NEWLINE;
@@ -154,7 +155,8 @@ RomBankCommands: ('bankstotal' (INT|HEX) NEWLINE) |
 Rept: (RepeatTag|ReptTag) repeatCount=NumericLiteral NEWLINE block+=Line+ EndRTag;
 
 Bank: {BankCmd} BankTag INT ('slot' slot=INT)?;
-Org: ORG_TAG value=(NUMBER);
+Org: OrgTag value=(NUMBER);
+Orga: OrgaTag value=(NUMBER);
 
 Section: SectionTag sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ END_S_TAG;
 
@@ -205,7 +207,7 @@ DbAdditionalValueType: ',' value=DbDataType;
 
 IncludeType: inc=(Include|Incbin|Incdir);
 Include: IncludeTag file=STRING;
-Incbin: IncBinTag file=STRING;
+Incbin: IncBinTag file=STRING ('skip' skipAmount=INT)? ('read' readAmount=INT)? swap='swap'? ('fsize' fsize=LabelType)? ('filter' macro=[Macro])?;
 Incdir: IncDirTag directory=STRING;
 
 SdscTagCmd: {SdscTagCmd} SdscTag INT(DOT INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID); //FIXME need to make a better version number type
@@ -347,7 +349,7 @@ B returns Operand: bitType=BitOperand;
 terminal STRUCT_SIZE_OF_DEFINE:  '_sizeof_'ID;
 NumericLiteral : sizeof=STRUCT_SIZE_OF_DEFINE|BANKLABEL|structRef=DotExpression|NUMBER|MacroNumericArg; //ID referencedObj=[VarName]|
 
-NUMBER: i=INT|str=(HEX|BINARY);
+NUMBER: i=INT('.'fraction=INT)?|str=(HEX|BINARY);
 NegNumber hidden(): MINUS? NUMBER;
 
 terminal HEX: ('$'('a'..'f'|'A'..'F'|'0'..'9')+)|('0'..'9'('a'..'f'|'A'..'F'|'0'..'9')*'h');
