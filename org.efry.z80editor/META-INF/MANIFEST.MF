@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.efry.z80editor
 Bundle-Vendor: Eric Fry
-Bundle-Version: 1.0.8
+Bundle-Version: 1.0.9
 Bundle-SymbolicName: org.efry.z80editor; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
