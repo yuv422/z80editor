@@ -36,6 +36,7 @@ import org.efry.z80editor.z80.Line
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.efry.z80editor.z80.VarType
 import org.efry.z80editor.z80.Orga
+import org.efry.z80editor.z80.Slot
 
 /**
  * Customization of the default outline structure.
@@ -262,6 +263,14 @@ class Z80OutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
     
     def _text(IfCommands v) {
+        null
+    }
+
+    def _isLeaf(Slot v) {
+        true
+    }
+        
+    def _text(Slot v) {
         null
     }
 }

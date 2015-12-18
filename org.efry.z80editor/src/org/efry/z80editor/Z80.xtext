@@ -93,13 +93,14 @@ ReptTag hidden(): DOT 'rept';
 RomBankMapTag hidden(): DOT 'rombankmap';
 SdscTag hidden(): DOT 'sdsctag';
 SectionTag hidden(): DOT 'section';
+SlotTag hidden(): DOT 'slot';
 SmsTag hidden(): DOT 'smstag';
 StructTag hidden(): DOT 'struct';
 UndefineTag hidden(): DOT 'undefine';
 UndefTag hidden(): DOT 'undef';
 
 Line:
-	 (Macro | MacroUsage | Sms | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | SdscTagCmd | Bank | Org | Orga | Section | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
+	 (Macro | MacroUsage | Sms | EmptyFill | Asm | EndAsm | Define | Redefine | Undefine | MemoryMap | RomBankMap | SdscTagCmd | Bank | Org | Orga | Section | Slot | Struct | EnumCmd | RamSection | Rept | Asc | Dsb | Dsw | Db | Dw | IncludeType | 
 	    IfCommands | Label | Asciitable | Command) NEWLINE
 	    | (Labels (c=(Command | Asc | Dsb | Dsw | Db | Dw)) NEWLINE)
 	    | {EmptyLine} NEWLINE;
@@ -159,6 +160,8 @@ Org: OrgTag value=(NUMBER);
 Orga: OrgaTag value=(NUMBER);
 
 Section: SectionTag sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ END_S_TAG;
+
+Slot: SlotTag value=(NUMBER);
 
 Struct: StructTag name=LabelType definitions+=VarDefinitionStruct* NEWLINE END_ST_TAG;
 
