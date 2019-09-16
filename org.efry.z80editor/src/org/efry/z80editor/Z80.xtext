@@ -159,7 +159,7 @@ Bank: {BankCmd} BankTag INT ('slot' slot=INT)?;
 Org: OrgTag value=(NUMBER);
 Orga: OrgaTag value=(NUMBER);
 
-Section: SectionTag sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite')? NEWLINE lines+=Line+ END_S_TAG;
+Section: SectionTag sectionName=STRING? ('size' size=NUMBER)? ('align' align=NUMBER)? ('force'|'semifree'|'free'|'superfree'|'overwrite'|'semisubfree')? NEWLINE lines+=Line+ END_S_TAG;
 
 Slot: SlotTag value=(NUMBER);
 
