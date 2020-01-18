@@ -4,21 +4,27 @@
 package org.efry.z80editor.generator
 
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IGenerator
-import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IGenerator2
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import org.eclipse.xtext.generator.IGeneratorContext
 
 /**
  * Generates code from your model files on save.
  * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
-class Z80Generator implements IGenerator {
+class Z80Generator implements IGenerator2 {
 	
-	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-//		fsa.generateFile('greetings.txt', 'People to greet: ' + 
-//			resource.allContents
-//				.filter(typeof(Greeting))
-//				.map[name]
-//				.join(', '))
+	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+
 	}
+	
+	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+
+	}
+	
+	override doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+
+	}
+	
 }

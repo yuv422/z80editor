@@ -28,7 +28,7 @@ import org.efry.z80editor.Z80CycleCalculator;
 import org.efry.z80editor.Z80Instruction;
 import org.efry.z80editor.Z80OpCodes;
 import org.efry.z80editor.ui.Z80OperationTypeWalker;
-import org.efry.z80editor.ui.internal.Z80Activator;
+import org.efry.z80editor.ui.internal.Z80editorActivator;
 import org.efry.z80editor.z80.Operation;
 
 import com.google.common.io.CharStreams;
@@ -96,7 +96,7 @@ public class Z80InstructionHelpView extends ViewPart {
     }
 
     private void loadCycleInfo(final int offset, final int length, XtextEditor editor, final IDocument doc) {
-        final ILocationInFileProvider locationInFileProvider = Z80Activator.getInstance().getInjector(Z80Activator.ORG_EFRY_Z80EDITOR_Z80).getInstance(ILocationInFileProvider.class);
+        final ILocationInFileProvider locationInFileProvider = Z80editorActivator.getInstance().getInjector(Z80editorActivator.ORG_EFRY_Z80EDITOR_Z80).getInstance(ILocationInFileProvider.class);
 
         editor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
 
@@ -117,7 +117,7 @@ public class Z80InstructionHelpView extends ViewPart {
     }
 
     private void loadHtmlOpcodeInfo(final int offset, final int length, XtextEditor editor) {
-        final ILocationInFileProvider locationInFileProvider = Z80Activator.getInstance().getInjector(Z80Activator.ORG_EFRY_Z80EDITOR_Z80).getInstance(ILocationInFileProvider.class);
+        final ILocationInFileProvider locationInFileProvider = Z80editorActivator.getInstance().getInjector(Z80editorActivator.ORG_EFRY_Z80EDITOR_Z80).getInstance(ILocationInFileProvider.class);
 
         editor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
 
