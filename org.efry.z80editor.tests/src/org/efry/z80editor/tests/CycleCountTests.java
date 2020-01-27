@@ -5,12 +5,12 @@ import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipse.xtext.junit4.XtextRunner;
-import org.eclipse.xtext.junit4.util.ParseHelper;
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.xtext.testing.util.ParseHelper;
+import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.efry.z80editor.Z80CycleCalculator;
-import org.efry.z80editor.Z80InjectorProvider;
+import org.efry.z80editor.tests.Z80InjectorProvider;
 import org.efry.z80editor.Z80Instruction;
 import org.efry.z80editor.z80.Z80Model;
 import org.junit.Assert;
