@@ -26,4 +26,6 @@ Enter the update site details
 
 https://dl.bintray.com/yuv422/EclipseZ80Editor 
 
+### Building from source
 
+You can compile with maven. `mvn package` should result in an update site zip being created in the repository project.
