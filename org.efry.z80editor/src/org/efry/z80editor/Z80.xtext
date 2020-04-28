@@ -210,7 +210,7 @@ DbAdditionalValueType: ',' value=DbDataType;
 
 IncludeType: inc=(Include|Incbin|Incdir);
 Include: IncludeTag file=STRING;
-Incbin: IncBinTag file=STRING ('skip' skipAmount=INT)? ('read' readAmount=INT)? swap='swap'? ('fsize' fsize=LabelType)? ('filter' macro=[Macro])?;
+Incbin: IncBinTag file=STRING ('skip' skipAmount=Expression)? ('read' readAmount=Expression)? swap='swap'? ('fsize' fsize=LabelType)? ('filter' macro=[Macro])?;
 Incdir: IncDirTag directory=STRING;
 
 SdscTagCmd: {SdscTagCmd} SdscTag INT(DOT INT)? ',' (STRING|ID) ',' (STRING|ID) ',' (STRING|ID); //FIXME need to make a better version number type
@@ -370,7 +370,7 @@ NumericLiteralIndirect returns Operand: ('[' lit=NumericLiteral ']')|('(' =>lit=
 IndexIndirectPlusOffset returns Operand: ('[' indexPlusOffset=IndexPlusOffset ']')|('(' indexPlusOffset=IndexPlusOffset ')');
 IndexIndirect returns Operand: ('[' reg=xx ']')|('(' reg=xx ')');
 
-IndexPlusOffset returns Operand: reg=xx offset=SignedByteOffset;
+IndexPlusOffset returns Operand: (reg=xx)|(reg=xx offset=SignedByteOffset);
 SignedByteOffset: sign=(PLUS)? value=Expression; //FIXME Decision can match input such as "RULE_MINUS" using multiple alternatives //Must be in the range -128..+127 This is checked for by a validator
 
 CC: 'c'|'m'|'nc'|'nz'|'p'|'pe'|'po'|'z';
